@@ -521,7 +521,9 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
 /* ============ Mobile (<= 640px) ============ */
 @media (max-width: 640px) {
   .app { padding: 10px 12px 48px !important; }
-  .book { padding: 18px 18px 22px 46px; max-width: 100%; }
+  .book { padding: 16px 12px 20px 34px; max-width: 100%; }
+  .book::after { left: 26px; }
+  .book::before { left: 3px; width: 10px; background-size: 10px 32px; }
   .cover__eyebrow { align-items: flex-start; flex-direction: column; gap: 5px; }
   .cover__title { font-size: 38px; }
   .dashboard-grid { grid-template-columns: 1fr; }
@@ -540,13 +542,16 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
   .bab-hero__title { font-size: 20px; }
   .bab-hero__stamp { flex-direction: row; gap: 6px; align-items: center; width: 100%; }
 
-  .toolbar { gap: 12px; font-size: 12px; }
+  .toolbar { gap: 8px; margin-top: 8px; padding: 7px 0; font-size: 12px; }
   .toolbar__title { width: 100%; }
 
   /* TOC bisa di-scroll horizontal */
-  .toc { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .toc { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-top: 10px; padding: 6px; scroll-padding-inline: 6px; }
   .toc::-webkit-scrollbar { display: none; }
   .toc a { flex: 0 0 auto; }
+
+  .flash__seg { width: 100%; }
+  .flash__seg .chip { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
 
   /* tabel kosakata jadi kartu bertumpuk */
   table.vokab { table-layout: auto; }
@@ -558,7 +563,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
     border: 1px solid rgba(67,56,43,0.14);
     border-radius: 10px;
     margin-bottom: 8px;
-    padding: 8px 6px;
+    padding: 6px 5px;
     background: rgba(255,255,255,0.4);
   }
   table.vokab tbody tr:nth-child(even) { background: rgba(255,255,255,0.4); }
@@ -568,7 +573,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
     grid-template-columns: 50px minmax(0, 1fr);
     align-items: start;
     gap: 8px;
-    padding: 3px 8px;
+    padding: 3px 7px;
   }
   table.vokab td::before {
     content: attr(data-label);

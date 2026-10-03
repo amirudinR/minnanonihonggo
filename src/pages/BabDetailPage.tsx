@@ -575,10 +575,10 @@ function TerjemahanList({
           {h.nilai && (
             <span className={`terj__res terj__res--${h.nilai.level}`}>
               {h.nilai.level === 'tepat'
-                ? `✅ Sangat dekat (${h.nilai.skor}%)`
+                ? `Sangat dekat (${h.nilai.skor}%)`
                 : h.nilai.level === 'dekat'
-                  ? `🟡 Cukup dekat (${h.nilai.skor}%)`
-                  : `❌ Belum dekat (${h.nilai.skor}%)`}
+                  ? `Cukup dekat (${h.nilai.skor}%)`
+                  : `Belum dekat (${h.nilai.skor}%)`}
             </span>
           )}
         </div>
@@ -625,7 +625,7 @@ function LatihanList({
               />
               {lvl && (
                 <p className={`verdict ${lvl === 'tepat' ? 'verdict--ok' : lvl === 'dekat' ? 'verdict--hangat' : 'verdict--no'}`}>
-                  {lvl === 'tepat' ? '✅ Benar' : lvl === 'dekat' ? '🟡 Hampir — cek bagian yang kurang' : '❌ Belum cocok'}
+                  {lvl === 'tepat' ? 'Benar' : lvl === 'dekat' ? 'Hampir — cek bagian yang kurang' : 'Belum cocok'}
                 </p>
               )}
               {r.jawaban && (

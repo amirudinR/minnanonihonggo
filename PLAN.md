@@ -1,5 +1,7 @@
 # PLAN — Aplikasi Belajar Minna no Nihongo 1 (Bab 1–25)
 
+> ⚠️ **Agent/AI: baca `AGENTS.md` DULU** (aturan keras + daftar kesalahan yang sudah pernah terjadi). File ini = rencana/roadmap.
+
 > Stack: **React 19 + TypeScript + Vite 6 + Tailwind CSS v4 + react-router v7 + Zustand**
 > Offline penuh. Data per-bab 1 folder. Tampilan bergaya kertas, **bisa diisi jawaban, dikoreksi, dan dicoret-coret**.
 
