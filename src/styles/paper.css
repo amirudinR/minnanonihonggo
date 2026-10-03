@@ -136,7 +136,7 @@ ruby rt {
   font-size: clamp(18px, 3.5vw, 21px);
   padding: 8px 10px;
   border-radius: 8px;
-  transition: background 150ms ease;
+
   list-style: none;
 }
 .section > summary::-webkit-details-marker { display: none; }
@@ -144,7 +144,7 @@ ruby rt {
   content: "▸";
   display: inline-block;
   margin-right: 8px;
-  transition: transform 150ms ease;
+
   color: var(--color-accent);
 }
 .section[open] > summary::before { transform: rotate(90deg); }
@@ -177,7 +177,7 @@ button {
   background: var(--color-paper);
   color: var(--color-ink);
   cursor: pointer;
-  transition: background 150ms ease, transform 80ms ease, box-shadow 150ms ease;
+
   box-shadow: var(--shadow-soft);
 }
 button:hover { background: #efe4c8; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -243,7 +243,7 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
   text-decoration: none;
   color: var(--color-ink-soft);
   border: 1px solid transparent;
-  transition: all 120ms ease;
+
 }
 .toc a:hover {
   background: rgba(138, 90, 43, 0.1);
@@ -267,7 +267,7 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+ * { animation: none !important; }
 }
 
 /* ============ Hero bab ============ */
@@ -344,7 +344,7 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
   border: 1px solid rgba(67,56,43,0.2);
   background: rgba(255,255,255,0.4);
   color: var(--color-ink-soft);
-  transition: all 140ms ease;
+
   user-select: none;
 }
 .toolbar__toggle:has(input:checked) {
@@ -363,7 +363,7 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
   background: linear-gradient(135deg, rgba(47,125,79,0.08), rgba(47,125,79,0.01));
 }
 .koreksi__bar { height: 8px; border-radius: 999px; background: rgba(67,56,43,0.12); overflow: hidden; margin-top: 10px; }
-.koreksi__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #2f7d4f, #4aa36a); transition: width 300ms ease; }
+.koreksi__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #2f7d4f, #4aa36a); }
 
 /* textarea jawaban */
 .jawab, .coretan {
@@ -405,7 +405,7 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
   background: var(--color-ink);
   color: var(--color-paper-light);
   text-decoration: none;
-  transition: transform 150ms ease;
+
 }
 .skip-link:focus { transform: translateY(0); }
 .cover__eyebrow { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
@@ -433,7 +433,7 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
 .continue-card h2 { margin: 4px 0 0; font-size: 25px; }
 .continue-card p { margin: 2px 0 0; color: var(--color-ink-soft); }
 .continue-card__meta { display: block; margin-top: 9px; color: var(--color-ink-faint); font-size: 12px; }
-.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 15px; border-radius: 7px; font-size: 13px; font-weight: 700; text-decoration: none; transition: transform 120ms ease, background 150ms ease, box-shadow 150ms ease; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 15px; border-radius: 7px; font-size: 13px; font-weight: 700; text-decoration: none; }
 .button:hover { transform: translateY(-1px); }
 .button--primary { background: var(--color-accent); color: var(--color-paper-light); box-shadow: 0 5px 12px rgba(112,69,31,0.2); }
 .button--primary:hover { background: var(--color-accent-deep); }
@@ -452,14 +452,14 @@ a { color: var(--color-accent); text-underline-offset: 3px; }
   text-decoration: none;
   color: inherit;
   border: 1px solid transparent;
-  transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
+
 }
 .bab-item__link:hover {
   background: rgba(138, 90, 43, 0.07);
   border-color: rgba(138, 90, 43, 0.22);
   transform: translateX(2px);
 }
-.bab-item__arrow { color: var(--color-accent); font-size: 18px; opacity: 0.65; transition: transform 120ms ease, opacity 120ms ease; }
+.bab-item__arrow { color: var(--color-accent); font-size: 18px; opacity: 0.65; }
 .bab-item__link:hover .bab-item__arrow { transform: translateX(3px); opacity: 1; }
 .bab-item__link--locked { opacity: 0.55; cursor: default; }
 .bab-item__link--locked:hover { background: none; border-color: transparent; transform: none; }
@@ -609,7 +609,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
   font: inherit;
   font-size: 13px;
   cursor: pointer;
-  transition: all 140ms ease;
+
   box-shadow: none;
 }
 .chip:hover { background: rgba(138, 90, 43, 0.1); border-color: rgba(138, 90, 43, 0.35); color: var(--color-ink); transform: none; }
@@ -637,7 +637,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
   background: linear-gradient(135deg, rgba(138, 90, 43, 0.08), rgba(255, 255, 255, 0.4));
   cursor: pointer;
   text-align: center;
-  transition: transform 120ms ease, box-shadow 150ms ease, background 150ms ease;
+
 }
 .flash__card:hover { box-shadow: var(--shadow-soft); }
 .flash__card--balik { background: linear-gradient(135deg, rgba(47, 125, 79, 0.1), rgba(255, 255, 255, 0.4)); border-color: rgba(47, 125, 79, 0.3); }
@@ -678,7 +678,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
   font-size: 13.5px;
   cursor: pointer;
   box-shadow: none;
-  transition: all 130ms ease;
+
 }
 .opsi:hover:not(:disabled) { background: rgba(138, 90, 43, 0.09); border-color: rgba(138, 90, 43, 0.3); transform: none; }
 .opsi:disabled { cursor: default; }
@@ -700,7 +700,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
 .terj__res--dekat { color: #a06a1f; }
 .terj__res--belum { color: #b03030; }
 .terj__bar { height: 7px; border-radius: 999px; background: rgba(67, 56, 43, 0.12); overflow: hidden; margin: 8px 0 4px; }
-.terj__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #427ab0, #6aa3d6); transition: width 300ms ease; }
+.terj__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #427ab0, #6aa3d6); }
 
 /* ============ Progress per-bagian ============ */
 .bagian { list-style: none; padding: 0; margin: 6px 0 4px; display: grid; gap: 6px; }
@@ -714,7 +714,7 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
   background: rgba(255, 255, 255, 0.35);
   font-size: 13.5px;
   cursor: pointer;
-  transition: all 130ms ease;
+
 }
 .bagian__item:hover { background: rgba(138, 90, 43, 0.07); }
 .bagian__item input { accent-color: var(--color-accent); width: 16px; height: 16px; }

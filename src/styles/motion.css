@@ -1,0 +1,67 @@
+/* ============ Animasi & motion (SEMUA transisi di sini) ============ */
+/* Semua deklarasi `transition` dari paper.css dipusatkan di file satu ini. */
+/* Ubah file ini untuk merombak feel animasi tanpa menyentuh layout/warna. */
+
+.section > summary {
+  transition: background 150ms ease;
+}
+
+.section > summary::before {
+  transition: transform 150ms ease;
+}
+
+button {
+  transition: background 150ms ease, transform 80ms ease, box-shadow 150ms ease;
+}
+
+.toc a {
+  transition: all 120ms ease;
+}
+
+.toolbar__toggle {
+  transition: all 140ms ease;
+}
+
+.koreksi__fill {
+  transition: width 300ms ease;
+}
+
+.skip-link {
+  transition: transform 150ms ease;
+}
+
+.button {
+  transition: transform 120ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.bab-item__link {
+  transition: background 150ms ease, border-color 150ms ease, transform 120ms ease;
+}
+
+.bab-item__arrow {
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.chip {
+  transition: all 140ms ease;
+}
+
+.flash__card {
+  transition: transform 120ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.opsi {
+  transition: all 130ms ease;
+}
+
+.terj__fill {
+  transition: width 300ms ease;
+}
+
+.bagian__item {
+  transition: all 130ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
