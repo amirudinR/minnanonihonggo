@@ -15,8 +15,36 @@ export function validasiBab(bab: Bab): ValidasiHasil {
   const errors: string[] = []
   const warnings: string[] = []
 
-  if (!bab.no) errors.push('bab.no kosong')
-  if (!bab.topik?.trim()) errors.push('bab.topik kosong')
+if (!bab.no) errors.push('bab.no kosong')
+    if (!bab.topik?.trim()) errors.push('bab.topik kosong')
+
+    // WAJIB: OCR (RapidOCR) tidak bisa baca kana/kanji -> teks JP jadi '??' / '\ufffd'.
+    // Hanya deteksi 2+ '?' bertumpuk supaya tanda tanya biasa di kalimat Indonesia tidak kena.
+    const rusak = (s?: string) => !!s && (/\?{2,}/.test(s) || s.includes('\ufffd'))
+    const cekJp = (label: string, s?: string) => {
+      if (rusak(s)) errors.push(`${label} berisi '??' — teks JP gagal dibaca (jangan pakai OCR)`)
+    }
+    bab.kosakata.forEach((k) => {
+      cekJp(`kosakata ${k.id} kana`, k.kana)
+      cekJp(`kosakata ${k.id} kanji`, k.kanji)
+    })
+    ;[...bab.bunpou, ...(bab.catatanTataBahasa ?? [])].forEach((b) => {
+      cekJp(`bunpou ${b.no} pola`, b.pola)
+      b.contoh?.forEach((c, i) => cekJp(`bunpou ${b.no} contoh[${i}]`, c))
+    })
+    bab.reibun.forEach((r) => {
+      cekJp(`reibun ${r.no} jp`, r.jp)
+      cekJp(`reibun ${r.no} kunci`, r.kunci)
+    })
+    bab.kaiwa?.dialog.forEach((d, i) => cekJp(`kaiwa dialog[${i}]`, d.jp))
+    ;[...bab.renshuuA, ...bab.renshuuB, ...bab.renshuuC].forEach((r) => {
+      cekJp(`renshuu ${r.no} soal`, r.soal)
+      cekJp(`renshuu ${r.no} jawaban`, r.jawaban)
+    })
+    bab.mondai.forEach((m) => {
+      cekJp(`mondai ${m.no} soal`, m.soal)
+      cekJp(`mondai ${m.no} jawaban`, m.jawaban)
+    })
 
   // kosakata
   const ids = new Set<string>()

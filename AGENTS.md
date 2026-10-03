@@ -98,6 +98,20 @@ Beberapa subagent mengklaim salah dan mengubah data Bab 1 yang sebenarnya sudah 
 - Bash tool = **PowerShell (pwsh)**. Jangan tulis perintah gaya bash.
 - `python -c "..."` OK, tapi here-doc TIDAK.
 
+### #12 — Teks Jepang TAMPIL `?` di terminal PowerShell 🔴 (FALSE ALARM!)
+- `Get-Content -Encoding UTF8` **menampilkan kana/kanji sebagai `?`** karena codepage konsol (cp1252) tidak bisa merender huruf Jepang. **Ini BUKAN data rusak.**
+- Akibatnya saya pernah salah menghapus `src/data/bab26` & `bab34` yang sebenarnya isinya baik. Verifikasi ulang selalu pakai Python, bukan `Get-Content`:
+```powershell
+python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.open(r'src\data\bab02\kosakata.ts',encoding='utf-8').read()[:300])"
+```
+- Deteksi data benar-benar rusak (hasil OCR): cari `\ufffd` atau rentset `??` (2+ tanda tanya berturut). Sudah jadi aturan otomatis di `src/core/validation/schema.ts` (`cekJp`).
+
+### #13 — OCR (RapidOCR) TIDAK bisa baca kana/kanji 🔴
+- `tools/extract_bab.py` (RapidOCR/onnx) **sudah DIHAPUS** — dia hanya bisa baca huruf Latin, sehingga kana/kanji jadi `??`. Semua isi PDF MNN itu berupa scan, jadi:
+- **WAJIB baca visual** hasil `python tools/render_pdf.py <pdf> <out> <prefix> <start> <end>` (default 1800px grayscale quality 85, kana/kanji terbaca). Jangan pernah pakai OCR untuk PDF MNN.
+- Render JANGAN turunkan width < 1500 atau kana/kanji pecah jadi tidak terbaca.
+- Batas memo: baca **maksimal 6 gambar per pesan** (>32MB total akan men-*crash* agent).
+
 ---
 
 ## 4. FAKTA TERVERIFIKASI — JANGAN "DIPERBAIKI" (sudah benar!)
