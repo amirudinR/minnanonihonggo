@@ -5,13 +5,13 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi upload GitHub (Bab 1 selesai, F8–F10 + fix infinite loop).
+> Terakhir diperbarui: sesi polish UI (motion.css sentralisasi, Bab 2, Bab 3–25 sedang diisi, MNN2 direncanakan).
 
 ---
 
 ## 0. Konteks proyek (ringkas)
 
-Aplikasi belajar **Minna no Nihongo 1 (Bab 1–25)**, offline, bergaya buku catatan kertas.
+Aplikasi belajar **Minna no Nihongo 1 (Bab 1–25)**, offline, bergaya buku catatan kertas. MNN2 (Bab 26–50) akan menyusul dengan skema sama.
 Stack: **React 19 + TypeScript + Vite 6 + Tailwind CSS v4 (`@tailwindcss/vite`) + react-router v7 + Zustand**. Data per bab di `src/data/babNN/` (registry otomatis via `import.meta.glob`).
 
 Perintah:
@@ -194,3 +194,15 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 3. Perubahan UI → lampirkan/screenshot dan periksa nyata.
 4. Tidak mengubah fakta terverifikasi (§4) atau konfigurasi kritis (§1).
 5. Update `PLAN.md` (sesi/log) bila mengerjakan fitur baru.
+
+---
+
+## 9. Catatan perubahan yang sudah berlangsung (jangan di-regresi)
+
+- **Animasi dipusatkan** di `src/styles/motion.css` (semua `transition` + blok `prefers-reduced-motion`). `index.css` meng-import `tokens.css` → `paper.css` → `motion.css`. Merombak animasi = edit `motion.css` saja.
+- **`paper.css` tidak boleh berisi `transition:`** lagi (sudah dipindah); cek sebelum menambahkan rule agar tak ada dead code.
+- **Inter & Caveat adalah variable font** → satu `@font-face` per family dengan `font-weight: 100 900` (Inter) / `400 700` (Caveat), format `woff2-variations`. Jangan buat 4 deklarasi (pernah bikin dead code).
+- **Emoji verdict/terj hasil dihapus** oleh agent lain; pertahankan stripped kecuali user minta dikembalikan.
+- **Offset halaman terverifikasi** (jangan ganti rumus tanpa bukti): Honsatsu idx = printed + 21, printed start Bab N = 8N−2 → idx start = 8N+19. Indonesia idx = printed + 20, printed start Pelajaran N = 6N+4 → idx start = 6N+24.
+- Bab 2 data lengkap (kosakata, bunpou, reibun, kaiwa, renshuu A/B/C, mondai) sudah ada di `src/data/bab02/` — jadi template kualitas untuk bab lain.
+- GitHub `main` berisi: cb5789e (initial), 7f708b3 (AGENTS.md + polish mobile), 962b555 (Bab 2), a7b95d3 (motion.css).
