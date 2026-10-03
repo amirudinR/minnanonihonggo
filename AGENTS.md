@@ -43,6 +43,7 @@ npm run validate   # validasi data bab (tsx tools/validate.ts)
 - **Romaji TIDAK dicetak di buku.** Kolom romaji default tersembunyi; kalau diisi, itu *transliterasi app*, jangan anggap data buku.
 - `bunpou` = pola 文型 buku (umumnya 4). Catatan tata bahasa (mis. `の`, `～さん`) masuk `catatanTataBahasa` **(penomoran mulai dari 1, TERPISAH dari bunpou)**.
 - `kaiwa.dialog[].arti` **wajib** diisi dari PDF terjemahan Indonesia (1:1, bukan karangan).
+- **Pola kalimat (`bunpou`)**: penjelasan `pola`/`contoh`/`arti` WAJIB diambil dari PDF Indonesia, section **"Terjemahan Pola Kalimat"** (pola Indonesia paling jelas di situ). Jangan mengandalkan terjemahan karangan dari buku JP.
 - Audio: **1 kaiwa per bab (selalu tepat 1)**; mondai **bervariasi 2–4** (Bab 4 = 4). **JANGAN hardcode mondai1..3** — pakai `src/core/audio/manifest.ts`.
 - Mondai mendengarkan (listening): `kunciTersedia:false` + `instruksi`, **bukan** `jawaban:''`.
 - `bunsho` / `rangkuman`: hanya diisi bila buku punya; kalau tidak → `[]` / jangan ditaruh.
