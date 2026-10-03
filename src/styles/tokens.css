@@ -1,0 +1,27 @@
+@theme {
+  /* palette (jangan ubah nilainya tanpa cek kontras) */
+  --color-paper: #f5eddc;
+  --color-paper-light: #fdf6e3;
+  --color-ink: #43382b;
+  --color-ink-soft: #6b5d49;
+  --color-accent: #8a5a2b;
+  --color-margin-red: rgba(192, 57, 43, 0.45);
+  --color-rule: rgba(67, 56, 43, 0.1);
+  --color-selesai: #2f7d4f;
+  --color-salah: #b03030;
+  --color-ink-faint: #8b7c68;
+  --color-accent-deep: #70451f;
+  --color-wash: rgba(138, 90, 43, 0.07);
+
+  /* fonts */
+  --font-sans: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN",
+    "Meiryo", system-ui, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-hand: "Caveat", "Kalam", "Segoe UI", system-ui, sans-serif;
+  --font-title: "Kalam", "Caveat", "Segoe UI", system-ui, sans-serif;
+
+  /* skala */
+  --radius-card: 10px;
+  --shadow-paper: 0 18px 42px rgba(67, 56, 43, 0.12);
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
