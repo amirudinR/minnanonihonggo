@@ -15,8 +15,6 @@ export default function BabDetailPage() {
   const bab = getBab(num)
   const p = useProgress((s) => s.items.find((x) => x.no === num))
   const setSelesai = useProgress((s) => s.setSelesai)
-  const answers = useNotes((s) => s.answers)
-  const setAnswer = useNotes((s) => s.setAnswer)
   const catatan = useNotes((s) => s.catatan)
   const setCatatan = useNotes((s) => s.setCatatan)
   const [showRomaji, setShowRomaji] = useState(false)
@@ -277,60 +275,18 @@ export default function BabDetailPage() {
         {bab.mondai.length > 0 && (
           <Section id="mondai" title="Mondai">
             {bab.mondai.map((m) => (
-              <div key={m.no} className="mb-3">
-                <p className="font-medium">
-                  {m.no}. <span lang="ja"><TextWithNewlines text={m.soal} inline /></span>
-                </p>
-                {m.instruksi && (
-                  <p className="ml-3 text-sm italic text-ink-soft">
-                    {m.instruksi}
-                  </p>
-                )}
-                {m.audio && <AudioBar src={m.audio} label={`Dengarkan Mondai ${m.no}`} />}
-                {m.kunciTersedia === false ? (
-                  <p className="mt-1 text-sm italic text-ink-soft">(kunci jawaban tersedia di CD, tidak di buku)</p>
-                ) : (
-                  (() => {
-                    const mkey = `b${num}-mondai-${m.no}`
-                    const lvl = adaJawaban(answers[mkey])
-                      ? matchLevel(answers[mkey], m.jawaban ?? '')
-                      : null
-                    return (
-                      <>
-                        {m.pilihan && m.pilihan.length > 0 && (
-                          <ul className="mt-1 ml-4 list-disc text-sm">
-                            {m.pilihan.map((p, i) => (
-                              <li key={i} lang="ja">{p}</li>
-                            ))}
-                          </ul>
-                        )}
-                        <textarea
-                          rows={2}
-                          value={answers[mkey] ?? ''}
-                          onChange={(e) => setAnswer(mkey, e.target.value)}
-                          placeholder="Jawabanmu…"
-                          aria-label={`Jawaban Mondai ${m.no}`}
-                          className="jawab mt-1"
-                        />
-                        {lvl && (
-                          <p className={`verdict ${lvl === 'tepat' ? 'verdict--ok' : lvl === 'dekat' ? 'verdict--hangat' : 'verdict--no'}`}>
-                            {lvl === 'tepat' ? 'Benar' : lvl === 'dekat' ? 'Hampir — cek bagian yang kurang' : 'Belum cocok'}
-                          </p>
-                        )}
-                        {m.jawaban && (
-                          <details className="mt-1">
-                            <summary className="cursor-pointer text-sm underline underline-offset-2">Lihat kunci</summary>
-                            <pre className="whitespace-pre-wrap rounded-md bg-[rgba(67,56,43,0.05)] p-2 text-sm">
-                              {m.jawaban}
-                            </pre>
-                          </details>
-                        )}
-                      </>
-                    )
-                  })()
-                )}
-              </div>
-            ))}
+                <SoalInteraktif 
+                  key={m.no}
+                  no={m.no}
+                  mkey={`b${num}-mondai-${m.no}`}
+                  soal={m.soal}
+                  audio={m.audio}
+                  instruksi={m.instruksi}
+                  pilihan={m.pilihan}
+                  jawaban={m.jawaban}
+                  kunciTersedia={m.kunciTersedia}
+                />
+              ))}
           </Section>
         )}
 
@@ -414,7 +370,7 @@ function Section({
   children: ReactNode
 }) {
   return (
-    <details id={id} open={defaultOpen ? true : undefined} className="section mb-2 scroll-mt-20">
+    <details id={id} open={defaultOpen ? true : undefined} className={`section section--${id.replace("A","").replace("B","").replace("C","")} mb-2 scroll-mt-20`}>
       <summary className="cursor-pointer select-none text-xl" style={{ fontFamily: 'var(--font-hand)' }}>
         {title}
       </summary>
@@ -525,6 +481,110 @@ function BagianProgress({ bab, babNo }: { bab: Bab; babNo: number }) {
         })}
       </ul>
     </Section>
+  )
+}
+
+
+function SoalInteraktif({ 
+  mkey, 
+  soal, 
+  audio, 
+  instruksi, 
+  pilihan, 
+  jawaban, 
+  kunciTersedia, 
+  no 
+}: { 
+  mkey: string
+  soal: string
+  audio?: string
+  instruksi?: string
+  pilihan?: string[]
+  jawaban?: string
+  kunciTersedia?: boolean
+  no: number
+}) {
+  const answers = useNotes((s) => s.answers)
+  const setAnswer = useNotes((s) => s.setAnswer)
+  const lines = soal.split('\n').filter(l => l.trim())
+  
+  const artiKunci = mkey + '-arti'
+  const lvl = adaJawaban(answers[mkey]) ? matchLevel(answers[mkey], jawaban ?? '') : null
+
+  return (
+    <div className="mb-4">
+      <div className="flex gap-2">
+        <span className="font-medium text-accent">{no}.</span>
+        <div className="flex-1">
+          {lines.map((line, i) => (
+            <div key={i} className="soal-baris">
+              <span className="soal-baris__teks" lang="ja"><TextWithNewlines text={line} inline /></span>
+              <div className="soal-baris__input-wrapper flex flex-col gap-1">
+                <input 
+                  type="text" 
+                  className="book-input text-sm text-ink-soft" 
+                  placeholder="Catatan Romaji / arti tiap kata..." 
+                  value={answers[`${mkey}-line-${i}-romaji`] || ''}
+                  onChange={(e) => setAnswer(`${mkey}-line-${i}-romaji`, e.target.value)}
+                />
+                <input 
+                  type="text" 
+                  className="book-input" 
+                  placeholder="Terjemahan utuh baris ini..." 
+                  value={answers[`${mkey}-line-${i}`] || ''}
+                  onChange={(e) => setAnswer(`${mkey}-line-${i}`, e.target.value)}
+                />
+              </div>
+            </div>
+          ))}
+          {instruksi && <p className="text-sm italic text-ink-soft mb-2">{instruksi}</p>}
+          {audio && <div className="mb-2"><AudioBar src={audio} label={`Dengarkan soal ${no}`} /></div>}
+          
+          {pilihan && pilihan.length > 0 && (
+            <ul className="mt-1 ml-4 mb-2 list-disc text-sm">
+              {pilihan.map((p, i) => (
+                <li key={i} lang="ja">{p}</li>
+              ))}
+            </ul>
+          )}
+
+          {kunciTersedia !== false && jawaban && (
+            <div className="mt-2 p-3 bg-paper-light border rounded-lg shadow-sm">
+              <label className="text-xs uppercase font-bold text-ink-faint tracking-wider mb-1 block">
+                Jawaban Soal
+              </label>
+              <input 
+                type="text"
+                className="book-input font-bold"
+                placeholder="Jawaban (mis. 1) ①...)"
+                value={answers[mkey] || ''}
+                onChange={(e) => setAnswer(mkey, e.target.value)}
+              />
+              {lvl && (
+                <div className={`mt-1 text-sm ${
+                  lvl === 'tepat' ? 'text-selesai' : lvl === 'dekat' ? 'text-accent' : 'text-salah'
+                }`}>
+                  {lvl === 'tepat' ? 'Benar!' : lvl === 'dekat' ? 'Hampir tepat (typo?)' : 'Kurang tepat'}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="mt-2">
+            <label className="text-xs uppercase font-bold text-ink-faint tracking-wider mb-1 block">
+              Arti Keseluruhan
+            </label>
+            <input 
+              type="text"
+              className="book-input"
+              placeholder="Arti dari semua kalimat di atas..."
+              value={answers[artiKunci] || ''}
+              onChange={(e) => setAnswer(artiKunci, e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

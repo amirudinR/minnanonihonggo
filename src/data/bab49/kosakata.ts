@@ -1,0 +1,146 @@
+import type { KosaKata } from '@/types/bab'
+
+// Kosakata Bab 49 — sumber: PDF Indonesia, "Pelajaran 49 · I. Kosa Kata" (idx 167–168).
+// Kolom kana = bacaan, kolom kanji = bentuk kanji ('-' bila buku tidak mencantumkan kanji).
+// Bab 49 adalah bab tata bahasa (敬語/尊敬語) sehingga daftar kosakatanya pendek.
+// Catatan: buku tidak mencetak romaji. `romaji` di sini transliterasi aplikasi
+// (disembunyikan default, tampil lewat toggle "Romaji").
+export const kosakata: KosaKata[] = [
+  {
+    id: 'k49-01',
+    kana: 'りょうしますⅢ',
+    kanji: '利用します',
+    romaji: 'riyōshimasu III',
+    arti: 'menggunakan',
+  },
+  {
+    id: 'k49-02',
+    kana: 'つどめますⅡ［かいしゃに～］',
+    kanji: '勤めます［会社に～］',
+    romaji: 'tsudome masu II [kaishani ~]',
+    arti: 'bekerja [di perusahaan]',
+  },
+  {
+    id: 'k49-03',
+    kana: 'かけますⅡ［いすに～］',
+    kanji: '掛けます',
+    romaji: 'kakemasu II [isuni ~]',
+    arti: 'duduk (di kursi)',
+  },
+  {
+    id: 'k49-04',
+    kana: 'すごしますⅠ',
+    kanji: '過ごします',
+    romaji: 'sugoshimasu I',
+    arti: 'menghabiskan, melewati',
+  },
+  {
+    id: 'k49-05',
+    kana: 'いらっしゃいますⅠ',
+    kanji: '-',
+    romaji: 'irasshaimasu I',
+    arti: 'ada, pergi, datang (Kata Hormat dari います, いきます, いただきます)',
+  },
+  {
+    id: 'k49-06',
+    kana: 'めしあがりますⅠ',
+    kanji: '召し上がります',
+    romaji: 'meshiagarimasu I',
+    arti: 'makan, minum (Kata Hormat dari たべます, のみます)',
+  },
+  {
+    id: 'k49-07',
+    kana: 'おっしゃいますⅠ',
+    kanji: '-',
+    romaji: 'osshaiimasu I',
+    arti: 'berkata (Kata Hormat dari いいます)',
+  },
+  {
+    id: 'k49-08',
+    kana: 'なさいますⅠ',
+    kanji: '-',
+    romaji: 'nasaimasu I',
+    arti: 'melakukan (Kata Hormat dari します)',
+  },
+  {
+    id: 'k49-09',
+    kana: 'ごらんになりますⅠ',
+    kanji: 'ご覧に なります',
+    romaji: 'goran ni narimasu I',
+    arti: 'melihat (Kata Hormat dari みます)',
+  },
+  {
+    id: 'k49-10',
+    kana: 'ご存じです',
+    kanji: 'ご存じです',
+    romaji: 'gozendesu',
+    arti: 'mengetahui (Kata Hormat dari しっています)',
+  },
+  {
+    id: 'k49-11',
+    kana: 'あいさつ',
+    kanji: '-',
+    romaji: 'aisatsu',
+    arti: 'salam (～を します: memberi salam kepada)',
+  },
+  { id: 'k49-12', kana: 'りょかん', kanji: '旅館', romaji: 'ryokan', arti: 'penginapan' },
+  { id: 'k49-13', kana: 'バスてい', kanji: 'バス停', romaji: 'basutei', arti: 'halte' },
+  {
+    id: 'k49-14',
+    kana: 'おくさま',
+    kanji: '奥様',
+    romaji: 'okusama',
+    arti: 'Nyonya (Kata Hormat terhadap istri orang lain)',
+  },
+  {
+    id: 'k49-15',
+    kana: '～さま',
+    kanji: '～様',
+    romaji: '~ sama',
+    arti: 'Kepada Yth. ～, Bapak ～, Ibu ～, Sdr. ～ (Kata Hormat)',
+  },
+  { id: 'k49-16', kana: 'たまに', kanji: '-', romaji: 'tamani', arti: 'kadang-kadang' },
+  {
+    id: 'k49-17',
+    kana: 'どなたでも',
+    kanji: '-',
+    romaji: 'donatemohodo',
+    arti: 'siapa saja (Kata Hormat)',
+  },
+  { id: 'k49-18', kana: '～といいます', kanji: '-', romaji: '~ to iimasu', arti: 'bermana ～' },
+  {
+    id: 'k49-19',
+    kana: '一年一組',
+    kanji: '一年一組',
+    romaji: 'ichinen ichiku',
+    arti: 'kelas 一',
+  },
+  {
+    id: 'k49-20',
+    kana: '出しますⅠ［熱を～］',
+    kanji: '出ますⅠ［熱を～］',
+    romaji: 'dashimasu I [netsu o ~]',
+    arti: 'menjadi [demam]',
+  },
+  {
+    id: 'k49-21',
+    kana: 'よろしく お伝え ください。',
+    kanji: '-',
+    romaji: 'yoroshiku otsutensai kudasai',
+    arti: 'Tolong sampaikan salam saya.',
+  },
+  {
+    id: 'k49-22',
+    kana: '失礼いたします。',
+    kanji: '-',
+    romaji: 'shitsurei itashimasu',
+    arti: 'Permisi. (Kata Merendahkan Diri dari しれいします)',
+  },
+  {
+    id: 'k49-23',
+    kana: 'ひまわりしょうがっこう',
+    kanji: 'ひまわり小学校',
+    romaji: 'himawari shōgakkō',
+    arti: 'SD fiksi',
+  },
+]

@@ -3,13 +3,28 @@
 Panduan untuk menambah Bab 2–25 **tanpa mengulang kesalahan audit**.
 
 ## 1. Offset halaman
-`PDF index = halaman cetak + 21`
+`PDF index = halaman cetak + 21` (Honsatsu) · Indonesia `= cetak + 20`
 
-| Bab | PDF idx awal | hal. cetak awal |
+**Jangan pakai rumus `8N−2`** — bab 6, 13, 19, 22 masing-masing 10 halaman.
+Sumber kebenaran: ToC Honsatsu (`tmp/tocmnn1/`).
+
+| Bab | PDF idx (Honsatsu) | hal. cetak |
 |---|---|---|
-| 1 | idx 27 | cetak 6 |
-| 2 | idx 35 | cetak 14 |
-| n | cetak_start(n) + 21 | (lihat Daftar Isi PDF) |
+| 1 | 27–34 | 6–13 |
+| 6 | 67–76 | 46–55 |
+| 7 | 77–84 | 56–63 |
+| 13 | 125–134 | 104–113 |
+| 18 | 167–174 | 146–153 |
+| 19 | 175–184 | 154–163 |
+| 20 | 185–192 | 164–171 |
+| 21 | 193–200 | 172–179 |
+| 22 | 201–210 | 180–189 |
+| 23 | 211–218 | 190–197 |
+| 24 | 219–226 | 198–205 |
+| 25 | 227–234 | 206–213 |
+
+Indonesia: Pelajaran N mulai cetak `6N+4` → idx `6N+24` (mis. bab19 → idx 138, bab25 → idx 174).
+MNN2: Honsatsu `cetak + 18`, Indonesia `cetak + 21`.
 
 ## 2. Struktur konten
 - Kosakata: `kana`, `kanji?`, `arti`, `catatan?`, `contoh?`. **Tidak ada romaji di buku** — kolom romaji disembunyikan default & jika dibutuhkan isi *generated* + badge "transliterasi app".

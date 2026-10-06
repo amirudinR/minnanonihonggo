@@ -37,9 +37,14 @@ Lokasi: `D:\A_bahasa_jepang\MINNA NO NIHONGO\Minna No Nihongo 1`
 
 ### Offset halaman (penting)
 ```
-PDF index = halaman cetak + 21
-Bab 1 = cetak 6–13 = PDF idx 27–34
-Bab 2 = cetak 14 → idx 35
+Honsatsu: PDF idx = cetak + 21.  Bab mulai cetak (ToC, sumber kebenaran):
+b1 6, b2 14, b3 22, b4 30, b5 38, b6 46(10hlm), b7 56, b8 64, b9 72, b10 80,
+b11 88, b12 96, b13 104(10hlm), b14 114, b15 122, b16 130, b17 138, b18 146,
+b19 154(10hlm), b20 164, b21 172, b22 180(10hlm), b23 190, b24 198, b25 206
+Indonesia: idx = cetak + 20; Pelajaran N mulai cetak 6N+4 → idx 6N+24.
+MNN2: Honsatsu idx = cetak + 18; Indonesia idx = cetak + 21 (bab42: 136→154, 108→129).
+JANGAN pakai rumus 8N−2 untuk awal bab — meleset +2/+4/+6/+8 (bab 6/13/19/22 = 10 hal).
+Bab 1 = cetak 6–13 = PDF idx 27–34 (idx 27).
 ```
 
 ### Audio — invariant
@@ -296,3 +301,46 @@ Lihat `docs/BAB-TEMPLATE.md`. Ringkas:
 
 **Verifikasi:** typecheck ✅ build ✅ (CSS 33.23 kB) validate ✅ (Bab 1: 0 error 0 warning) · DOM render dicek via Chrome headless (tidak ada error boundary / loop) · screenshot desktop 1200px + mobile 390px OK.
 
+---
+
+## 14. Sesi "lengkapi MNN2" (Bab 26–50 → 25/25 SELESAI)
+
+**Tujuan:** melengkapi data MNN2 yang tersisa sampai semua 50 bab tuntas.
+
+**Yang dikerjakan:**
+- **bab28** — dibuat `index.ts`, `kaiwa.ts`, `renshuu.ts`, `mondai.ts` (3→7 file). Perbaiki artefak OCR di `kosakata.ts` (「salon concoctik」→「salon kecantikan」, 「solanya」→「sebenarnya」, 土 romaji) dan `reibun.ts` (arti yang kacau: 「conscientious, menarik, dan reprinted」→「antusias, menarik, dan berpengalaman」, dll.).
+- **bab37, bab41, bab46, bab50** — dibuat dari nol (7 file/bab): kosakata, bunpou + catatanTataBahasa, reibun, kaiwa, renshuuA/B/C, mondai.
+- Sumber: render visual Honsatsu (`tmp/babNNjp/`) + PDF Indonesia (`tmp/babNNid*/`, offset `idx = cetak + 21`). Transkripsi kana/kanji **diverifikasi visual**, bukan OCR (stlh §13 AGENTS.md).
+
+**Catatan edisi (penting):** untuk bab37 & bab41, 「Percakapan」 PDF Indonesia memakai dialog yang **BERBEDA** dari Honsatsu (bab37: ID「金閣寺」 vs JP「海を埋め立てて造られました」; bab41: ID「Selamat Menempuh Hidup Baru」 vs JP「荷物を 預かって いただけませんか」). Karena arti wajib 1:1 & tidak boleh dikarang, `kaiwa.dialog` mengikuti **Honsatsu** (= urutan audio), `arti` = terjemahan setia teks Honsatsu, diberi komentar `CATATAN EDISI` di file.
+
+**Verifikasi akhir:**
+```
+validate  → 50 bab · 0 error · 0 warning ✅
+typecheck → tsc --noEmit ✅
+build     → ✓ built in 8.17s ✅ (warning chunk >500kB, pre-existing)
+progress  → bab26..bab50 semua 7/7 OK ✅
+screenshot→ bab/50 desktop 1200px + bab/37 mobile 390px ✅ (hero, tabel, furigana, TOC OK)
+```
+
+**Status:** MNN1 (bab1–25) + MNN2 (bab26–50) = **50/50 bab lengkap**.
+
+## 15. Sesi audit fidelity data MNN2 (deep audit sebelum upload)
+
+**Tujuan:** memastikan data bab 26–50 benar-benar sesuai PDF, bukan sekadar lolos validator.
+
+**Temuan (semua diperbaiki):**
+- **Menyalin `arti` menurut indeks antar edisi = bug sistematis.** Terverifikasi visual: PDF Indonesia dan Honsatsu TIDAK memakai set Contoh Kalimat/Percakapan yang sama (lihat AGENTS.md #14). Yang rusak: bab28 reibun (6 butir) + kaiwa (5 giliran tertukar), bab46 reibun (3), bab41 reibun (2), bab37 reibun (3). Semua kini memakai terjemahan setia dari JP + header `CATATAN EDISI`.
+- **Transkripsi JP salah** (ketemu lewat zoom `dpi=400`, render `dpi=100` cuma 656px dan tidak terbaca): bab28 bunpou `遠い` → harus `速い` (ID: "cepat dan murah"); bab28 kaiwa tokoh `小川佐和子` → `小川幸子`; bab41 reibun `お血` → `お皿`; bab37 kaiwa `大阪から` → `大阪駅から`.
+- **`arti` placeholder**: bab37 reibun (`（Pola: penemuan）`), bab50 reibun (2× `(Pola: …)`), dan bab50 kaiwa giliran 12 yang tidak sesuai JP.
+- **12 furigana dengan `base` tidak ada di teks** → tidak pernah dirender karena `Ruby` memakai `teks.split(base)`. Diperbaiki; validator sekarang mendeteksinya sendiri (AGENTS.md #15).
+- **Verifikasi positif:** kosakata bab28 (54 entri) serta reibun bab46 & bab50 cocok 100% dengan PDF. Dugaan `訳` (bukan `詫`) pada `申し訳` **ditolak** — memang begitu cetakannya.
+
+**Verifikasi akhir:**
+```
+validate  → 50 bab · 0 error · 0 warning ✅
+typecheck → tsc --noEmit ✅
+build     → ✓ built in 6.59s ✅ (warning chunk >500kB, pre-existing)
+```
+
+**Belum diaudit tuntas:** kunci `jawaban` renshuu A/B/C + mondai (PDF tidak menyediakan kunci → jawaban itu milik app), `penjelasan`/`contoh` bunpou dari section "IV. Keterangan Tata Bahasa", serta baseline "kanji tanpa furigana" 103 temuan (§16 — sebagian besar memang sesuai cetakan buku).

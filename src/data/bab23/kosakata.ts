@@ -1,0 +1,33 @@
+import type { KosaKata } from '@/types/bab'
+
+// Sumber: PDF Indonesia "Pelajaran 23 — I. Kosa Kata" (idx 162-163).
+export const kosakata: KosaKata[] = [
+  { id: 'k23-01', kana: 'ききます', kanji: '聞きます', romaji: 'kikimasu', arti: 'bertanya', catatan: '［先生に～］ bertanya [kepada guru]' },
+  { id: 'k23-02', kana: 'まわします', kanji: '回します', romaji: 'mawashimasu', arti: 'memutar' },
+  { id: 'k23-03', kana: 'ひきます', kanji: '引きます', romaji: 'hikimasu', arti: 'tarik' },
+  { id: 'k23-04', kana: 'かえます', kanji: '変えます', romaji: 'kaemasu', arti: 'mengubah' },
+  { id: 'k23-05', kana: 'さわります', kanji: '触ります', romaji: 'sawarimasu', arti: 'menyentuh', catatan: '［ドアに～］ menyentuh [pintu]' },
+  { id: 'k23-06', kana: 'でます', kanji: '出ます', romaji: 'demasu', arti: 'keluar', catatan: '［お釣りが～］ keluar [uang kembalian]' },
+  { id: 'k23-07', kana: 'あるきます', kanji: '歩きます', romaji: 'arukimasu', arti: 'berjalan kaki' },
+  { id: 'k23-08', kana: 'わたります', kanji: '渡ります', romaji: 'watarimasu', arti: 'menyeberang', catatan: '［橋を～］ menyeberang [jembatan]' },
+  { id: 'k23-09', kana: 'まがります', kanji: '曲がります', romaji: 'magarimasu', arti: 'belok', catatan: '［右へ～］ belok [ke kanan]' },
+  { id: 'k23-10', kana: 'さびしい', kanji: '寂しい', romaji: 'sabishii', arti: 'sepi' },
+  { id: 'k23-11', kana: 'おゆ', kanji: '[お]湯', romaji: 'oyu', arti: 'air panas' },
+  { id: 'k23-12', kana: 'おと', kanji: '音', romaji: 'oto', arti: 'bunyi, suara' },
+  { id: 'k23-13', kana: 'サイズ', romaji: 'saizu', arti: 'ukuran' },
+  { id: 'k23-14', kana: 'こしょう', kanji: '故障', romaji: 'koshō', arti: 'kerusakan', catatan: '［～します： rusak］' },
+  { id: 'k23-15', kana: 'みち', kanji: '道', romaji: 'michi', arti: 'jalan' },
+  { id: 'k23-16', kana: 'こうさてん', kanji: '交差点', romaji: 'kōsaten', arti: 'perempatan' },
+  { id: 'k23-17', kana: 'しんごう', kanji: '信号', romaji: 'shingō', arti: 'lampu lalu lintas' },
+  { id: 'k23-18', kana: 'かど', kanji: '角', romaji: 'kado', arti: 'sudut' },
+  { id: 'k23-19', kana: 'はし', kanji: '橋', romaji: 'hashi', arti: 'jembatan' },
+  { id: 'k23-20', kana: 'ちゅうしゃじょう', kanji: '駐車場', romaji: 'chūshajō', arti: 'tempat parkir' },
+  { id: 'k23-21', kana: 'たてもの', kanji: '建物', romaji: 'tatemono', arti: 'gedung' },
+  { id: 'k23-22', kana: 'なんかいも', kanji: '何回も', romaji: 'nankaimo', arti: 'berkali-kali' },
+  { id: 'k23-23', kana: 'ーめ', kanji: 'ー目', romaji: '-me', arti: 'yang ke — (mengungkapkan urutan)' },
+  { id: 'k23-24', kana: 'しょうとくたいし', kanji: '聖徳太子', romaji: 'Shōtoku Taishi', arti: 'Pangeran Shotoku (574-622)' },
+  { id: 'k23-25', kana: 'ほうりゅうじ', kanji: '法隆寺', romaji: 'Hōryūji', arti: 'nama wihara yang dibangun oleh Pangeran Shotoku pada awal abad ke tujuh di Nara' },
+  { id: 'k23-26', kana: 'げんきちゃ', kanji: '元気茶', romaji: 'Genki-cha', arti: 'teh fiksi' },
+  { id: 'k23-27', kana: 'ほんだえき', kanji: '本田駅', romaji: 'Honda-eki', arti: 'stasiun fiksi' },
+  { id: 'k23-28', kana: 'としょかんまえ', kanji: '図書館前', romaji: 'Toshokanmae', arti: 'halte bus fiksi' },
+]

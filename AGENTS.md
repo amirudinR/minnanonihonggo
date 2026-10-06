@@ -5,13 +5,13 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi polish UI (motion.css sentralisasi, Bab 2, Bab 3–25 sedang diisi, MNN2 direncanakan).
+> Terakhir diperbarui: sesi lengkapi MNN2 — Bab 1–50 sekarang LENGKAP (50/50 bab).
 
 ---
 
 ## 0. Konteks proyek (ringkas)
 
-Aplikasi belajar **Minna no Nihongo 1 (Bab 1–25)**, offline, bergaya buku catatan kertas. MNN2 (Bab 26–50) akan menyusul dengan skema sama.
+Aplikasi belajar **Minna no Nihongo 1 (Bab 1–25)**, offline, bergaya buku catatan kertas. MNN2 (Bab 26–50) memakai skema sama dan **sudah lengkap** (50/50 bab).
 Stack: **React 19 + TypeScript + Vite 6 + Tailwind CSS v4 (`@tailwindcss/vite`) + react-router v7 + Zustand**. Data per bab di `src/data/babNN/` (registry otomatis via `import.meta.glob`).
 
 Perintah:
@@ -111,6 +111,24 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **WAJIB baca visual** hasil `python tools/render_pdf.py <pdf> <out> <prefix> <start> <end>` (default 1800px grayscale quality 85, kana/kanji terbaca). Jangan pernah pakai OCR untuk PDF MNN.
 - Render JANGAN turunkan width < 1500 atau kana/kanji pecah jadi tidak terbaca.
 - Batas memo: baca **maksimal 6 gambar per pesan** (>32MB total akan men-*crash* agent).
+- **`render_pdf.py` pakai `dpi=100` → hasil hanya ~656px dan kanji TIDAK terbaca** untuk PDF MNN2. Untukaudit butir yang samar, render sendiri dengan `fitz ... dpi=400` lalu crop pakai `tools/crop_zoom.py`.
+
+### #14 — EDISI Indonesia ≠ EDISI Honsatsu (MNN2) 🔴
+- **Jangan pernah menyalin `arti` menurut indeks.** Untuk Bab 28, 37, 41, 46 (dan kemungkinan bab lain) PDF Indonesia memakai *Contoh Kalimat*/*Percakapan* yang **beda isi** dari Honsatsu, walau nomor urut sama.
+- Bukti (terverifikasi visual):
+  - Bab 28: ID butir 2 = "belajar sambil mendengarkan musik" (JP: テレビ), ID 6 = "restoran sushi" (JP: 田中 旅行), ID 7 = "Universitas Fuji" (JP: さくら大学 = **Sakura**).
+  - Bab 28 percakapan: ID 15 baris (punya "Homestay? Bagus."), Honsatsu 8 giliran. Sama persis hanya giliran 1, 2, 8.
+  - Bab 37 percakapan: Honsatsu = Bandara Kansai; ID = 「金閣寺」. Total beda.
+  - Bab 41 butir 5, Bab 46 butir 1b & 6: beda.
+- Aturan main: `arti` harus **1:1 dari PDF Indonesia**. Kalau kalimat JP tidak ada di edisi Indonesia → tulis **terjemahan setia** dari JP + beri komentar `CATATAN EDISI` di header file.Jangan mengarang.
+
+### #15 — Furigana hanya jalan kalau `base` ada LITERAL di teks 🔴
+- `BabDetailPage.tsx` → `Ruby` memakai `teks.split(f.base)`. Jadi furigana yang tidak cocok persis **diam-diam tidak dirender**.
+- Contoh bug nyata yang ketemu: `base: '申訳'` pada teks `申し訳` (jarak kana di tengah) → 申/訳 tanpa furigana; `base: '使方'` pada `使い方`; `base: '書方'` pada `書き方`; `建物` pada teks yang cuma `ビル`; `分/じ` untuk `時`; base sisa (`付`, `知`, `渡`, `今日`, `今年`, `間違`) untuk kalimat yang kana saja.
+- `src/core/validation/schema.ts` **sudah** mendeteksi "furigana base tidak ada di teks" (base milik `pembicara` dikecualikan karena memang tak pernah dirender). Jalankan `npm run validate` dan **Jangan abaikan** warning baru ini.
+
+### #16 — Kanji tanpa furigana BUKAN otomatis bug 🟡
+- Buku MNN sengaja tidak memberi furigana pada kanji yang dianggap sudah dikuasai. Karena itu cek "kanji tanpa furigana" hanya jalan bila `VALIDASI_STRICT=1` (PowerShell: `$env:VALIDASI_STRICT=1; npm run validate`). Angka baseline: **103 temuan**, mayoritas sesuai cetakan buku.
 
 ---
 
@@ -218,6 +236,6 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 - **`paper.css` tidak boleh berisi `transition:`** lagi (sudah dipindah); cek sebelum menambahkan rule agar tak ada dead code.
 - **Inter & Caveat adalah variable font** → satu `@font-face` per family dengan `font-weight: 100 900` (Inter) / `400 700` (Caveat), format `woff2-variations`. Jangan buat 4 deklarasi (pernah bikin dead code).
 - **Emoji verdict/terj hasil dihapus** oleh agent lain; pertahankan stripped kecuali user minta dikembalikan.
-- **Offset halaman terverifikasi** (jangan ganti rumus tanpa bukti): Honsatsu idx = printed + 21, printed start Bab N = 8N−2 → idx start = 8N+19. Indonesia idx = printed + 20, printed start Pelajaran N = 6N+4 → idx start = 6N+24.
+- **Offset halaman terverifikasi** (jangan ganti rumus tanpa bukti): Honsatsu `idx = printed + 21`, Indonesia `idx = printed + 20`, printed start Pelajaran N = 6N+4. **`printed start Bab N = 8N-2` SALAH** — bab 6, 13, 19, 22 masing-masing 10 halaman (bukan 8), sehingga rumus lama meleset +2/+4/+6/+8 untuk bab setelahnya. Peta yang BENAR (printed → idx Honsatsu): b6 46–55→67–76, b13 104–113→125–134, b19 154–163→175–184, b22 180–189→201–210. Batas lain: b1 6–13→27–34, b18 146–153→167–174, b20 164–171→185–192, b21 172–179→193–200, b23 190–197→211–218, b24 198–205→219–226, b25 206–213→227–234. **Sumber kebenaran: ToC Honsatsu** (render `tmp/tocmnn1/`).
 - Bab 2 data lengkap (kosakata, bunpou, reibun, kaiwa, renshuu A/B/C, mondai) sudah ada di `src/data/bab02/` — jadi template kualitas untuk bab lain.
 - GitHub `main` berisi: cb5789e (initial), 7f708b3 (AGENTS.md + polish mobile), 962b555 (Bab 2), a7b95d3 (motion.css).

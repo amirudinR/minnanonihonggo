@@ -53,6 +53,8 @@ body {
 .book {
   position: relative;
   background-color: var(--color-paper-light);
+  background-image: repeating-linear-gradient(transparent, transparent 35px, rgba(59, 53, 46, 0.06) 35px, rgba(59, 53, 46, 0.06) 36px);
+  background-attachment: local;
   border: 1px solid rgba(67, 56, 43, 0.16);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-paper);
@@ -724,4 +726,90 @@ table.vokab tbody tr:hover { background: rgba(138,90,43,0.06); }
 @media (max-width: 640px) {
   .kuis__opsi { grid-template-columns: 1fr; }
   .flash__aksi .chip { flex: 1 1 calc(50% - 4px); }
+}
+
+
+/* ============ Premium UI Overhauls ============ */
+.book-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(59, 53, 46, 0.15);
+  background: transparent;
+  padding: 4px 0;
+  font-family: var(--font-hand);
+  font-size: 16px;
+  color: var(--color-ink);
+  outline: none;
+  box-shadow: none;
+}
+.book-input:focus {
+  border-bottom-color: var(--color-accent);
+  background: var(--color-wash);
+}
+.book-input::placeholder {
+  color: var(--color-ink-faint);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* Section Specific Layouts */
+.section--kosakata > div {
+  background: var(--color-paper-light);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.section--bunpou > div, .section--catatan > div {
+  background: var(--color-wash);
+  border-left: 3px solid var(--color-accent);
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  font-family: var(--font-display);
+}
+
+.section--reibun > div {
+  padding: 16px 20px;
+  background: linear-gradient(to right, transparent, var(--color-paper-light) 5%);
+  border-left: 2px dashed var(--color-accent-deep);
+}
+
+.section--kaiwa > div {
+  font-family: var(--font-display);
+  background: var(--color-surface-dim);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.section--renshuu > div {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: 8px;
+}
+
+.section--mondai > div {
+  background: var(--color-paper-light);
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-soft);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Interaktif Soal (Mondai/Renshuu conversation format) */
+.soal-baris {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+.soal-baris__teks {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+.soal-baris__input-wrapper {
+  padding-left: 16px;
+  border-left: 2px solid var(--color-wash);
 }

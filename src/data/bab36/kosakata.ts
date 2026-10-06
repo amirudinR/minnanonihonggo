@@ -1,0 +1,55 @@
+import type { KosaKata } from '@/types/bab'
+
+// Kosakata Bab 36 — sumber: PDF Indonesia, "Pelajaran 36 · I. Kosa Kata" (idx 89-90 / cetak 68-69).
+// Kolom kana = bacaan, kolom kanji = bentuk kanji ('-' bila buku tidak mencantumkan kanji).
+// Catatan: buku tidak mencetak romaji. `romaji` di sini transliterasi aplikasi
+// (disembunyikan default, tampil lewat toggle "Romaji").
+// Catatan layout: untuk baris pola 「［じこに～］／［事故に～］」 buku menaruh arti pada baris
+// kata kerjanya (satu arti menutupi dua baris), jadi arti diulang pada keduanya.
+export const kosakata: KosaKata[] = [
+  { id: 'k36-01', kana: 'おいますⅠ', romaji: 'oimasu I', arti: 'tertimpa [kecelekaan]', catatan: 'Buku mencantumkan pola 「［じこに～］／［事故に～］」 tepat di bawah entri ini (lihat k36-02).' },
+  { id: 'k36-02', kana: '［じこに～］', kanji: '［事故に～］', romaji: '［jiko ni ~］', arti: 'tertimpa [kecelekaan]', furigana: [{ base: '事故', ruby: 'じこ' }], catatan: 'Pola yang menyertai kata kerja k36-01. 事故（じこ）= kecelakaan.' },
+  { id: 'k36-03', kana: 'ちょきんしますⅢ', kanji: '貯金します', romaji: 'chokinshimasu III', arti: 'menabung', furigana: [{ base: '貯金', ruby: 'ちょきん' }] },
+  { id: 'k36-04', kana: 'すきますⅡ', kanji: '過ぎます', romaji: 'sukimasu II', arti: 'lewat [pukul tujuh]', furigana: [{ base: '過', ruby: 'す' }] },
+  { id: 'k36-05', kana: '［7じを～］', kanji: '［7時を～］', romaji: '［7ji o ~］', arti: 'lewat [pukul tujuh]', furigana: [{ base: '時', ruby: 'じ' }] },
+  { id: 'k36-06', kana: 'なれますⅡ', kanji: '慣れます', romaji: 'naremasu II', arti: 'terbiasa [dengan tugas]', furigana: [{ base: '慣', ruby: 'な' }] },
+  { id: 'k36-07', kana: '［しことに～］', kanji: '［仕事に～］', romaji: '［shigoto ni ~］', arti: 'terbiasa [dengan tugas]', furigana: [{ base: '仕事', ruby: 'しごと' }] },
+  { id: 'k36-08', kana: 'くさりますⅠ', kanji: '腐ります', romaji: 'kusarimasu I', arti: '[makanan] busuk', furigana: [{ base: '腐', ruby: 'くさ' }] },
+  { id: 'k36-09', kana: '［たべものが～］', kanji: '［食べ物が～］', romaji: '［tabemono ga ~］', arti: '[makanan] busuk', furigana: [{ base: '食べ物', ruby: 'たべもの' }] },
+  { id: 'k36-10', kana: 'けんどう', kanji: '剣道', romaji: 'kendō', arti: 'kendo (anggar gaya Jepang)', furigana: [{ base: '剣道', ruby: 'けんどう' }] },
+  { id: 'k36-11', kana: 'じゅうどう', kanji: '柔道', romaji: 'jūdō', arti: 'judo', furigana: [{ base: '柔道', ruby: 'じゅうどう' }] },
+  { id: 'k36-12', kana: 'ラッシュ', romaji: 'rashshu', arti: 'keramaian, kesibukan' },
+  { id: 'k36-13', kana: 'うちゅう', kanji: '宇宙', romaji: 'uchū', arti: 'angkasa', furigana: [{ base: '宇宙', ruby: 'うちゅう' }] },
+  { id: 'k36-14', kana: 'きょく', kanji: '曲', romaji: 'kyoku', arti: 'musik', furigana: [{ base: '曲', ruby: 'きょく' }] },
+  { id: 'k36-15', kana: 'まいしゅう', kanji: '毎週', romaji: 'maishū', arti: 'setiap minggu', furigana: [{ base: '毎週', ruby: 'まいしゅう' }] },
+  { id: 'k36-16', kana: 'まいつき*', kanji: '毎月', romaji: 'maitsuki', arti: 'setiap bulan', furigana: [{ base: '毎月', ruby: 'まいつき' }] },
+  { id: 'k36-17', kana: 'まいとし', kanji: '毎年', romaji: 'maitoshi', arti: 'setiap tahun', furigana: [{ base: '毎年', ruby: 'まいとし' }] },
+  { id: 'k36-18', kana: '（まいねん）', romaji: '(mainen)', arti: 'setiap tahun', catatan: 'Varian bacaan dari 毎年. Buku tidak memisahkan arti karena sama.' },
+  { id: 'k36-19', kana: 'このころ', romaji: 'kono koro', arti: 'akhir-akhir ini' },
+  { id: 'k36-20', kana: 'やっと', romaji: 'yatto', arti: 'akhirnya' },
+  { id: 'k36-21', kana: 'かなり', romaji: 'kanari', arti: 'cukup' },
+  { id: 'k36-22', kana: 'かならず', kanji: '必ず', romaji: 'kanazu', arti: 'pasti', furigana: [{ base: '必', ruby: 'かなら' }] },
+  { id: 'k36-23', kana: 'ぜったいに', kanji: '絶対に', romaji: 'zettai ni', arti: 'mutlak', furigana: [{ base: '絶対', ruby: 'ぜったい' }] },
+  { id: 'k36-24', kana: 'じょうずに', kanji: '上手に', romaji: 'jōzuni', arti: 'dengan pandai', furigana: [{ base: '上手', ruby: 'じょうず' }] },
+  { id: 'k36-25', kana: 'できるだけ', romaji: 'dekiru dake', arti: 'sedapat mungkin' },
+  { id: 'k36-26', kana: 'ほとんど', romaji: 'hotondo', arti: 'sebagian besar' },
+  { id: 'k36-27', kana: '※ショパン', romaji: 'Shopan', arti: 'Chopin, musisi Polandia (1810-1849)', kategori: 'fiksi', catatan: 'Toko nyata (Chopin), dicantumkan sebagai catatan kaki bab ini.' },
+  { id: 'k36-28', kana: 'おきゃく さま', kanji: 'お客様', romaji: 'okyakusama', arti: 'tamu (kata hormat dari おきゃくさん)', furigana: [{ base: '客', ruby: 'きゃく' }, { base: '様', ruby: 'さま' }], kategori: 'sapaan', catatan: 'Hormat untuk 「おきゃくさん」. Ditandai bintang (＊) di buku sebagai kata baru.' },
+  { id: 'k36-29', kana: 'とくべつ［な］', kanji: '特別［な］', romaji: 'tokubetsu [na]', arti: 'khusus, spesial', furigana: [{ base: '特別', ruby: 'とくべつ' }] },
+  { id: 'k36-30', kana: 'して いらっしゃいます', romaji: 'shite irasshaimasu', arti: 'melakukan (kata hormat dari しています)', kategori: 'sapaan' },
+  { id: 'k36-31', kana: 'すいえい', kanji: '水泳', romaji: 'suiei', arti: 'renang', furigana: [{ base: '水泳', ruby: 'すいえい' }] },
+  { id: 'k36-32', kana: 'ちがいますⅠ', romaji: 'chigaimasu I', arti: 'salah, tidak benar' },
+  { id: 'k36-33', kana: 'つかって いらっしゃるんですね', romaji: 'tsukatte irasshaimasu ne', arti: 'menggunakan ～, ya. / memakai ～, ya. (kata hormat dari つかっているんですね)', kategori: 'sapaan' },
+  { id: 'k36-34', kana: 'チャレンジしますⅢ', romaji: 'charenjishimasu III', arti: 'menantang' },
+  { id: 'k36-35', kana: 'きもち', kanji: '気持ち', romaji: 'kimochi', arti: 'sikap', furigana: [{ base: '気持ち', ruby: 'きもち' }] },
+  { id: 'k36-36', kana: 'のりもの', kanji: '乗り物', romaji: 'norimono', arti: 'kendaraan', furigana: [{ base: '乗', ruby: 'の' }, { base: '物', ruby: 'もの' }] },
+  { id: 'k36-37', kana: 'いっせき', kanji: '一世紀', romaji: 'isseki', arti: 'abad ke —', furigana: [{ base: '世紀', ruby: 'せき' }] },
+  { id: 'k36-38', kana: 'とおく', romaji: 'tōku', arti: 'jauh' },
+  { id: 'k36-39', kana: 'いっせい', kanji: '一声', romaji: 'issei', arti: 'langka', furigana: [{ base: '声', ruby: 'せい' }], catatan: ' arti ditulis 「langka」 (jarang) pada buku ini.' },
+  { id: 'k36-40', kana: 'きしゃ', kanji: '汽車', romaji: 'kisha', arti: 'kereta api', furigana: [{ base: '汽車', ruby: 'きしゃ' }] },
+  { id: 'k36-41', kana: 'きせん', kanji: '汽船', romaji: 'kisen', arti: 'kapal api', furigana: [{ base: '汽船', ruby: 'きせん' }] },
+  { id: 'k36-42', kana: 'おおぜいの～', kanji: '大勢の～', romaji: 'ōzei no ~', arti: 'banyak ～', furigana: [{ base: '大勢', ruby: 'おおぜい' }] },
+  { id: 'k36-43', kana: 'はこびますⅠ', kanji: '運びますⅠ', romaji: 'hakobimasu I', arti: 'mengangkut', furigana: [{ base: '運', ruby: 'はこ' }] },
+  { id: 'k36-44', kana: 'りようしますⅢ', kanji: '利用しますⅢ', romaji: 'riyōshimasu III', arti: 'menggunakan', furigana: [{ base: '利用', ruby: 'りよう' }] },
+  { id: 'k36-45', kana: 'じゆうに', kanji: '自由に', romaji: 'jiyū ni', arti: 'dengan bebas', furigana: [{ base: '自由', ruby: 'じゆう' }] },
+]

@@ -33,10 +33,9 @@ if (!bab.no) errors.push('bab.no kosong')
       b.contoh?.forEach((c, i) => cekJp(`bunpou ${b.no} contoh[${i}]`, c))
     })
     bab.reibun.forEach((r) => {
-      cekJp(`reibun ${r.no} jp`, r.jp)
-      cekJp(`reibun ${r.no} kunci`, r.kunci)
+      cekJp(`reibun ${r.kalimat.slice(0, 10)}`, r.kalimat)
     })
-    bab.kaiwa?.dialog.forEach((d, i) => cekJp(`kaiwa dialog[${i}]`, d.jp))
+    bab.kaiwa?.dialog.forEach((d, i) => cekJp(`kaiwa dialog[${i}]`, d.teks))
     ;[...bab.renshuuA, ...bab.renshuuB, ...bab.renshuuC].forEach((r) => {
       cekJp(`renshuu ${r.no} soal`, r.soal)
       cekJp(`renshuu ${r.no} jawaban`, r.jawaban)
@@ -69,10 +68,44 @@ if (!bab.no) errors.push('bab.no kosong')
     }
   })
 
+  // Furigana: komponen Ruby (BabDetailPage) memakai `teks.split(base)`, jadi
+  // base yang TIDAK ada di teks diam-diam tidak dirender -> kanji tanpa furigana.
+  // `base tidak ada di teks` = bug transkripsi (selalu warning).
+  // `kanji tanpa furigana` = BUKAN bug: buku MNN sengaja tidak memberi furigana
+  // pada kanji yang sudah dianggap dikuasai, jadi hanya dicek bila VALIDASI_STRICT=1.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const envStrict = (globalThis as any)?.process?.env?.VALIDASI_STRICT === '1'
+
+const cekFurigana = (
+    label: string,
+    teks: string,
+    furigana?: { base: string; ruby: string }[],
+    namaPemicara?: string,
+  ) => {
+    if (!furigana?.length) return
+    const takDipakai = furigana.filter(
+      (f) =>
+        f.base &&
+        !teks.includes(f.base) &&
+        !(namaPemicara && namaPemicara.includes(f.base)),
+    )
+    if (takDipakai.length) {
+      const nama = [...new Set(takDipakai.map((f) => f.base))].join(', ')
+      warnings.push(`${label}: furigana base tidak ada di teks (${nama})`)
+    }
+    let sisa = teks
+    for (const f of furigana) if (f.base) sisa = sisa.split(f.base).join('\u0000')
+    const kanji = [...new Set(sisa.match(/[\u3005\u3006\u4e00-\u9faf]+/g) ?? [])]
+    if (kanji.length && envStrict) {
+      warnings.push(`${label}: kanji tanpa furigana (${kanji.join(' ')})`)
+    }
+  }
+
   // reibun
   bab.reibun.forEach((r, i) => {
     if (!r.kalimat?.trim()) errors.push(`reibun #${i + 1} tanpa kalimat`)
     if (!r.arti?.trim()) warnings.push(`reibun #${i + 1} tanpa arti`)
+    cekFurigana(`reibun #${i + 1}`, r.kalimat, r.furigana)
   })
 
   // kaiwa
@@ -83,6 +116,7 @@ if (!bab.no) errors.push('bab.no kosong')
       if (adaKanji && (!d.furigana || d.furigana.length === 0)) {
         warnings.push(`kaiwa baris ${d.no} mengandung kanji tanpa furigana`)
       }
+      cekFurigana(`kaiwa baris ${d.no}`, d.teks, d.furigana, d.pembicara)
     })
   } else {
     warnings.push('bab tanpa kaiwa')

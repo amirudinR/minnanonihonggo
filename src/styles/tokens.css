@@ -1,17 +1,18 @@
 @theme {
-  /* palette (jangan ubah nilainya tanpa cek kontras) */
-  --color-paper: #f5eddc;
-  --color-paper-light: #fdf6e3;
-  --color-ink: #43382b;
-  --color-ink-soft: #6b5d49;
-  --color-accent: #8a5a2b;
-  --color-margin-red: rgba(192, 57, 43, 0.45);
-  --color-rule: rgba(67, 56, 43, 0.1);
-  --color-selesai: #2f7d4f;
-  --color-salah: #b03030;
-  --color-ink-faint: #8b7c68;
-  --color-accent-deep: #70451f;
-  --color-wash: rgba(138, 90, 43, 0.07);
+  /* palette premium bookish */
+  --color-paper: #f8f6f0;
+  --color-paper-light: #ffffff;
+  --color-ink: #3b352e;
+  --color-ink-soft: #70685e;
+  --color-accent: #9a6534;
+  --color-margin-red: rgba(192, 57, 43, 0.35);
+  --color-rule: rgba(59, 53, 46, 0.08);
+  --color-selesai: #3b825b;
+  --color-salah: #b03a3a;
+  --color-ink-faint: #9c948a;
+  --color-accent-deep: #7a4f27;
+  --color-wash: rgba(154, 101, 52, 0.05);
+  --color-surface-dim: #f0eee6;
 
   /* fonts */
   --font-sans: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN",
@@ -21,7 +22,7 @@
   --font-title: "Kalam", "Caveat", "Segoe UI", system-ui, sans-serif;
 
   /* skala */
-  --radius-card: 10px;
-  --shadow-paper: 0 18px 42px rgba(67, 56, 43, 0.12);
-  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --radius-card: 6px;
+  --shadow-paper: 0 12px 30px rgba(59, 53, 46, 0.08);
+  --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.04);
 }

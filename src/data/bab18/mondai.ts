@@ -1,0 +1,11 @@
+import type { MondaiItem } from '@/types/bab'
+
+export const mondai: MondaiItem[] = [
+  { no: 1, jenis: 'mendengarkan', soal: 'Mondai 1 - Dengarkan pertanyaan lalu jawab (5 soal).', instruksi: 'Dengarkan pertanyaan lalu jawab.', audio: '/audio/bab18_mondai1.mp3', kunciTersedia: false },
+  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 - Dengarkan percakapan lalu tentukan benar (O) atau salah (X) (5 soal).', instruksi: 'Dengarkan percakapan lalu tentukan benar (O) atau salah (X).', audio: '/audio/bab18_mondai2.mp3', kunciTersedia: false },
+  { no: 3, jenis: 'jawaban_pendek', soal: '例：泳ぎます →（ 泳ぐ ）\n1) 弾きます →\n2) 話します →\n3) 持ちます →\n4) 遊びます →\n5) 飲みます →\n6) 入ります →\n7) 歌います →\n8) 集めます →\n9) 捨てます →\n10) 見ます →\n11) 浴びます →\n12) します →\n13) 運転します →\n14) （日本へ）来ます →\n15) 持って 来ます →', jawaban: '1) 弾く 2) 話す 3) 持つ 4) 遊ぶ 5) 飲む 6) 入る 7) 歌う 8) 集める 9) 捨てる 10) 見る 11) 浴びる 12) する 13) 運転する 14) くる 15) 持って くる', kunciTersedia: true },
+  { no: 4, jenis: 'jawaban_pendek', soal: '例：わたしは ピアノを（ 弾く ）ことが できます。\n[かきます / 換えます / 乗ります / 弾きます / 予約します]\n1) わたしは 自転車に（ ）ことが できません。\n2) 電話で 飛行機の チケットを（ ）ことが できます。\n3) 趣味は 絵を（ ）ことです。\n4) どこで お金を（ ）ことが できますか。', jawaban: '1) 乗る 2) 予約する 3) かく 4) 換える', kunciTersedia: true },
+  { no: 5, jenis: 'jawaban_pendek', soal: '例1：友達の うちへ（ 行きます → 行く まえに ）、電話を かけます。\n例2：仕事が（ 終わります → 終わってから ）、飲みに 行きます。\n1) 朝 うちで コーヒーを（ 飲みます → ）、会社へ 行きます。\n2) 料理を（ 始めます → ）、手を 洗います。\n3) 夜（ 寝ます → ）、日記を 書きます。\n4) 銀行で お金を（ 下ろします → ）、買い物に 行きました。', jawaban: '1) 飲んでから 2) 始める まえに 3) 寝る まえに 4) 下ろしてから', kunciTersedia: true },
+  { no: 6, jenis: 'jawaban_pendek', soal: '例：100メートル（ × ） 泳ぐ こと（ が ） できます。\n1) 車（ ） 運転（ ） できます。\n2) 漢字（ ） 50ぐらい 書く こと（ ） できます。\n3) 会議（ ） まえに、資料を コピーしなければ なりません。\n4) 2年（ ） まえに、大学を 出ました。', jawaban: '1) の, が 2) を, が 3) の 4) ×', kunciTersedia: true },
+  { no: 7, jenis: 'jawaban_pendek', soal: '子ども図書館\n本の 借り方\n・受付で カードを 作って ください。\n・受付へ 本を 持って 来て、カードを 見せて ください。\n・本は 2週間 借りる ことが できます。\n・辞書と 新聞と 新しい 雑誌は 借りる ことが できません。\n\nコピーが できます（1枚 10円）\n・図書館の 本を コピーする ことが できます。\n・コピーは 受付で しますから、本を 受付へ 持って 来て ください。\n\nきょうは 4月2日です。 テレーザちゃんが 質問します。 教えて ください。\n例：どうやって 本を 借りる ことが できますか。\n……まず カードを 作って ください。 それから 本と カードを 受付へ 持って 来て ください。\n1) きょう 本を 借ります。 いつまでに 返さなければ なりませんか。\n……\n2) 辞書を 借りる ことが できますか。……\n3) 本を 自分で コピーしても いいですか。……\n4) 4枚 コピーしました。 いくらですか。……', jawaban: '1) 4月16日までに 返さなければ なりません。 2) いいえ、できません。 3) いいえ、いけません。 4) 40円です。', kunciTersedia: true }
+]
