@@ -4,6 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Minna no Nihongo 1 — Belajar Bahasa Jepang</title>
+    <script>
+      // Anti-FOUC: terapkan tema sebelum React render (baca localStorage + preferensi OS).
+      (function () {
+        try {
+          var stored = localStorage.getItem('mnn1_theme_v1')
+          var mode = 'system'
+          if (stored) {
+            var parsed = JSON.parse(stored)
+            if (parsed && parsed.state && parsed.state.theme) mode = parsed.state.theme
+          }
+          var dark =
+            mode === 'dark' ||
+            (mode === 'system' &&
+              window.matchMedia &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+          var el = document.documentElement
+          el.dataset.theme = dark ? 'dark' : 'light'
+          el.style.colorScheme = dark ? 'dark' : 'light'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

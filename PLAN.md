@@ -344,3 +344,37 @@ build     → ✓ built in 6.59s ✅ (warning chunk >500kB, pre-existing)
 ```
 
 **Belum diaudit tuntas:** kunci `jawaban` renshuu A/B/C + mondai (PDF tidak menyediakan kunci → jawaban itu milik app), `penjelasan`/`contoh` bunpou dari section "IV. Keterangan Tata Bahasa", serta baseline "kanji tanpa furigana" 103 temuan (§16 — sebagian besar memang sesuai cetakan buku).
+
+---
+
+## 16. Sesi "lengkapi + dark mode + rapikan audit" (2026-10)
+
+**Tujuan:** lengkapi yang kurang di UI, tambah dark mode, rapikan skrip audit, percepat siklus verifikasi.
+
+**Temuan kelengkapan (jawaban "apakah minna sudah lengkap?"):**
+- Data **SUDAH lengkap**: 50/50 bab, `validate` 0 error/0 warning, audio 162/162 mp3 (0 hilang).
+- **Bukan data, tapi UI:** `HomePage` hardcode `const TOTAL = 25` → Home hanya menampilkan Bab 1–25 padahal data 26–50 ada. **Bug nyata, diperbaiki.**
+- `tools/audit_kelengkapan.ts` melaporkan **55 false positive**: `konteks` (field OPSIONAL), `renshuuC` (memang belum ada di bab 1–13; 練習C baru sejak 第14課), `bunpou tanpa contoh` (pola catatan panjang). Setelah dirapikan → **0 anomali**.
+
+**Yang dikerjakan:**
+1. **HomePage 50 bab** — `TOTAL = babs.length` (dinamis dari registry), judul "Minna no Nihongo I & II", sub "Bab 1–50".
+2. **Dark mode** (toggle manual + simpan):
+   - `tokens.css`: dua lapis — nilai runtime di `:root` (terang) & `html[data-theme='dark']` (gelap, palet **kertas gelap hangat**), lalu `@theme` memetakan ke Tailwind. Kanal RGB (`--k-rgb-*`) untuk rgba yang bisa ditukar tema.
+   - `useTheme.ts` (persist `mnn1_theme_v1`, **idempoten**), mode `light|dark|system`, `applyTheme()` set `data-theme` + `color-scheme` ke `<html>`.
+   - **Anti-FOUC** inline script di `index.html` (baca localStorage + `prefers-color-scheme` sebelum React render).
+   - `features/theme/ThemeToggle.tsx` (☀/☾, target ≥44px) dipasang di header Home & toolbar BabDetail; sinkron ke perubahan preferensi OS selama mode `system`.
+   - `paper.css`: 91 rgba + 21 hex hardcode dialihkan ke token tema (mis. `rgb(var(--k-rgb-ink) / a)`, verdict/ok/no/info jadi token).
+3. **Audit bersih** (`tools/audit_kelengkapan.ts`): `konteks` tak lagi dilaporkan, `renshuuC` hanya dicek bab ≥14, pola bunpou tanpa contoh hanya bila penjelasan pendek.
+4. **Percepat verifikasi** (`package.json`): `npm run check` (validate+typecheck, tanpa build) untuk loop cepat; `npm run check:full` (validate+typecheck+vite build) untuk gerbang "selesai"; `npm run audit`.
+
+**Verifikasi akhir:**
+```
+check:full → validate 50 bab 0 error ✅ · tsc --noEmit ✅ · vite build ✓ built ✅ (CSS 39.74 kB, chunk >500kB pre-existing)
+audit      → 50 bab · 0 anomali ✅
+screenshot → Home desktop (gelap & terang), Bab 1 desktop+mobile (gelap & terang) OK
+toggle     → klik mengubah data-theme + persist localStorage; mode awal "Sistem" ikut prefers-color-scheme ✅
+```
+
+**Baseline waktu:** `validate` ~2.9s · `typecheck` ~3.9s · `vite build` ~5.4s (build penuh) — total `check` ~7s, `check:full` ~12s.
+
+**Catatan:** tidak ada dependensi UI baru (patuh AGENTS §1). Semua animasi tetap di `motion.css`.

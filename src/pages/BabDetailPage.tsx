@@ -8,6 +8,7 @@ import { matchLevel, countCorrect, adaJawaban } from '../core/text/normalize'
 import { nilaiTerjemahan } from '../core/text/terjemahan'
 import { Flashcard } from '../features/flashcard/Flashcard'
 import { Kuis } from '../features/kuis/Kuis'
+import { ThemeToggle } from '../features/theme/ThemeToggle'
 
 export default function BabDetailPage() {
   const { no } = useParams()
@@ -86,6 +87,7 @@ export default function BabDetailPage() {
             />
             Romaji
           </label>
+          <ThemeToggle />
         </div>
 
         {/* TOC */}

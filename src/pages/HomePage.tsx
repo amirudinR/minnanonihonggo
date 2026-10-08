@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
 import { useProgress } from '../store/useProgress'
-import { getBab } from '../data'
-
-const TOTAL = 25
+import { useTheme } from '../store/useTheme'
+import { ThemeToggle } from '../features/theme/ThemeToggle'
+import { babs, getBab } from '../data'
 
 export default function HomePage() {
   const items = useProgress((s) => s.items)
+  useTheme((s) => s.theme) // berlangganan agar toggle ikut re-render
+  const TOTAL = babs.length
   const selesaiCount = items.filter((x) => x.selesai).length
-  const pct = Math.round((selesaiCount / TOTAL) * 100)
+  const pct = TOTAL > 0 ? Math.round((selesaiCount / TOTAL) * 100) : 0
   const chapters = Array.from({ length: TOTAL }, (_, i) => {
     const no = i + 1
     return { no, bab: getBab(no), progress: items.find((x) => x.no === no) }
@@ -29,12 +31,15 @@ export default function HomePage() {
         <a className="skip-link" href="#daftar-bab">Lewati ke daftar bab</a>
 
         <header className="cover">
+          <div className="cover__toolbar">
+            <ThemeToggle />
+          </div>
           <div className="cover__eyebrow">
             <span className="cover__label">みんなの日本語</span>
             <span className="cover__edition">Edisi belajar mandiri · Offline</span>
           </div>
-          <h1 className="cover__title">Minna no Nihongo I</h1>
-          <p className="cover__sub">Ruang belajar pribadi untuk Bab 1–25.</p>
+          <h1 className="cover__title">Minna no Nihongo I & II</h1>
+          <p className="cover__sub">Ruang belajar pribadi untuk Bab 1–50.</p>
 
         </header>
 

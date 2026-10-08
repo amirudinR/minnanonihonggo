@@ -20,6 +20,9 @@ npm run dev        # port 5173
 npm run typecheck  # tsc --noEmit
 npm run build      # typecheck + vite build
 npm run validate   # validasi data bab (tsx tools/validate.ts)
+npm run audit      # audit kelengkapan data bab
+npm run check      # validate + typecheck (loop cepat, TANPA build)
+npm run check:full # validate + typecheck + vite build (gerbang "selesai")
 ```
 
 ---
@@ -31,7 +34,7 @@ npm run validate   # validasi data bab (tsx tools/validate.ts)
 3. **Tailwind v4 CSS-first** — TIDAK ADA `tailwind.config.js` / `postcss.config.js`. Token di `src/styles/tokens.css` (`@theme`). Jangan membuat file config Tailwind.
 4. **Jangan "memperbaiki" fakta yang sudah diverifikasi** di §4 dan `docs/BAB-TEMPLATE.md` §5. Agent sebelumnya sudah beberapa kali salah dan "membetulkan" data yang sebenarnya benar.
 5. **Setiap `setState` ke store Zustand harus idempoten** (lihat §3 kesalahan #1). Ini pernah menyebabkan *infinite render loop* yang mematikan halaman.
-6. **Selalu jalankan `npm run typecheck` + `npm run build` + `npm run validate`** sebelum menyatakan selesai. Jangan mengklaim "beres" tanpa bukti.
+6. **Selalu jalankan `npm run typecheck` + `npm run build` + `npm run validate`** sebelum menyatakan selesai. Jangan mengklaim "beres" tanpa bukti. Untuk loop kerja cepat pakai `npm run check` (tanpa build); gerbang akhir tetap `npm run check:full`.
 7. **Verifikasi visual nyata** untuk perubahan tampilan (screenshot), bukan sekadar "seharusnya tampil".
 8. **Jangan commit kunci/rahasia.** Jangan `git config` global, jangan force-push ke `main`.
 
@@ -233,6 +236,11 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 ## 9. Catatan perubahan yang sudah berlangsung (jangan di-regresi)
 
 - **Animasi dipusatkan** di `src/styles/motion.css` (semua `transition` + blok `prefers-reduced-motion`). `index.css` meng-import `tokens.css` → `paper.css` → `motion.css`. Merombak animasi = edit `motion.css` saja.
+- **Tema terang/gelap via token runtime** (jangan hardcode warna):
+  - Nilai warna ada di `tokens.css` → `:root` (terang) & `html[data-theme='dark']` (gelap); `@theme` hanya **memetakan** `var(--k-*)` ke `--color-*` Tailwind.
+  - **JANGAN hardcode hex/rgba** di `paper.css`. Pakai token. Untuk rgba ber-alpha → `rgb(var(--k-rgb-ink) / 0.1)` (kanal RGB di token, bisa ditukar tema). Pengecualian: bayangan hitam netral alpha rendah (`rgba(0,0,0,0.0x)`) boleh apa adanya.
+  - `data-theme` diset ke `<html>` oleh `useTheme` (`mnn1_theme_v1`) + inline script anti-FOUC di `index.html`. Mode default `system` (ikut `prefers-color-scheme`).
+- **Home menampilkan SEMUA bab** dari registry (`babs.length`), bukan angka hardcode. Jangan kembalikan `TOTAL = 25`.
 - **`paper.css` tidak boleh berisi `transition:`** lagi (sudah dipindah); cek sebelum menambahkan rule agar tak ada dead code.
 - **Inter & Caveat adalah variable font** → satu `@font-face` per family dengan `font-weight: 100 900` (Inter) / `400 700` (Caveat), format `woff2-variations`. Jangan buat 4 deklarasi (pernah bikin dead code).
 - **Emoji verdict/terj hasil dihapus** oleh agent lain; pertahankan stripped kecuali user minta dikembalikan.

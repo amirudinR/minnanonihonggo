@@ -1,18 +1,111 @@
+/*
+ * Token tema — dua lapis:
+ * 1) :root / html[data-theme] menetapkan NILAI warna runtime (bisa ditukar terang/gelap).
+ * 2) @theme memetakan token itu ke Tailwind (--color-*) + font & skala.
+ *
+ * JANGAN hardcode warna langsung di @theme; selalu lewat var(--k-*) agar dark mode
+ * otomatis ikut. Animasi tetap di motion.css (jangan taruh transition di sini).
+ */
+
+/* ---------- 1) Nilai runtime: PALET TERANG (kertas hangat) ---------- */
+:root {
+  color-scheme: light;
+
+  --k-paper: #f8f6f0;
+  --k-paper-light: #ffffff;
+  --k-ink: #3b352e;
+  --k-ink-soft: #70685e;
+  --k-accent: #9a6534;
+  --k-accent-deep: #7a4f27;
+  --k-margin-red: rgba(192, 57, 43, 0.35);
+  --k-rule: rgba(59, 53, 46, 0.08);
+  --k-selesai: #3b825b;
+  --k-salah: #b03a3a;
+  --k-ink-faint: #9c948a;
+  --k-wash: rgba(154, 101, 52, 0.05);
+  --k-surface-dim: #f0eee6;
+
+  /* verdict & aksen sekunder (dulu hardcode di paper.css) */
+  --k-verdict-ok: #2f7d4f;
+  --k-verdict-ok-deep: #205b39;
+  --k-verdict-ok-soft: #4aa36a;
+  --k-verdict-no: #b03030;
+  --k-verdict-no-deep: #8a2626;
+  --k-accent-warn: #a06a1f;
+  --k-info: #427ab0;
+  --k-info-soft: #6aa3d6;
+  --k-hi: #fbf3df;
+  --k-hi-2: #efe4c8;
+
+  /* efek kertas */
+  --k-shadow-paper: 0 12px 30px rgba(59, 53, 46, 0.08);
+  --k-shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+  /* kanal RGB untuk rgba(... / alpha) yang bisa ditukar tema */
+  --k-rgb-ink: 67 56 43;
+  --k-rgb-accent: 138 90 43;
+  --k-rgb-surface: 255 255 255;
+  --k-rgb-base: 59 53 46;
+  --k-rgb-ok: 47 125 79;
+  --k-rgb-no: 176 48 48;
+}
+
+/* ---------- PALET GELAP (kertas gelap hangat) ---------- */
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  --k-paper: #211c16;
+  --k-paper-light: #2a241d;
+  --k-ink: #ece3d4;
+  --k-ink-soft: #b9ad9a;
+  --k-accent: #cf9a5c;
+  --k-accent-deep: #e0b083;
+  --k-margin-red: rgba(214, 108, 96, 0.4);
+  --k-rule: rgba(236, 227, 212, 0.12);
+  --k-selesai: #6fbf8f;
+  --k-salah: #e08a8a;
+  --k-ink-faint: #8a8073;
+  --k-wash: rgba(207, 154, 92, 0.1);
+  --k-surface-dim: #1b1712;
+
+  --k-verdict-ok: #6fbf8f;
+  --k-verdict-ok-deep: #9fd9b6;
+  --k-verdict-ok-soft: #8ccfa6;
+  --k-verdict-no: #e08a8a;
+  --k-verdict-no-deep: #f0b0b0;
+  --k-accent-warn: #e0b06a;
+  --k-info: #8fb8e0;
+  --k-info-soft: #a8cbe8;
+  --k-hi: #3a3126;
+  --k-hi-2: #332b21;
+
+  --k-shadow-paper: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --k-shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.35);
+
+  /* kanal RGB versi gelap */
+  --k-rgb-ink: 236 227 212;
+  --k-rgb-accent: 207 154 92;
+  --k-rgb-surface: 58 49 38;
+  --k-rgb-base: 236 227 212;
+  --k-rgb-ok: 111 191 143;
+  --k-rgb-no: 224 138 138;
+}
+
+/* ---------- 2) Peta ke Tailwind + font & skala ---------- */
 @theme {
-  /* palette premium bookish */
-  --color-paper: #f8f6f0;
-  --color-paper-light: #ffffff;
-  --color-ink: #3b352e;
-  --color-ink-soft: #70685e;
-  --color-accent: #9a6534;
-  --color-margin-red: rgba(192, 57, 43, 0.35);
-  --color-rule: rgba(59, 53, 46, 0.08);
-  --color-selesai: #3b825b;
-  --color-salah: #b03a3a;
-  --color-ink-faint: #9c948a;
-  --color-accent-deep: #7a4f27;
-  --color-wash: rgba(154, 101, 52, 0.05);
-  --color-surface-dim: #f0eee6;
+  --color-paper: var(--k-paper);
+  --color-paper-light: var(--k-paper-light);
+  --color-ink: var(--k-ink);
+  --color-ink-soft: var(--k-ink-soft);
+  --color-accent: var(--k-accent);
+  --color-margin-red: var(--k-margin-red);
+  --color-rule: var(--k-rule);
+  --color-selesai: var(--k-selesai);
+  --color-salah: var(--k-salah);
+  --color-ink-faint: var(--k-ink-faint);
+  --color-accent-deep: var(--k-accent-deep);
+  --color-wash: var(--k-wash);
+  --color-surface-dim: var(--k-surface-dim);
 
   /* fonts */
   --font-sans: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN",
@@ -23,6 +116,6 @@
 
   /* skala */
   --radius-card: 6px;
-  --shadow-paper: 0 12px 30px rgba(59, 53, 46, 0.08);
-  --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.04);
+  --shadow-paper: var(--k-shadow-paper);
+  --shadow-soft: var(--k-shadow-soft);
 }
