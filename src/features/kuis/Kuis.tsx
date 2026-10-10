@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { KosaKata } from '@/types/bab'
 
 interface SoalKuis {
@@ -39,38 +39,74 @@ function buatSoal(kosakata: KosaKata[], jumlah: number): SoalKuis[] {
   return soal
 }
 
-export function Kuis({ kosakata, jumlah = 8 }: { kosakata: KosaKata[]; jumlah?: number }) {
-  const [benih, setBenih] = useState(0)
-  const soal = useMemo(() => buatSoal(kosakata, jumlah), [kosakata, jumlah, benih])
-  const [jawab, setJawab] = useState<Record<string, string>>({})
+/** Baca/simpan jawaban kuis per bab di localStorage. */
+function bacaJawaban(kunci: string): Record<string, string> {
+  try {
+    const raw = localStorage.getItem(kunci)
+    return raw ? (JSON.parse(raw) as Record<string, string>) : {}
+  } catch {
+    return {}
+  }
+}
+function simpanJawaban(kunci: string, j: Record<string, string>) {
+  localStorage.setItem(kunci, JSON.stringify(j))
+}
 
-  if (soal.length === 0) return null
+export function Kuis({ kosakata, babNo = 0, jumlah = 8 }: { kosakata: KosaKata[]; babNo?: number; jumlah?: number }) {
+  const [benih, setBenih] = useState(0)
+  const [reviewSalah, setReviewSalah] = useState(false)
+  const [jawab, setJawab] = useState<Record<string, string>>(() => bacaJawaban(`mnn1_kuis_v1_${babNo}`))
+  useEffect(() => simpanJawaban(`mnn1_kuis_v1_${babNo}`, jawab), [jawab, babNo])
+
+  const soal = useMemo(() => buatSoal(kosakata, jumlah), [kosakata, jumlah, benih])
+  const salahIds = new Set(soal.filter((s) => jawab[s.id] && jawab[s.id] !== s.jawaban).map((s) => s.id))
+  const tampil = reviewSalah && salahIds.size > 0 ? soal.filter((s) => salahIds.has(s.id)) : soal
+
+  if (soal.length === 0) return <p className="text-sm text-ink-soft">Kosakata untuk kuis belum tersedia.</p>
 
   const terisi = soal.filter((s) => jawab[s.id]).length
   const benar = soal.filter((s) => jawab[s.id] === s.jawaban).length
   const selesai = terisi === soal.length
+  const progres = Math.round((terisi / soal.length) * 100)
 
   return (
     <div className="kuis">
       <div className="kuis__head">
         <p className="kuis__skor" role="status">
           Benar <strong>{benar}</strong> / {soal.length}
+          <span aria-hidden> · </span>
+          {reviewSalah && salahIds.size > 0 ? `mode ulangi ${tampil.length} soal salah` : `terisi ${terisi}/${soal.length}`}
         </p>
-        <button
-          type="button"
-          className="chip"
-          onClick={() => {
-            setJawab({})
-            setBenih((b) => b + 1)
-          }}
-        >
-          ↻ Acak ulang
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {selesai && salahIds.size > 0 && (
+            <button type="button" className="chip" onClick={() => { setReviewSalah((r) => !r); }}>
+              {reviewSalah ? '↺ Semua soal' : `↻ Ulangi ${salahIds.size} salah`}
+            </button>
+          )}
+          <button
+            type="button"
+            className="chip"
+            onClick={() => {
+              if (window.confirm('Semua jawaban kuis akan dihapus. Lanjutkan?')) {
+                setJawab({})
+                setBenih((b) => b + 1)
+                setReviewSalah(false)
+              }
+            }}
+          >
+            ↻ Acak ulang
+          </button>
+        </div>
+      </div>
+
+      <div className="kuis__prog" role="progressbar" aria-label="Progres kuis" aria-valuenow={progres} aria-valuemin={0} aria-valuemax={100}>
+        <div style={{ width: `${progres}%` }} />
       </div>
 
       <ol className="kuis__list">
-        {soal.map((s, i) => {
+        {tampil.map((s, i) => {
           const dipilih = jawab[s.id]
+          const benarIni = dipilih === s.jawaban
           return (
             <li key={s.id} className="kuis__item">
               <p className="kuis__q">
@@ -81,7 +117,7 @@ export function Kuis({ kosakata, jumlah = 8 }: { kosakata: KosaKata[]; jumlah?: 
                 {s.pilihan.map((p) => {
                   const kelas =
                     dipilih === p
-                      ? p === s.jawaban
+                      ? benarIni
                         ? 'opsi opsi--benar'
                         : 'opsi opsi--salah'
                       : dipilih && p === s.jawaban
@@ -100,12 +136,17 @@ export function Kuis({ kosakata, jumlah = 8 }: { kosakata: KosaKata[]; jumlah?: 
                   )
                 })}
               </div>
+              {dipilih && (
+                <p className={`kuis__fb ${benarIni ? 'kuis__fb--ok' : 'kuis__fb--no'}`}>
+                  {benarIni ? '✓ Benar!' : `✗ Yang benar: ${s.jawaban}`}
+                </p>
+              )}
             </li>
           )
         })}
       </ol>
 
-      {selesai && (
+      {selesai && !reviewSalah && (
         <p className={`kuis__hasil ${benar / soal.length >= 0.6 ? 'kuis__hasil--ok' : 'kuis__hasil--no'}`}>
           {benar / soal.length >= 0.6
             ? `Bagus! Kamu benar ${benar} dari ${soal.length}.`

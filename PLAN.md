@@ -378,3 +378,66 @@ toggle     → klik mengubah data-theme + persist localStorage; mode awal "Siste
 **Baseline waktu:** `validate` ~2.9s · `typecheck` ~3.9s · `vite build` ~5.4s (build penuh) — total `check` ~7s, `check:full` ~12s.
 
 **Catatan:** tidak ada dependensi UI baru (patuh AGENTS §1). Semua animasi tetap di `motion.css`.
+
+## 17. Sesi Toolbox — verifikasi cepat + perbaikan fidelity mondai MNN2
+
+**Tujuan:** (1) alat agar AI/dev cepat menemukan & memperbaiki kode; (2) perbaiki temuan fidelity sesi sebelumnya.
+
+**Temuan fidelity (diverifikasi visual, render 1800px + zoom 400dpi Honsatsu MNN2 idx 92–93 / 100):**
+- **bab34/mondai.ts salah total:** 問題1 & 問題2 (ikon telinga, tanpa cetakan) diisi kalimat karangan (campuran 課長/出張/てんぷら yang bukan milik 第34課); isi 問題5 (latihan tertulis 〜ないで) dipasangi audio 問題2; 問題3/4/6/7 hilang. → Ditulis ulang jadi **7 item = 問題1–7 apa adanya**: 1–2 listening (baris kosong, `kunciTersedia:false`), 3–4 & 7 tertulis sesuai cetakan (gambar + instruksi, tanpa kunci karena buku tak mencetak), 5–6 kunci milik app (`kunciTersedia:true`).
+- **bab35/mondai.ts 問題1–2** sama-sama memuat kalimat karangan → diganti meniru struktur cetakan (dikte 4 baris / ○× 1–5). Pola bersih sudah dipakai bab33/36.
+- **Kunci 問題5 bab34 yang lama juga karangan** (「うえで 本を 読まないで…」) → jawaban baru diturunkan dari 例 cetak (「…休まないで、働きます。」).
+
+**Toolbox baru (tanpa dependensi baru):**
+- `npm run map` → `docs/AI-MAP.md`: daftar modul + deskripsi (komentar/ekspor), peta dependensi, ringkasan 50 bab.
+- `npm run find <kata>` → cari terkelompok KODE/DATA/TOOLS/DOKUMEN, output `file:baris`, multi-kata AND.
+- `npm run verify` → check:full + `tools/screenshot.mjs` (Chrome headless: Home + bab1 + bab34 × desktop/mobile + cek DOM `Unexpected Application Error` / `Maximum update depth`).
+- `npm run guard` → validate + audit + cek aturan keras (dependensi baru, hex/rgba hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, `\ufffd` di data, audio ter-track git).
+- `npm run add:bab <N>` → scaffold 8 file berisi checklist BAB-TEMPLATE.
+- `.serena/project.yml`: `initial_prompt` (ringkasan arsitektur + aturan keras) + `ignored_paths` (tmp/dist/cache/audio).
+
+**Quick wins kode:**
+- Tipe bersama `Konteks` di `src/types/bab.ts` (hilangkan 2 definisi inline); `bab01/konteks.ts` jadi array (sebelumnya skalar → `index.ts` membungkus `[konteks]`).
+- `BabDetailPage.tsx:375` `id.replace("A","")…` → `id.replace(/[ABC]$/, '')` (rapuh untuk id lain).
+- Heading "Contoh:" tidak lagi dirender saat `contoh: []` (bab8/14/18/20) — catatan tata bahasa memang tanpa heading; kunci jawaban baru tampil setelah "Lihat kunci" (sudah diverifikasi lewat DOM).
+
+**Verifikasi akhir:**
+```
+check:full → validate 50 bab 0 error 0 warning ✅ · tsc ✅ · build ✅ (CSS 41.59 kB, chunk >500kB pre-existing)
+guard      → 7/7 aturan keras PASS ✅ (termasuk: 0 dependensi baru, paper.css token-only, audio tidak di git)
+map        → 17 modul + 18 edge + 50 bab ✅
+verify     → DOM Home/bab01/bab34 bersih; 6 screenshot desktop+mobile ✅
+fidelity   → bab34: 7 item 問題1–7 render (domain-checked: 問題1–7, 例, 親子, ボタン, "Gambar (hls. 74)") ✅
+bab08/14   → heading "Contoh:" hanya muncul utk pola yang punya contoh ✅
+```
+
+## 18. Sesi UI/UX Overhaul — kritik & penyempurnaan (P0+P1)
+
+**Tujuan:** kritik tajam tampilan/UX belajar → perbaiki yang rusak. Mode plan → user pilih "gas" → eksekusi P0+P1 (P2 ditunda).
+
+**P0 — perbaiki yang rusak:**
+- **KoreksiPanel** hilang saat 0 soal terjawab (sebelumnya menampilkan "Terisi 0 dari 19 · Skor 0" yang menakutkan) + tambah baris "Kualitas terjemahan rata-rata" (reibun+kaiwa, metrik Jaccard terpisah dari skor exact-match) + tombol "Koreksi semua" (scroll ke panel) di ringkasan bab.
+- **SoalInteraktif** disederhanakan: buang input romaji per-baris (20 input → 10), kunci jawaban multi-line kini `<textarea>` (sebelumnya single-line → matchLevel mustahil "tepat"), buang duplikasi "Arti Keseluruhan".
+- **Flashcard:** tampilkan kanji di bawah kana (data sudah punya), tampilkan `contoh`+`catatan` di sisi belakang, shortcut keyboard (Spasi balik · ←/→ navigasi · H hafal · U ulangi), simpan hafal/ulangi per-bab di localStorage, tambah progress bar.
+- **AudioBar:** + tombol Ulang (loop) + pilihan kecepatan 0.75×/1×/1.25× (krusial untuk listening).
+- **Home:** + pencarian (nomor/topik/judul kaiwa) + filter Semua/MNN I/MNN II.
+
+**P1 — perbaiki alur latihan:**
+- **LatihanList:** "Lihat kunci" kini tampil inline 2 kolom "Jawabanmu | Kunci" (bukan details di bawah yang bikin layout loncat), + hint "Koreksi otomatis saat kamu mengetik."
+- **Kuis:** + progress bar (terisi/total), feedback per soal ("✓ Benar!" / "✗ Yang benar: X"), simpan jawaban per-bab, mode "Ulangi N salah" setelah selesai.
+- **Tab keyboard nav:** arrow-key untuk tab Daftar/Flashcard/Kuis (pola ARIA tablist).
+
+**Verifikasi akhir:**
+```
+check:full → validate 50 bab 0 error 0 warning ✅ · tsc ✅ · build ✅ (6.17s)
+guard      → 7/7 PASS ✅
+map        → 17 modul + 18 edge + 50 bab ✅
+visual     → flashcard kanji (せんせい+先生) & progress bar ✅ · kuis progress+feedback "✓ Benar!" ✅
+             latihan hint + kunci inline (Jawabanmu|Kunci) ✅ · audio Ulang+speed ✅
+             home cari "34"→1 hasil, "敬語"→1 hasil, filter MNN II→25 hasil ✅
+             KoreksiPanel hilang saat 0 jawaban ✅ · tombol "Koreksi semua" ada ✅
+```
+
+**Catatan:** skor ≥60 tetap auto-SELESAI (keputusan user: pertahankan); kualitas terjemahan ditampilkan terpisah agar skor exact-match tidak tercampur metrik Jaccard. P2 (search tabel kosakata, nav bawah mobile, review salah, backup JSON) ditunda.
+
+**Catatan:** screenshot script versi ini menembak **tema terlang/tersimpan di profile** (bukan paksa dark/light lewat CLI) — cek tema gelap tetap lewat ThemeToggle. Render visual dicek manual (bab34 + bab08 sesuai kunci).

@@ -68,8 +68,13 @@ export interface MondaiItem {
   arti?: string
   instruksi?: string
   kunciTersedia?: boolean
-  konteks?: { judul?: string; teks?: string }[]
+  konteks?: Konteks[]
   furigana?: Furigana[]
+}
+
+export interface Konteks {
+  judul?: string
+  teks?: string
 }
 
 export interface Bunsho {
@@ -92,5 +97,5 @@ export interface Bab {
   mondai: MondaiItem[]
   bunsho: Bunsho[]
   rangkuman?: string
-  konteks?: { judul?: string; teks?: string }[]
+  konteks?: Konteks[]
 }

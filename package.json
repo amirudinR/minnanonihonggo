@@ -11,7 +11,12 @@
     "validate": "tsx tools/validate.ts",
     "audit": "tsx tools/audit_kelengkapan.ts",
     "check": "tsx tools/validate.ts && tsc --noEmit",
-    "check:full": "tsx tools/validate.ts && tsc --noEmit && vite build"
+    "check:full": "tsx tools/validate.ts && tsc --noEmit && vite build",
+    "map": "tsx tools/map.ts",
+    "find": "tsx tools/find.ts",
+    "guard": "tsx tools/validate.ts && tsx tools/audit_kelengkapan.ts && tsx tools/guard.ts",
+    "verify": "npm run check:full && node tools/screenshot.mjs",
+    "add:bab": "tsx tools/new-bab.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProgress } from '../store/useProgress'
 import { useTheme } from '../store/useTheme'
@@ -7,6 +8,8 @@ import { babs, getBab } from '../data'
 export default function HomePage() {
   const items = useProgress((s) => s.items)
   useTheme((s) => s.theme) // berlangganan agar toggle ikut re-render
+  const [cari, setCari] = useState('')
+  const [fase, setFase] = useState<'semua' | 'I' | 'II'>('semua')
   const TOTAL = babs.length
   const selesaiCount = items.filter((x) => x.selesai).length
   const pct = TOTAL > 0 ? Math.round((selesaiCount / TOTAL) * 100) : 0
@@ -14,7 +17,15 @@ export default function HomePage() {
     const no = i + 1
     return { no, bab: getBab(no), progress: items.find((x) => x.no === no) }
   })
-  const availableChapters = chapters.filter((chapter) => chapter.bab)
+  const cariNorm = cari.trim().toLowerCase()
+  const availableChapters = chapters.filter((chapter) => {
+    if (!chapter.bab) return false
+    if (fase === 'I' && chapter.no > 25) return false
+    if (fase === 'II' && chapter.no <= 25) return false
+    if (!cariNorm) return true
+    const hay = `${chapter.no} ${chapter.bab.topik} ${chapter.bab.kaiwa?.judul ?? ''}`.toLowerCase()
+    return hay.includes(cariNorm)
+  })
   const activeChapter =
     availableChapters.find((chapter) => !chapter.progress?.selesai) ??
     availableChapters[availableChapters.length - 1]
@@ -42,6 +53,33 @@ export default function HomePage() {
           <p className="cover__sub">Ruang belajar pribadi untuk Bab 1–50.</p>
 
         </header>
+
+        <div className="home-filter" role="search">
+          <input
+            type="search"
+            className="home-search"
+            placeholder="Cari bab (nomor, topik, judul kaiwa)…"
+            value={cari}
+            onChange={(e) => setCari(e.target.value)}
+            aria-label="Cari bab"
+          />
+          <div className="flash__seg" role="group" aria-label="Filter fase">
+            {([
+              ['semua', 'Semua'],
+              ['I', 'MNN I'],
+              ['II', 'MNN II'],
+            ] as const).map(([f, label]) => (
+              <button
+                key={f}
+                type="button"
+                className={`chip ${fase === f ? 'chip--aktif' : ''}`}
+                onClick={() => setFase(f)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <section className="dashboard-grid" aria-label="Ringkasan belajar">
           <div className="progress-card">
@@ -96,7 +134,7 @@ export default function HomePage() {
             <span className="section-heading__count">{availableChapters.length} siap dibuka</span>
           </div>
           <ol className="m-0 list-none p-0">
-          {chapters.map(({ no, bab, progress: p }) => {
+          {availableChapters.map(({ no, bab, progress: p }) => {
             const ready = Boolean(bab)
             return (
               <li key={no} className="bab-item">

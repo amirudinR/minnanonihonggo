@@ -8,13 +8,13 @@ export const mondai: MondaiItem[] = [
     no: 1,
     jenis: 'mendengarkan',
     soal:
-      '問題 1 - Dengarkan audio, lalu tulis jawaban untuk pertanyaan berikut.\n' +
-      '1) どうすれば、漢字が覚えられますか。\n' +
-      '2) 値段が安ければ、遠くても、買いに行きますか。\n' +
-      '3) 名前をまちがえたとき、何と言えばいいですか。\n' +
-      '4) パソコンを買いたいんですが、どこのがいいですか。',
+      '問題 1 - Dengarkan audio bab35_mondai1.mp3, lalu tuliskan apa yang Anda dengar pada garis jawaban 1)-4).\n' +
+      '1) ________________________________________________\n' +
+      '2) ________________________________________________\n' +
+      '3) ________________________________________________\n' +
+      '4) ________________________________________________',
     instruksi:
-      'Putar audio beberapa kali, lalu tulis jawaban Anda untuk setiap pertanyaan. Kunci jawaban tidak disertakan.',
+      'Putar audio beberapa kali, lalu tulis kalimat yang terdengar. Buku tidak mencetak kalimat soal maupun kunci jawaban.',
     audio: '/audio/bab35_mondai1.mp3',
     kunciTersedia: false,
   },
@@ -22,13 +22,10 @@ export const mondai: MondaiItem[] = [
     no: 2,
     jenis: 'mendengarkan',
     soal:
-      '問題 2 - Dengarkan audio, lalu beri tanda (○) atau (×) pada pernyataan 1)-4).\n' +
-      '1) ここは冬より春のほうがいいです。\n' +
-      '2) 男の人はすぐタクシーの会社に電話をかけます。\n' +
-      '3) 山田さんに聞けば、相撲のチケットの買い方がわかります。\n' +
-      '4) 女の人は白ワインを飲みながら、魚料理を食べます。',
+      '問題 2 - Dengarkan audio bab35_mondai2.mp3, lalu beri tanda (〇) atau (×) pada pernyataan 1)-5).\n' +
+      '1) (　　)  2) (　　)  3) (　　)  4) (　　)  5) (　　)',
     instruksi:
-      'Putar audio, lalu tentukan pernyataan mana yang sesuai dengan isi audio. Kunci jawaban tidak disertakan.',
+      'Putar audio, lalu tentukan pernyataan mana yang sesuai dengan isi percakapan. Buku tidak mencetak pernyataan maupun kunci jawaban.',
     audio: '/audio/bab35_mondai2.mp3',
     kunciTersedia: false,
   },

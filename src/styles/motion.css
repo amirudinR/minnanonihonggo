@@ -50,6 +50,10 @@ button {
   transition: transform 120ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
+.flash__face {
+  transition: transform 0.5s ease, opacity 0.3s ease;
+}
+
 .opsi {
   transition: all 130ms ease;
 }
@@ -60,6 +64,10 @@ button {
 
 .bagian__item {
   transition: all 130ms ease;
+}
+
+.back-to-top {
+  transition: opacity 200ms ease, transform 200ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

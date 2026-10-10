@@ -5,7 +5,7 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi lengkapi MNN2 — Bab 1–50 sekarang LENGKAP (50/50 bab).
+> Terakhir diperbarui: sesi UI/UX Overhaul (§18) — P0+P1: koreksi panel, flashcard kanji+keyboard, kuis feedback, latihan kunci inline, audio speed, home filter+cari.
 
 ---
 
@@ -23,6 +23,11 @@ npm run validate   # validasi data bab (tsx tools/validate.ts)
 npm run audit      # audit kelengkapan data bab
 npm run check      # validate + typecheck (loop cepat, TANPA build)
 npm run check:full # validate + typecheck + vite build (gerbang "selesai")
+npm run verify     # check:full + screenshot + cek error boundary (butuh dev server)
+npm run guard      # validate + audit + cek aturan keras §1
+npm run map        # regenerate docs/AI-MAP.md
+npm run find <x>   # cari di kode/data/docs
+npm run add:bab N  # scaffold bab baru
 ```
 
 ---
@@ -130,6 +135,12 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - Contoh bug nyata yang ketemu: `base: '申訳'` pada teks `申し訳` (jarak kana di tengah) → 申/訳 tanpa furigana; `base: '使方'` pada `使い方`; `base: '書方'` pada `書き方`; `建物` pada teks yang cuma `ビル`; `分/じ` untuk `時`; base sisa (`付`, `知`, `渡`, `今日`, `今年`, `間違`) untuk kalimat yang kana saja.
 - `src/core/validation/schema.ts` **sudah** mendeteksi "furigana base tidak ada di teks" (base milik `pembicara` dikecualikan karena memang tak pernah dirender). Jalankan `npm run validate` dan **Jangan abaikan** warning baru ini.
 
+### #17 — mondai listening diisi kalimat KARANGAN (bab34/bab35) 🔴
+- Di buku MNN2, 問題1 = ikon telinga + baris kosong (dikte), 問題2 = ikon telinga + `1)( )…5)( )` — **tidak ada kalimat JP yang dicetak**. Isi audio CD tidak bisa diverifikasi tanpa transkrip.
+- Sesi MNN2 pernah mengisi soal listening dengan kalimat karangan (bab34: campuran 〜とおりに/課長/出張 yang bahkan bukan milik pelajaran itu; bab35: 4 pertanyaan 〜ば yang tak tercetak di buku). **Sudah dibetulkan** mengikuti struktur cetakan: soal = tugas + baris kosong, `kunciTersedia:false`, tanpa kalimat JP buatan.
+- Bab34 dulu juga memindahkan isi **問題5** (latihan tertulis 〜ないで) ke "mondai 2" lengkap dengan audio, sementara 問題3/4/6/7 hilang. Sekarang 7 item = 問題1–7 apa adanya (jawaban 5 & 6 milik app, ditandai `kunciTersedia:true`).
+- Aturan main untuk soal listening: tulis ** APA YANG TERCETAK DI BUKU** (baris kosong, ikon telinga) + instruksi. Audio menyediakan isi; jangan pernah mengarang isi audio di data.
+
 ### #16 — Kanji tanpa furigana BUKAN otomatis bug 🟡
 - Buku MNN sengaja tidak memberi furigana pada kanji yang dianggap sudah dikuasai. Karena itu cek "kanji tanpa furigana" hanya jalan bila `VALIDASI_STRICT=1` (PowerShell: `$env:VALIDASI_STRICT=1; npm run validate`). Angka baseline: **103 temuan**, mayoritas sesuai cetakan buku.
 
@@ -211,6 +222,31 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 - [ ] Tidak ada error boundary / loop di render nyata
 - [ ] Screenshot desktop **dan** mobile diperiksa untuk perubahan UI
 - [ ] Tidak menyentuh fakta terverifikasi §4
+
+---
+
+## 6b. Toolbox (alat untuk AI/dev)
+
+| Perintah | Fungsi |
+|---|---|
+| `npm run verify` | **gerbang akhir sekali jalan**: check:full + screenshot desktop/mobile + cek DOM (`Unexpected Application Error` / `Maximum update depth`). Butuh dev server menyala. |
+| `npm run guard` | validate + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
+| `npm run map` | regenerate `docs/AI-MAP.md`: daftar modul + peta dependensi + ringkasan 50 bab. |
+| `npm run find <kata>` | cari di KODE / DATA / TOOLS / DOKUMEN, output `file:baris`. Bisa multi-kata (AND). |
+| `npm run add:bab <N>` | scaffold `src/data/babNN/` (8 file berisi checklist). Registry otomatis. |
+| `npm run check` / `check:full` | validate + typecheck (+ build). |
+
+### Resep cepat (ripgrep / alat built-in)
+```powershell
+rg "kunciTersedia" src                    # siapa memakai satu field
+rg "jenis: 'mendengarkan'" src/data       # 1 pola data di semua bab
+npm run find 申し訳                        # cari di kode+data+docs
+npm run find konteks bab01                 # cari multi-kata
+npm run map; git diff docs/AI-MAP.md      # apa yang berubah sesi ini
+```
+
+### Screenshot manual (masih boleh)
+Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs` hanya membungkusnya + menambah cek DOM.
 
 ---
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from 'react'
+import { useState, useEffect, useRef, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getBab } from '../data'
 import { useProgress } from '../store/useProgress'
@@ -21,6 +21,39 @@ export default function BabDetailPage() {
   const [showRomaji, setShowRomaji] = useState(false)
   const [showFurigana, setShowFurigana] = useState(true)
   const [modeKosakata, setModeKosakata] = useState<'tabel' | 'flash' | 'kuis'>('tabel')
+  const [showTop, setShowTop] = useState(false)
+  const [cariKata, setCariKata] = useState('')
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 600)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Navigasi bab dengan arrow key (←/→)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return
+      if (e.key === 'ArrowLeft' && num > 1) window.location.href = `/bab/${num - 1}`
+      if (e.key === 'ArrowRight' && num < 50) window.location.href = `/bab/${num + 1}`
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [num])
+
+  // Navigasi tab Daftar/Flashcard/Kuis dengan arrow-key (pola ARIA tablist).
+  const modeTab = ['tabel', 'flash', 'kuis'] as const
+  const onTabKey = (e: React.KeyboardEvent) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return
+    e.preventDefault()
+    const i = modeTab.indexOf(modeKosakata)
+    const next = e.key === 'ArrowRight' ? (i + 1) % modeTab.length : (i + modeTab.length - 1) % modeTab.length
+    setModeKosakata(modeTab[next])
+    requestAnimationFrame(() => {
+      document.getElementById(`tab-kosakata-${modeTab[next]}`)?.focus()
+    })
+  }
 
   if (!bab) {
     return (
@@ -67,6 +100,13 @@ export default function BabDetailPage() {
           <span><strong>{bab.kosakata.length}</strong> kosakata</span>
           <span><strong>{bab.bunpou.length}</strong> pola bunpou</span>
           <span>{bab.renshuuA.length + bab.renshuuB.length + bab.renshuuC.length} latihan</span>
+          <button
+            type="button"
+            className="chip"
+            onClick={() => document.getElementById('koreksi')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          >
+            Koreksi semua
+          </button>
         </div>
 
         <div className="toolbar" aria-label="Pengaturan tampilan">
@@ -93,7 +133,16 @@ export default function BabDetailPage() {
         {/* TOC */}
         <nav className="toc" aria-label="Daftar isi">
           {sectionsOf(bab).map((s) => (
-            <a key={s.id} href={`#${s.id}`}>
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              onClick={() => {
+                const el = document.getElementById(s.id)
+                if (el && el instanceof HTMLDetailsElement && !el.open) {
+                  el.open = true
+                }
+              }}
+            >
               {s.short}
             </a>
           ))}
@@ -101,7 +150,7 @@ export default function BabDetailPage() {
 
         {bab.kosakata.length > 0 && (
           <Section id="kosakata" title="Kosakata" defaultOpen>
-            <div className="flash__seg" role="tablist" aria-label="Mode belajar kosakata" style={{ marginBottom: 10 }}>
+            <div className="flash__seg" role="tablist" aria-label="Mode belajar kosakata" style={{ marginBottom: 10 }} onKeyDown={onTabKey}>
               {([
                 ['tabel', 'Daftar'],
                 ['flash', 'Flashcard'],
@@ -124,6 +173,15 @@ export default function BabDetailPage() {
             </div>
             {modeKosakata === 'tabel' && (
               <div id="panel-kosakata-tabel" role="tabpanel" aria-labelledby="tab-kosakata-tabel">
+              <input
+                type="search"
+                className="home-search"
+                style={{ marginBottom: 8, maxWidth: 320 }}
+                placeholder="Cari kata…"
+                value={cariKata}
+                onChange={(e) => setCariKata(e.target.value)}
+                aria-label="Cari kosakata"
+              />
               <table className="vokab">
                 <caption className="sr-caption">Kosakata Bab {num}</caption>
                 <thead>
@@ -135,7 +193,17 @@ export default function BabDetailPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {bab.kosakata.map((k) => (
+                  {bab.kosakata
+                    .filter((k) => {
+                      if (!cariKata.trim()) return true
+                      const q = cariKata.toLowerCase()
+                      return (
+                        k.kana.toLowerCase().includes(q) ||
+                        k.kanji?.toLowerCase().includes(q) ||
+                        k.arti.toLowerCase().includes(q)
+                      )
+                    })
+                    .map((k) => (
                     <tr key={k.id}>
                       <td data-label="Kana" lang="ja">{k.kana}</td>
                       <td data-label="Kanji" lang="ja">
@@ -151,14 +219,14 @@ export default function BabDetailPage() {
                         {k.catatan && <span className="block text-xs italic text-ink-soft">{k.catatan}</span>}
                         {k.contoh && <span className="block text-xs text-ink-soft">contoh: {k.contoh}</span>}
                       </td>
-                    </tr>
-                  ))}
+                     </tr>
+                    ))}
                 </tbody>
               </table>
               </div>
             )}
-            {modeKosakata === 'flash' && <div id="panel-kosakata-flash" role="tabpanel" aria-labelledby="tab-kosakata-flash"><Flashcard kosakata={bab.kosakata} /></div>}
-            {modeKosakata === 'kuis' && <div id="panel-kosakata-kuis" role="tabpanel" aria-labelledby="tab-kosakata-kuis"><Kuis kosakata={bab.kosakata} /></div>}
+            {modeKosakata === 'flash' && <div id="panel-kosakata-flash" role="tabpanel" aria-labelledby="tab-kosakata-flash"><Flashcard kosakata={bab.kosakata} babNo={num} /></div>}
+            {modeKosakata === 'kuis' && <div id="panel-kosakata-kuis" role="tabpanel" aria-labelledby="tab-kosakata-kuis"><Kuis kosakata={bab.kosakata} babNo={num} /></div>}
           </Section>
         )}
 
@@ -175,15 +243,17 @@ export default function BabDetailPage() {
                     <strong>{s.judul}:</strong> {s.isi}
                   </p>
                 ))}
-                <div className="mt-1">
-                  <strong>Contoh:</strong>
-                  {b.contoh.map((c, i) => (
-                    <p key={i} className="ml-2">
-                      <span lang="ja">{c}</span>
-                      <span className="block text-sm italic text-ink-soft">{b.artiContoh[i]}</span>
-                    </p>
-                  ))}
-                </div>
+                {b.contoh.length > 0 && (
+                  <div className="mt-1">
+                    <strong>Contoh:</strong>
+                    {b.contoh.map((c, i) => (
+                      <p key={i} className="ml-2">
+                        <span lang="ja">{c}</span>
+                        <span className="block text-sm italic text-ink-soft">{b.artiContoh[i]}</span>
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </Section>
@@ -195,7 +265,7 @@ export default function BabDetailPage() {
               <div key={b.no} className="mb-3">
                 <h3 className="font-semibold">{b.no}. <span lang="ja">{b.pola}</span></h3>
                 <p className="text-ink-soft" style={{ maxWidth: '68ch' }}>{b.penjelasan}</p>
-                {b.contoh.map((c, i) => (
+                {b.contoh.length > 0 && b.contoh.map((c, i) => (
                   <p key={i} className="ml-2">
                     <span lang="ja">{c}</span>
                     <span className="block text-sm italic text-ink-soft">{b.artiContoh[i]}</span>
@@ -328,11 +398,26 @@ export default function BabDetailPage() {
         <button
           type="button"
           className="mt-4 min-h-[44px] rounded border border-[rgba(67,56,43,0.3)] bg-paper px-4 focus-visible:outline-3 focus-visible:outline-[var(--accent)] focus-visible:outline-offset-2"
-          onClick={() => setSelesai(num, !(p?.selesai ?? false))}
+          onClick={() => {
+            if (p?.selesai) {
+              if (window.confirm('Batalkan status selesai? Progres akan dihapus.')) setSelesai(num, false)
+            } else {
+              setSelesai(num, true)
+            }
+          }}
         >
           {p?.selesai ? 'Batalkan selesai' : 'Tandai selesai'}
         </button>
       </main>
+
+      <button
+        type="button"
+        className={`back-to-top ${showTop ? 'back-to-top--visible' : ''}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        aria-label="Kembali ke atas"
+      >
+        ↑
+      </button>
     </div>
   )
 }
@@ -372,7 +457,7 @@ function Section({
   children: ReactNode
 }) {
   return (
-    <details id={id} open={defaultOpen ? true : undefined} className={`section section--${id.replace("A","").replace("B","").replace("C","")} mb-2 scroll-mt-20`}>
+    <details id={id} open={defaultOpen ? true : undefined} className={`section section--${id.replace(/[ABC]$/, '')} mb-2 scroll-mt-20`}>
       <summary className="cursor-pointer select-none text-xl" style={{ fontFamily: 'var(--font-hand)' }}>
         {title}
       </summary>
@@ -424,6 +509,27 @@ function KoreksiPanel({ bab, babNo }: { bab: Bab; babNo: number }) {
   push('C', bab.renshuuC)
   push('mondai', bab.mondai)
 
+  // Kualitas terjemahan (reibun + kaiwa) — metrik terpisah dari skor exact-match.
+  const terjPairs = [
+    ...bab.reibun.map((r, i) => ({
+      user: answers[`b${babNo}-terj-reibun-${i}`] ?? '',
+      expected: r.arti,
+    })),
+    ...(bab.kaiwa?.dialog ?? [])
+      .filter((d) => d.arti)
+      .map((d) => ({
+        user: answers[`b${babNo}-terj-kaiwa-${d.no}`] ?? '',
+        expected: d.arti as string,
+      })),
+  ]
+  const terjTerisi = terjPairs.filter((p) => p.user.trim()).length
+  const terjRata = terjTerisi
+    ? Math.round(
+        terjPairs.reduce((a, p) => a + (p.user.trim() ? nilaiTerjemahan(p.user, p.expected)?.skor ?? 0 : 0), 0) /
+          terjTerisi,
+      )
+    : 0
+
   const { benar, total } = countCorrect(pairs)
   const skor = total > 0 ? Math.round((benar / total) * 100) : 0
   const terisi = pairs.filter((p) => p.user.trim().length > 0).length
@@ -432,10 +538,10 @@ function KoreksiPanel({ bab, babNo }: { bab: Bab; babNo: number }) {
     if (terisi > 0) setSkor(babNo, skor)
   }, [terisi, skor, babNo, setSkor])
 
-  if (total === 0) return null
+  if (total === 0 || terisi === 0) return null
 
   return (
-    <div className="koreksi">
+    <div className="koreksi" id="koreksi">
       <h2 className="mb-1 text-lg">Hasil Koreksi Bab {babNo}</h2>
       <p className="text-sm text-ink-soft">
         Terisi {terisi} dari {total} soal · <strong>{benar} benar</strong>
@@ -445,6 +551,11 @@ function KoreksiPanel({ bab, babNo }: { bab: Bab; babNo: number }) {
       </div>
       <p className="mt-1 text-sm">
         Skor: <strong>{skor}</strong> / 100 <span className="score-note">{skor >= 60 ? 'Target tercapai' : 'Terus latihan'}</span>
+      </p>
+      <p className="koreksi__terj">
+        {terjTerisi > 0
+          ? `Kualitas terjemahan rata-rata: ${terjRata}% (${terjTerisi}/${terjPairs.length} terjemahan)`
+          : 'Isi terjemahan Reibun/Kaiwa untuk melihat kualitas terjemahan.'}
       </p>
     </div>
   )
@@ -509,9 +620,9 @@ function SoalInteraktif({
   const answers = useNotes((s) => s.answers)
   const setAnswer = useNotes((s) => s.setAnswer)
   const lines = soal.split('\n').filter(l => l.trim())
-  
-  const artiKunci = mkey + '-arti'
+
   const lvl = adaJawaban(answers[mkey]) ? matchLevel(answers[mkey], jawaban ?? '') : null
+  const kunciMulti = (jawaban ?? '').includes('\n')
 
   return (
     <div className="mb-4">
@@ -521,18 +632,11 @@ function SoalInteraktif({
           {lines.map((line, i) => (
             <div key={i} className="soal-baris">
               <span className="soal-baris__teks" lang="ja"><TextWithNewlines text={line} inline /></span>
-              <div className="soal-baris__input-wrapper flex flex-col gap-1">
-                <input 
-                  type="text" 
-                  className="book-input text-sm text-ink-soft" 
-                  placeholder="Catatan Romaji / arti tiap kata..." 
-                  value={answers[`${mkey}-line-${i}-romaji`] || ''}
-                  onChange={(e) => setAnswer(`${mkey}-line-${i}-romaji`, e.target.value)}
-                />
-                <input 
-                  type="text" 
-                  className="book-input" 
-                  placeholder="Terjemahan utuh baris ini..." 
+              <div className="soal-baris__input-wrapper">
+                <input
+                  type="text"
+                  className="book-input"
+                  placeholder={pilihan ? 'Jawaban baris ini…' : 'Tulis / terjemahkan baris ini…'}
                   value={answers[`${mkey}-line-${i}`] || ''}
                   onChange={(e) => setAnswer(`${mkey}-line-${i}`, e.target.value)}
                 />
@@ -541,7 +645,7 @@ function SoalInteraktif({
           ))}
           {instruksi && <p className="text-sm italic text-ink-soft mb-2">{instruksi}</p>}
           {audio && <div className="mb-2"><AudioBar src={audio} label={`Dengarkan soal ${no}`} /></div>}
-          
+
           {pilihan && pilihan.length > 0 && (
             <ul className="mt-1 ml-4 mb-2 list-disc text-sm">
               {pilihan.map((p, i) => (
@@ -555,13 +659,23 @@ function SoalInteraktif({
               <label className="text-xs uppercase font-bold text-ink-faint tracking-wider mb-1 block">
                 Jawaban Soal
               </label>
-              <input 
-                type="text"
-                className="book-input font-bold"
-                placeholder="Jawaban (mis. 1) ①...)"
-                value={answers[mkey] || ''}
-                onChange={(e) => setAnswer(mkey, e.target.value)}
-              />
+              {kunciMulti ? (
+                <textarea
+                  rows={Math.min(6, (jawaban ?? '').split('\n').length + 1)}
+                  className="book-input book-input--area w-full font-bold"
+                  placeholder="Jawaban (mis. 1) ①… 2) ②…)"
+                  value={answers[mkey] || ''}
+                  onChange={(e) => setAnswer(mkey, e.target.value)}
+                />
+              ) : (
+                <input
+                  type="text"
+                  className="book-input font-bold"
+                  placeholder="Jawaban (mis. ①…)"
+                  value={answers[mkey] || ''}
+                  onChange={(e) => setAnswer(mkey, e.target.value)}
+                />
+              )}
               {lvl && (
                 <div className={`mt-1 text-sm ${
                   lvl === 'tepat' ? 'text-selesai' : lvl === 'dekat' ? 'text-accent' : 'text-salah'
@@ -571,19 +685,6 @@ function SoalInteraktif({
               )}
             </div>
           )}
-
-          <div className="mt-2">
-            <label className="text-xs uppercase font-bold text-ink-faint tracking-wider mb-1 block">
-              Arti Keseluruhan
-            </label>
-            <input 
-              type="text"
-              className="book-input"
-              placeholder="Arti dari semua kalimat di atas..."
-              value={answers[artiKunci] || ''}
-              onChange={(e) => setAnswer(artiKunci, e.target.value)}
-            />
-          </div>
         </div>
       </div>
     </div>
@@ -597,6 +698,7 @@ function TerjemahanList({
 }) {
   const answers = useNotes((s) => s.answers)
   const setAnswer = useNotes((s) => s.setAnswer)
+  const [tampilkanSemua, setTampilkanSemua] = useState(false)
 
   const hasil = items.map((it) => {
     const user = answers[it.key] ?? ''
@@ -606,11 +708,23 @@ function TerjemahanList({
   const rata = terisi
     ? Math.round(hasil.reduce((a, h) => a + (h.nilai?.skor ?? 0), 0) / terisi)
     : 0
+  const belum = hasil.filter((h) => !h.user.trim())
+  const tampil = tampilkanSemua ? hasil : belum
 
   return (
     <div className="terj">
-      <div className="flash__seg" style={{ marginBottom: 4 }}>
+      <div className="flash__seg" style={{ marginBottom: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span className="toolbar__title">Koreksi terjemahan</span>
+        {belum.length < hasil.length && (
+          <button
+            type="button"
+            className="text-sm underline underline-offset-2 text-ink-soft"
+            onClick={() => setTampilkanSemua((v) => !v)}
+            aria-expanded={tampilkanSemua}
+          >
+            {tampilkanSemua ? 'Sembunyikan terjemahan' : `Tampilkan semua (${hasil.length})`}
+          </button>
+        )}
       </div>
       {terisi > 0 && (
         <>
@@ -622,7 +736,10 @@ function TerjemahanList({
           </p>
         </>
       )}
-      {hasil.map((h) => (
+      {tampil.length === 0 && (
+        <p className="text-sm text-ink-soft">Semua terjemahan sudah diisi. Klik "Tampilkan semua" untuk meninjau.</p>
+      )}
+      {tampil.map((h) => (
         <div key={h.key} className="terj__row">
           <span className="terj__jp" lang="ja">{h.jp}</span>
           <span className="terj__kuci">Kunci: {h.kunci}</span>
@@ -660,18 +777,42 @@ function LatihanList({
 }) {
   const answers = useNotes((s) => s.answers)
   const setAnswer = useNotes((s) => s.setAnswer)
+  const [bukaKunci, setBukaKunci] = useState<Set<number>>(new Set())
+  const [semuaKunci, setSemuaKunci] = useState(false)
   const pairs = items
     .filter((r) => r.jawaban)
     .map((r) => ({ user: answers[`b${babNo}-${section}-${r.no}`] ?? '', expected: r.jawaban as string }))
   const score = countCorrect(pairs)
+  const nomorKunci = items.filter((r) => r.jawaban).map((r) => r.no)
+  const toggleSemua = () => {
+    setSemuaKunci((v) => {
+      const next = !v
+      setBukaKunci(next ? new Set(nomorKunci) : new Set())
+      return next
+    })
+  }
   return (
     <>
+      <div className="mb-2 flex items-center justify-between">
+        <p className="text-sm font-medium text-ink-soft">
+          Skor {section}: {score.benar} benar dari {score.total}
+        </p>
+        <button
+          type="button"
+          className="text-sm underline underline-offset-2 text-ink-soft"
+          onClick={toggleSemua}
+          aria-expanded={semuaKunci}
+        >
+          {semuaKunci ? 'Tutup semua kunci' : 'Lihat semua kunci'}
+        </button>
+      </div>
       <ol className="list-decimal pl-5">
         {items.map((r) => {
           const key = `b${babNo}-${section}-${r.no}`
           const lvl = adaJawaban(answers[key]) && r.jawaban
             ? matchLevel(answers[key], r.jawaban)
             : null
+          const terlihat = semuaKunci || bukaKunci.has(r.no)
           return (
             <li key={r.no} className="mb-3">
               <span lang="ja" className="block text-[15px] leading-relaxed">
@@ -685,39 +826,79 @@ function LatihanList({
                 aria-label={`Jawaban ${section} nomor ${r.no}`}
                 className="jawab mt-1"
               />
+              <p className="latih-hint">Koreksi otomatis saat kamu mengetik.</p>
               {lvl && (
                 <p className={`verdict ${lvl === 'tepat' ? 'verdict--ok' : lvl === 'dekat' ? 'verdict--hangat' : 'verdict--no'}`}>
                   {lvl === 'tepat' ? 'Benar' : lvl === 'dekat' ? 'Hampir — cek bagian yang kurang' : 'Belum cocok'}
                 </p>
               )}
               {r.jawaban && (
-                <details className="mt-1">
-                  <summary className="cursor-pointer text-sm underline underline-offset-2">Lihat kunci</summary>
-                  <pre className="whitespace-pre-wrap rounded-md bg-[rgba(67,56,43,0.05)] p-2 text-sm">
-                    {r.jawaban}
-                  </pre>
-                </details>
+                <div className="mt-1">
+                  <button
+                    type="button"
+                    className="text-sm underline underline-offset-2 text-ink-soft"
+                    onClick={() =>
+                      setBukaKunci((s) => {
+                        const n = new Set(s)
+                        if (n.has(r.no)) n.delete(r.no)
+                        else n.add(r.no)
+                        return n
+                      })
+                    }
+                    aria-expanded={terlihat}
+                  >
+                    {terlihat ? 'Tutup kunci' : 'Lihat kunci'}
+                  </button>
+                  {terlihat && (
+                    <div className="kunci-box">
+                      <div className="kunci-box__col">
+                        <span className="kunci-box__tag">Jawabanmu</span>
+                        <span className="kunci-box__isi">{answers[key] || '—'}</span>
+                      </div>
+                      <div className="kunci-box__col kunci-box__col--kunci">
+                        <span className="kunci-box__tag">Kunci</span>
+                        <span className="kunci-box__isi">{r.jawaban}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
             </li>
           )
         })}
       </ol>
-      <p className="mt-2 text-sm font-medium text-ink-soft">
-        Skor {section}: {score.benar} benar dari {score.total}
-      </p>
     </>
   )
 }
 
 function AudioBar({ src, label }: { src: string; label: string }) {
+  const ref = useRef<HTMLAudioElement>(null)
+  const [ulang, setUlang] = useState(false)
+  const [speed, setSpeed] = useState(1)
+  useEffect(() => {
+    if (ref.current) ref.current.playbackRate = speed
+  }, [speed])
   return (
-    <audio
-      controls
-      preload="none"
-      src={src}
-      aria-label={label}
-      className="my-2 block w-full max-w-md"
-    />
+    <div className="audio-bar">
+      <audio ref={ref} controls preload="none" src={src} aria-label={label} loop={ulang} />
+      <label className="audio-bar__ctl">
+        <input
+          type="checkbox"
+          checked={ulang}
+          onChange={(e) => setUlang(e.target.checked)}
+          aria-label="Ulangi audio terus-menerus"
+        />
+        Ulang
+      </label>
+      <label className="audio-bar__ctl">
+        Kecepatan
+        <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="Kecepatan audio">
+          <option value={0.75}>0.75×</option>
+          <option value={1}>1×</option>
+          <option value={1.25}>1.25×</option>
+        </select>
+      </label>
+    </div>
   )
 }
 

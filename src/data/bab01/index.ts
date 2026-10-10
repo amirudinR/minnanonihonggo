@@ -19,7 +19,7 @@ const bab01: Bab = {
   renshuuB,
   renshuuC,
   mondai,
-  konteks: [konteks],
+  konteks,
   bunsho: [],
 }
 
