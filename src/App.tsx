@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import BabDetailPage from './pages/BabDetailPage'
+import SusunCampuranPage from './pages/SusunCampuranPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function ScrollTop() {
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'bab/:no', element: <BabDetailPage /> },
+      { path: 'latihan/susun', element: <SusunCampuranPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

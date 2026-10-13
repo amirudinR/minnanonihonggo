@@ -6,6 +6,7 @@ import { kaiwa } from './kaiwa'
 import { renshuuA, renshuuB, renshuuC } from './renshuu'
 import { mondai } from './mondai'
 import { konteks } from './konteks'
+import { susun } from './susun'
 
 const bab01: Bab = {
   no: 1,
@@ -21,6 +22,7 @@ const bab01: Bab = {
   mondai,
   konteks,
   bunsho: [],
+  susun,
 }
 
 export default bab01

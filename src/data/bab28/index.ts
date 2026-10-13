@@ -5,6 +5,7 @@ import { reibun } from './reibun'
 import { kaiwa } from './kaiwa'
 import { renshuuA, renshuuB, renshuuC } from './renshuu'
 import { mondai } from './mondai'
+import { susun } from './susun'
 
 const bab28: Bab = {
   no: 28,
@@ -19,6 +20,7 @@ const bab28: Bab = {
   renshuuC,
   mondai,
   bunsho: [],
+  susun,
 }
 
 export default bab28

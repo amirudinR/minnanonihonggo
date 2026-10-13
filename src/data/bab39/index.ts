@@ -5,6 +5,7 @@ import { reibun } from './reibun'
 import { kaiwa } from './kaiwa'
 import { renshuuA, renshuuB, renshuuC } from './renshuu'
 import { mondai } from './mondai'
+import { susun } from './susun'
 
 // MNN2 第39課 — Honsatsu cetak 110-117 (idx 128-135), PDF Indonesia cetak 86-91 (idx 107-112).
 const bab39: Bab = {
@@ -20,6 +21,7 @@ const bab39: Bab = {
   renshuuC,
   mondai,
   bunsho: [],
+  susun,
 }
 
 export default bab39

@@ -441,3 +441,40 @@ visual     → flashcard kanji (せんせい+先生) & progress bar ✅ · kuis 
 **Catatan:** skor ≥60 tetap auto-SELESAI (keputusan user: pertahankan); kualitas terjemahan ditampilkan terpisah agar skor exact-match tidak tercampur metrik Jaccard. P2 (search tabel kosakata, nav bawah mobile, review salah, backup JSON) ditunda.
 
 **Catatan:** screenshot script versi ini menembak **tema terlang/tersimpan di profile** (bukan paksa dark/light lewat CLI) — cek tema gelap tetap lewat ThemeToggle. Render visual dicek manual (bab34 + bab08 sesuai kunci).
+
+---
+
+## 19. Sesi "Latihan Menyusun Kalimat" (bunpou mendalam) — 2026
+
+**Tujuan:** tiap bab dapat latihan **menyusun kata → kalimat** (sentence building) yang fokus ke pola bunpou bab itu, **minimal 20 soal/bab**. Plus **halaman soal campuran** semua bab (acak, pilih jumlah 20/50/semua) supaya user "tinggal memasangkan JP-nya".
+
+**Keputusan user:**
+- Scope: **semua bab 1–50 sekaligus** (≈1000+ soal).
+- Interaksi: **dua-duanya** — klik-urut (default) + drag & drop.
+- Halaman campuran: **per pilihan jumlah** (20 / 50 / semua), soal diacak, progres + skor sesi.
+
+**Skema data baru** (`src/types/bab.ts`):
+```ts
+export interface SusunItem {
+  id: string            // unik dalam bab, mis. "s1"
+  arti: string          // arti Indonesia (petunjuk)
+  kata: string[]        // kata-kata diacak (termasuk partikel)
+  jawaban: string       // kalimat JP lengkap & benar
+  fokus?: string        // pola bunpou, mis. "～は ～です"
+  penjelasan?: string   // mini-learning setelah dikoreksi
+}
+```
+`Bab.susun?: SusunItem[]` (opsional → 50 bab lama tetap valid, validator aman).
+
+**Struktur file:**
+- `src/data/babNN/susun.ts` (BARU, ≥20 soal) + dipasang di `babNN/index.ts`.
+- `src/features/susun/` → `SoalMenyusun.tsx` (kartu 1 soal), `MenyusunLatihan.tsx` (per bab), `index.ts` (barrel).
+- `src/pages/SusunCampuranPage.tsx` (halaman campuran) + route `/latihan/susun` di `App.tsx`.
+- Section "Menyusun Kalimat" di `BabDetailPage.tsx` + link masuk dari HomePage.
+- `core/validation/schema.ts` → cek `susun` (id unik, kata ≥2, jawaban non-kosong).
+
+**Penyimpanan:** reuse `useNotes.answers` (key `b{babNo}-susun-{id}`, `campur-{babNo}-{id}`) → tanpa store baru, tetap idempoten.
+
+**Aturan konten:** soal diturunkan dari `reibun` + `contoh` bunpou + `renshuu` bab itu (pola & kalimat yang MEMANG ada di buku); `arti` dari PDF Indonesia. Tidak mengarang tata bahasa. Tidak menyentuh audio & fakta terverifikasi §4.
+
+**Status:** 🟡 rencana → eksekusi (fondasi → bab 1–50 → campuran → verifikasi).

@@ -125,6 +125,20 @@ export default function HomePage() {
           </section>
         )}
 
+        <section className="continue-card" aria-labelledby="susun-campuran-title">
+          <div className="continue-card__copy">
+            <span className="eyebrow">Latihan tambahan</span>
+            <h2 id="susun-campuran-title">Menyusun Kalimat — Campuran</h2>
+            <p>Soal acak dari seluruh bab: urutkan kata jadi kalimat Jepang yang benar.</p>
+            <span className="continue-card__meta">
+              1.000+ soal <span aria-hidden>·</span> pilih 20 / 50 / semua
+            </span>
+          </div>
+          <Link className="button button--primary" to="/latihan/susun">
+            Mulai latihan <span aria-hidden>→</span>
+          </Link>
+        </section>
+
         <section id="daftar-bab" className="chapter-index" aria-labelledby="chapter-index-title">
           <div className="section-heading">
             <div>

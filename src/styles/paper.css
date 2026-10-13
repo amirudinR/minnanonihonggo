@@ -539,6 +539,7 @@ table.vokab .romaji { color: var(--color-ink-soft); font-style: italic; }
 table.vokab .kosong { color: rgb(var(--k-rgb-ink) / 0.25); }
 table.vokab tbody tr:nth-child(even) { background: rgb(var(--k-rgb-ink) / 0.03); }
 table.vokab tbody tr:hover { background: rgb(var(--k-rgb-accent) / 0.06); }
+table.vokab tbody tr:nth-child(10n+11) td { border-top: 2px solid rgb(var(--k-rgb-ink) / 0.18); }
 
 /* ============ Mobile (<= 640px) ============ */
 @media (max-width: 640px) {
@@ -644,10 +645,71 @@ table.vokab tbody tr:hover { background: rgb(var(--k-rgb-accent) / 0.06); }
 .chip--hafal { color: var(--k-verdict-ok); border-color: rgb(var(--k-rgb-ok) / 0.35); }
 .chip--ulangi { color: var(--color-accent); border-color: rgb(var(--k-rgb-accent) / 0.35); }
 
+/* ============ Menyusun kalimat (susun) ============ */
+.susun-latihan__bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.susun-latihan__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+.susun {
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.14);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: rgb(var(--k-rgb-surface) / 0.4);
+}
+.susun__head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.susun__no { font-weight: 600; color: var(--color-accent); }
+.susun__bab { font-size: 12px; color: var(--color-ink-soft); border: 1px solid rgb(var(--k-rgb-ink) / 0.2); border-radius: 999px; padding: 1px 8px; }
+.susun__fokus { font-size: 12px; color: var(--k-verdict-ok); border: 1px solid rgb(var(--k-rgb-ok) / 0.3); border-radius: 999px; padding: 1px 8px; }
+.susun__arti { margin: 2px 0 10px; color: var(--color-ink-soft); font-style: italic; font-size: 14px; }
+.susun__jawab {
+  min-height: 52px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px dashed rgb(var(--k-rgb-ink) / 0.28);
+  background: rgb(var(--k-rgb-surface) / 0.55);
+  margin-bottom: 10px;
+}
+.susun__jawab--ok { border-color: rgb(var(--k-rgb-ok) / 0.5); background: rgb(var(--k-rgb-ok) / 0.08); }
+.susun__jawab--no { border-color: rgb(var(--k-rgb-no) / 0.45); background: rgb(var(--k-rgb-no) / 0.07); }
+.susun__placeholder { color: var(--color-ink-soft); font-size: 13px; opacity: 0.7; }
+.susun__bank { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.susun__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 7px 13px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.25);
+  background: rgb(var(--k-rgb-surface) / 0.9);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+.susun__chip:hover { background: rgb(var(--k-rgb-accent) / 0.12); border-color: rgb(var(--k-rgb-accent) / 0.4); }
+.susun__chip--dipakai { opacity: 0.35; cursor: default; }
+.susun__chip--jawab { border-style: solid; border-color: rgb(var(--k-rgb-accent) / 0.45); background: rgb(var(--k-rgb-accent) / 0.1); cursor: grab; }
+.susun__aksi { display: flex; flex-wrap: wrap; gap: 6px; }
+.susun__kunci {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--k-rgb-ok) / 0.35);
+  background: rgb(var(--k-rgb-ok) / 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.susun__kunci-tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-soft); }
+.susun__ket { font-size: 12px; color: var(--color-ink-soft); margin-top: 2px; }
+
 /* ============ Flashcard ============ */
 .flash { margin-top: 4px; }
 .flash__bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
 .flash__seg { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+.flash__seg[role="tablist"] .chip--aktif { border-bottom: 3px solid var(--color-accent); border-radius: 6px 6px 0 0; }
 .flash__acak { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--color-ink-soft); cursor: pointer; }
 .flash__acak input { accent-color: var(--color-accent); width: 15px; height: 15px; }
 .flash__card {
@@ -899,6 +961,21 @@ table.vokab tbody tr:hover { background: rgb(var(--k-rgb-accent) / 0.06); }
 /* Koreksi panel: baris terjemahan + aksi */
 .koreksi__terj { margin-top: 8px; font-size: 13px; color: var(--color-ink-soft); }
 .koreksi__aksi { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Kosakata search: sticky + icon */
+.kosakata-search {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--color-paper);
+  padding: 4px 0;
+}
+.kosakata-search input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  padding-left: 32px !important;
+}
 
 /* Home: filter + pencarian */
 .home-filter { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 4px 0 12px; }

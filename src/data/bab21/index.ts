@@ -3,6 +3,7 @@ import { bunpou, catatanTataBahasa } from './bunpou'
 import { kaiwa } from './kaiwa'
 import { kosakata } from './kosakata'
 import { mondai } from './mondai'
+import { susun } from './susun'
 import { reibun } from './reibun'
 import { renshuuA, renshuuB, renshuuC } from './renshuu'
 
@@ -19,6 +20,7 @@ export const bab21: Bab = {
   renshuuC,
   mondai,
   bunsho: [],
+  susun,
 }
 
 export default bab21

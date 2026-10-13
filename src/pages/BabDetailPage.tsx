@@ -9,6 +9,7 @@ import { nilaiTerjemahan } from '../core/text/terjemahan'
 import { Flashcard } from '../features/flashcard/Flashcard'
 import { Kuis } from '../features/kuis/Kuis'
 import { ThemeToggle } from '../features/theme/ThemeToggle'
+import { MenyusunLatihan } from '../features/susun'
 
 export default function BabDetailPage() {
   const { no } = useParams()
@@ -50,10 +51,20 @@ export default function BabDetailPage() {
     const i = modeTab.indexOf(modeKosakata)
     const next = e.key === 'ArrowRight' ? (i + 1) % modeTab.length : (i + modeTab.length - 1) % modeTab.length
     setModeKosakata(modeTab[next])
+    window.location.hash = modeTab[next]
     requestAnimationFrame(() => {
       document.getElementById(`tab-kosakata-${modeTab[next]}`)?.focus()
     })
   }
+
+  // Deep-linking: sinkronisasi tab dengan URL hash (#flash, #kuis)
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '')
+    if (modeTab.includes(hash as (typeof modeTab)[number])) {
+      setModeKosakata(hash as (typeof modeTab)[number])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (!bab) {
     return (
@@ -165,7 +176,11 @@ export default function BabDetailPage() {
                   id={`tab-kosakata-${m}`}
                   tabIndex={modeKosakata === m ? 0 : -1}
                   className={`chip ${modeKosakata === m ? 'chip--aktif' : ''}`}
-                  onClick={() => setModeKosakata(m)}
+                  onClick={() => {
+                    setModeKosakata(m)
+                    window.location.hash = m
+                    document.getElementById(`panel-kosakata-${m}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }}
                 >
                   {label}
                 </button>
@@ -173,15 +188,17 @@ export default function BabDetailPage() {
             </div>
             {modeKosakata === 'tabel' && (
               <div id="panel-kosakata-tabel" role="tabpanel" aria-labelledby="tab-kosakata-tabel">
-              <input
-                type="search"
-                className="home-search"
-                style={{ marginBottom: 8, maxWidth: 320 }}
-                placeholder="Cari kata…"
-                value={cariKata}
-                onChange={(e) => setCariKata(e.target.value)}
-                aria-label="Cari kosakata"
-              />
+              <div className="kosakata-search" style={{ marginBottom: 8, maxWidth: 320 }}>
+                <input
+                  type="search"
+                  className="home-search"
+                  style={{ width: '100%' }}
+                  placeholder="Cari kata…"
+                  value={cariKata}
+                  onChange={(e) => setCariKata(e.target.value)}
+                  aria-label="Cari kosakata"
+                />
+              </div>
               <table className="vokab">
                 <caption className="sr-caption">Kosakata Bab {num}</caption>
                 <thead>
@@ -328,12 +345,17 @@ export default function BabDetailPage() {
           </Section>
         )}
 
+        {bab.susun && bab.susun.length > 0 && (
+          <Section id="susun" title="Menyusun Kalimat">
+            <MenyusunLatihan babNo={num} items={bab.susun} />
+          </Section>
+        )}
+
         {bab.renshuuA.length > 0 && (
           <Section id="renshuuA" title="Renshuu A">
             <LatihanList items={bab.renshuuA} section="A" babNo={num} />
           </Section>
-        )}
-        {bab.renshuuB.length > 0 && (
+        )}        {bab.renshuuB.length > 0 && (
           <Section id="renshuuB" title="Renshuu B">
             <LatihanList items={bab.renshuuB} section="B" babNo={num} />
           </Section>
@@ -434,6 +456,7 @@ function sectionsOf(bab: Bab): BabSection[] {
   if (bab.reibun.length > 0) arr.push({ id: 'reibun', short: 'Reibun', label: 'Reibun' })
   if (bab.kaiwa) arr.push({ id: 'kaiwa', short: 'Kaiwa', label: 'Kaiwa' })
   if (bab.konteks?.length) arr.push({ id: 'konteks', short: 'Konteks', label: 'Konteks' })
+  if (bab.susun?.length) arr.push({ id: 'susun', short: 'Menyusun', label: 'Menyusun Kalimat' })
   if (bab.renshuuA.length > 0) arr.push({ id: 'renshuuA', short: 'Latih A', label: 'Latih A' })
   if (bab.renshuuB.length > 0) arr.push({ id: 'renshuuB', short: 'Latih B', label: 'Latih B' })
   if (bab.renshuuC.length > 0) arr.push({ id: 'renshuuC', short: 'Latih C', label: 'Latih C' })

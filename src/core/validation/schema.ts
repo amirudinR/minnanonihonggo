@@ -1,5 +1,7 @@
 import type { Bab } from '../../types/bab'
 import { cekKonsistensiAudio } from '../audio/manifest'
+import { canonical } from '../text/normalize'
+import { urutanBenar } from '../text/susun'
 
 export interface ValidasiHasil {
   bab: number
@@ -155,6 +157,27 @@ const cekFurigana = (
   const mondaiBerAudio = bab.mondai.filter((m) => m.audio).length
   const audioErr = cekKonsistensiAudio(bab.no, mondaiBerAudio)
   if (audioErr) warnings.push(audioErr)
+
+  // susun (latihan menyusun kalimat) — opsional
+  if (bab.susun?.length) {
+    const idsS = new Set<string>()
+    bab.susun.forEach((s) => {
+      if (!s.id?.trim()) errors.push('susun: item tanpa id')
+      if (idsS.has(s.id)) errors.push(`susun: id duplikat ${s.id}`)
+      idsS.add(s.id)
+      if (!s.jawaban?.trim()) errors.push(`susun ${s.id}: jawaban kosong`)
+      if (!s.kata || s.kata.length < 2) {
+        errors.push(`susun ${s.id}: butuh minimal 2 kata`)
+      } else {
+        // `kata` harus bisa diurutkan membentuk `jawaban` (unit boleh punya spasi internal)
+        const urutBenar = urutanBenar(s)
+        if (urutBenar.length !== s.kata.length || canonical(urutBenar.join(' ')) !== canonical(s.jawaban)) {
+          errors.push(`susun ${s.id}: 'kata' tidak membentuk 'jawaban'`)
+        }
+      }
+      if (!s.arti?.trim()) warnings.push(`susun ${s.id}: tanpa arti`)
+    })
+  }
 
   return { bab: bab.no, errors, warnings }
 }
