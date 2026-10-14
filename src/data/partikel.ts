@@ -80,12 +80,12 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 1,
-        fungsi: 'Penanda topik',
+        fungsi: 'Partikel topik',
         keterangan:
-          'Di Bab 1, は dipakai untuk menandai topik kalimat pola 「A は B です」 (perkenalan diri). Ditulis は tetapi dibaca "wa". Topik yang sudah jelas dari konteks boleh dihilangkan.',
+          'Partikel は menunjukkan bahwa kata sebelumnya adalah topik kalimat. Si pembicara memakai は untuk hal yang mau dibicarakannya, lalu menambahkan keterangan (penjelasan) tentang topik itu. [Perhatian] Partikel は dibaca wa.',
         contoh: [
-          { jp: 'わたしは 学生です。', id: 'Saya (adalah) pelajar.' },
-          { jp: 'これは 本です。', id: 'Ini buku.' },
+          { jp: 'わたしは マイク・ミラーです。', id: 'Saya Mike Miller.' },
+          { jp: 'わたしは 会社員です。', id: 'Saya pegawai perusahaan.' },
         ],
       },
     ],
@@ -106,12 +106,11 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 1,
-        fungsi: 'Penanda subjek',
+        fungsi: 'Penanda subjek pada kalimat tanya',
         keterangan:
-          'Di Bab 1, が menandai subjek pada pola 「A は B が あります／います」 (keberadaan) dan sebagai penegas subjek pada kalimat tanya だれ／なに.',
+          'Di Bab 1, が menandai subjek pertanyaan pada pola だれ／どなた＋が (mis. あの 方は どなたですか). Subjek ditandai が ketika ingin menanyakan/menegaskan siapa pelakunya, sedangkan は dipakai untuk topik yang sudah jelas.',
         contoh: [
-          { jp: '部屋に 机が あります。', id: 'Di kamar ada meja.' },
-          { jp: 'だれが 来ますか。……ミラーさんが 来ます。', id: 'Siapa yang datang? ……Sdr. Miller yang datang.' },
+          { jp: 'あの 方は どなたですか。', id: 'Siapakah orang itu?' },
         ],
       },
       {
@@ -158,11 +157,11 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 6,
-        fungsi: 'Objek langsung',
+        fungsi: 'Objek Kata Kerja Transitif',
         keterangan:
-          'Di Bab 6, を menandai objek langsung (sasaran) kata kerja transitif. Ditulis を, dibaca "o".',
+          'Objek dari Kata Kerja Transitif ditunjukkan oleh partikel を. [Perhatian] を hanya dipakai untuk menulis partikel saja. します juga disertai Kata Benda sebagai objek (サッカーを します, 仕事を します, 電話を します).',
         contoh: [
-          { jp: 'ご飯を 食べます。', id: 'Makan nasi.' },
+          { jp: 'ジュースを 飲みます。', id: 'Minum jus.' },
           { jp: '毎日 日本語を 勉強します。', id: 'Setiap hari belajar bahasa Jepang.' },
         ],
       },
@@ -170,7 +169,11 @@ export const partikel: Partikel[] = [
         bab: 7,
         fungsi: 'Objek pada KK memberi/menerima',
         keterangan:
-          'Di Bab 7, を menandai objek pada pola あげます／もらいます／くれます (benda yang diberikan/diterima) dan objek kata kerja gerak/melihat/mendengar.',
+          'Pada pola あげます／もらいます dan lain-lain, Kata Benda₂ (barang) ditandai partikel を sebagai objek, sedangkan orang yang diberi/diberikan ditandai に.',
+        contoh: [
+          { jp: '[わたしは] 木村さんに 花を あげました。', id: 'Saya memberikan Sdr. Kimura bunga.' },
+          { jp: '[わたしは] 山田さんに 花を もらいました。', id: 'Saya mendapatkan bunga dari Sdr. Yamada.' },
+        ],
       },
       {
         bab: 17,
@@ -211,29 +214,38 @@ export const partikel: Partikel[] = [
         bab: 4,
         fungsi: 'Titik waktu',
         keterangan:
-          'Di Bab 4, に menandai titik waktu (jam/tanggal) pada pola 「Kata Benda(waktu) に Kata Kerja」. Kata waktu seperti きょう／あした／きのう tidak memakai に.',
+          'Setelah Kata Benda yang menunjukkan waktu, dibubuhkan partikel に untuk menyatakan waktu ketika melakukan sesuatu. Kata Benda waktu seperti きょう・あした・きのう・いま・まいにち tidak dibubuhkan に.',
         contoh: [{ jp: '毎朝 6時に 起きます。', id: 'Setiap pagi bangun jam 6.' }],
       },
       {
         bab: 7,
-        fungsi: 'Sasaran memberi/menerima',
+        fungsi: 'Penerima / pemberi (に)',
         keterangan:
-          'Di Bab 7, に menandai sasaran penerima pada あげます／もらいます／くれます (kepada siapa benda diberikan).',
-        contoh: [{ jp: 'ミラーさんに 本を あげました。', id: 'Memberi buku kepada Sdr. Miller.' }],
+          'Kata Kerja あげます, かします, おしえます menunjukkan memberi barang/informasi dan memerlukan lawan yang diberi → Kata Benda (orang) dibubuhkan partikel に. Sebaliknya もらいます, かります, ならいます menerima → orang yang memberikan juga dibubuhkan に. [Perhatian] Untuk pola ini から dapat menggantikan に, terutama bila lawannya organisasi (mis. 銀行から お金を 借りました).',
+        contoh: [
+          { jp: '[わたしは] 木村さんに 花を あげました。', id: 'Saya memberikan Sdr. Kimura bunga.' },
+          { jp: '[わたしは] 山田さんに 花を もらいました。', id: 'Saya mendapatkan bunga dari Sdr. Yamada.' },
+        ],
       },
       {
         bab: 10,
         fungsi: 'Tempat keberadaan',
         keterangan:
-          'Di Bab 10, に menandai tempat keberadaan benda/orang pada あります／います (駅に います).',
-        contoh: [{ jp: '駅に います。', id: 'Berada di stasiun.' }],
+          'Untuk menyatakan keberadaan benda atau orang di suatu tempat, tempatnya dinyatakan dengan partikel に (mis. わたしの 部屋に 机が あります / 事務所に ミラーさんが います). Pada pola 「Kata Benda は tempat に あります／います」 Kata Benda di depan は adalah topik.',
+        contoh: [
+          { jp: 'わたしの 部屋に 机が あります。', id: 'Di kamar saya ada meja.' },
+          { jp: '事務所に ミラーさんが います。', id: 'Di kantor ada Sdr. Miller.' },
+        ],
       },
       {
         bab: 13,
-        fungsi: 'Tujuan perpindahan',
+        fungsi: 'Tujuan aksi (へ に)',
         keterangan:
-          'Di Bab 13, に menandai arah tujuan perpindahan (行きます／来ます／帰ります) dan tujuan gerak (mis. 買い物に行きます).',
-        contoh: [{ jp: '日本に 行きます。', id: 'Pergi ke Jepang.' }],
+          'Objek untuk aksi dari いきます, きます, かえります ditunjuk dengan に (mis. 神戸へ 買い物に 行きます). Untuk ～ます (かいものします, べんきょうします) dipakai bentuk Kata Benda に いきます／きます／かえります.',
+        contoh: [
+          { jp: '神戸へ 買い物に 行きます。', id: 'Pergi ke Kobe untuk belanja.' },
+          { jp: '日本へ 美術の 勉強に 来ました。', id: 'Datang ke Jepang untuk belajar seni.' },
+        ],
       },
       {
         bab: 15,
@@ -258,19 +270,24 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 5,
-        fungsi: 'Arah tujuan',
+        fungsi: 'Arah tujuan perpindahan',
         keterangan:
-          'Di Bab 5, へ menandai arah tujuan perpindahan (行きます／来ます／帰ります). Dibaca "e". Dibanding に, へ lebih menekankan arah, sedangkan に menekankan titik tujuan.',
+          'Jika menunjukkan pindah, arah pindahnya dinyatakan dengan membubuhkan partikel へ. [Perhatian] Partikel へ diucapkan e.',
         contoh: [
-          { jp: '日本へ 行きます。', id: 'Pergi ke Jepang.' },
-          { jp: '家へ 帰ります。', id: 'Pulang ke rumah.' },
+          { jp: '京都へ 行きます。', id: 'Pergi ke Kyoto.' },
+          { jp: '日本へ 来ました。', id: 'Datang ke Jepang.' },
+          { jp: 'うちへ 帰ります。', id: 'Pulang ke rumah.' },
         ],
       },
       {
         bab: 13,
-        fungsi: 'Arah tujuan perpindahan (lanjutan)',
+        fungsi: 'Arah tujuan (dengan に)',
         keterangan:
-          'Di Bab 13, へ dipakai berdampingan dengan に untuk menyatakan arah pergi/ke tempat (へ lebih halus, menekankan arah).',
+          'Objek untuk aksi dari いきます, きます, かえります ditunjuk dengan に. Untuk arah/tujuan, へ dan に dipakai berdampingan (神戸へ インド料理を 食べに 行きます).',
+        contoh: [
+          { jp: '神戸へ インド料理を 食べに 行きます。', id: 'Pergi makan masakan India ke Kobe.' },
+          { jp: '神戸へ 買い物に 行きます。', id: 'Pergi ke Kobe untuk belanja.' },
+        ],
       },
     ],
   },
@@ -290,24 +307,30 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 5,
-        fungsi: 'Alat / cara',
+        fungsi: 'Sarana / cara (kendaraan)',
         keterangan:
-          'Di Bab 5, で menandai alat atau cara yang dipakai melakukan tindakan (電車で 行きます = pergi dengan kereta).',
-        contoh: [{ jp: '電車で 行きます。', id: 'Pergi dengan kereta.' }],
+          'Partikel で menunjukkan sarana dan cara. Yang diikuti Kata Benda yang menunjukkan kendaraan adalah menunjukkan sarana transportasi. Jika pergi dengan jalan kaki digunakan あるいて, tetapi tidak dibubuhkan partikel で.',
+        contoh: [
+          { jp: '電車で 行きます。', id: 'Pergi dengan kereta rel listrik.' },
+          { jp: 'タクシーで 来ました。', id: 'Datang dengan taksi.' },
+        ],
       },
       {
         bab: 6,
-        fungsi: 'Tempat tindakan',
+        fungsi: 'Tempat melakukan aksi',
         keterangan:
-          'Di Bab 6, で menandai tempat terjadinya tindakan (bukan keberadaan): 図書館で 勉強します. Bandingkan tempat keberadaan yang memakai に.',
-        contoh: [{ jp: '図書館で 勉強します。', id: 'Belajar di perpustakaan.' }],
+          'Partikel で disertai Kata Benda yang menunjukkan tempat, kemudian menunjukkan tempat melakukan aksi.',
+        contoh: [{ jp: '駅で 新聞を 買います。', id: 'Membeli surat kabar di stasiun.' }],
       },
       {
         bab: 7,
-        fungsi: 'Alat / bahasa',
+        fungsi: 'Alat / sarana / bahasa',
         keterangan:
-          'Di Bab 7, で menandai alat atau bahasa yang dipakai (mis. はしで 食べます, 日本語で 手紙を 書きます).',
-        contoh: [{ jp: '日本語で 手紙を 書きます。', id: 'Menulis surat dengan bahasa Jepang.' }],
+          'Pada bagian ini mempelajari partikel で yang menunjukkan sarana dan cara (mis. alat dan bahasa yang dipakai untuk melakukan sesuatu).',
+        contoh: [
+          { jp: 'はしで 食べます。', id: 'Makan dengan sumpit.' },
+          { jp: '日本語で レポートを 書きます。', id: 'Menulis laporan dalam bahasa Jepang.' },
+        ],
       },
     ],
   },
@@ -334,10 +357,13 @@ export const partikel: Partikel[] = [
       },
       {
         bab: 5,
-        fungsi: 'Bersama (orang yang menemani)',
+        fungsi: 'Bersama (orang/hewan yang menemani)',
         keterangan:
-          'Di Bab 5, と menandai orang yang menemani (家族と 旅行します = bepergian bersama keluarga).',
-        contoh: [{ jp: '家族と 旅行します。', id: 'Bepergian bersama keluarga.' }],
+          'Jika melakukan sesuatu bersama orang (hewan) maka ditunjukkan dengan membubuhkan partikel と. Jika melakukan suatu aksi sendiri digunakan ひとりで. Dalam hal ini tidak menggunakan partikel と.',
+        contoh: [
+          { jp: '家族と 日本へ 来ました。', id: 'Datang ke Jepang bersama dengan keluarga.' },
+          { jp: '一人で 東京へ 行きます。', id: 'Pergi ke Tokyo sendirian.' },
+        ],
       },
       {
         bab: 21,
@@ -365,8 +391,8 @@ export const partikel: Partikel[] = [
         bab: 2,
         fungsi: 'Juga',
         keterangan:
-          'Di Bab 2, も menggantikan は／が untuk menyatakan "juga" (サントスさんも 学生です).',
-        contoh: [{ jp: 'サントスさんも 学生です。', id: 'Sdr. Santos juga pelajar.' }],
+          'も digunakan apabila menyatakan predikatnya dianggap sama dengan predikat sebelumnya. Letaknya sama seperti は.',
+        contoh: [{ jp: 'サントスさんも 会社員です。', id: 'Sdr. Santos juga pegawai perusahaan.' }],
       },
       {
         bab: 3,
@@ -376,9 +402,14 @@ export const partikel: Partikel[] = [
       },
       {
         bab: 5,
-        fungsi: 'Juga (pelengkap)',
+        fungsi: 'Menyangkal total (Kata Tanya + も + negatif)',
         keterangan:
-          'Di Bab 5, も memakai pola yang sama dengan は untuk menyatakan "juga" pada kalimat dengan kata kerja.',
+          'Apabila ingin menyangkal hal yang ditanyakan oleh Kata Tanya secara total, pembentukan Kata Kerja negatif dengan membubuhkan partikel も pada Kata Tanya (どこ[へ]も 行きません = tidak pergi ke mana-mana).',
+        contoh: [
+          { jp: 'どこ[へ]も 行きません。', id: 'Tidak pergi ke mana-mana.' },
+          { jp: '何も 食べません。', id: 'Tidak makan apa-apa.' },
+          { jp: 'だれも 来ませんでした。', id: 'Tidak datang siapa-siapa.' },
+        ],
       },
       {
         bab: 30,
@@ -405,17 +436,20 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 1,
-        fungsi: 'Kepemilikan (KB1 の KB2)',
+        fungsi: 'Penghubung KB₁ の KB₂',
         keterangan:
-          'Di Bab 1, の menghubungkan dua kata benda untuk menyatakan kepemilikan atau atribut (私の 傘 = payung saya).',
-        contoh: [{ jp: 'これは 私の 傘です。', id: 'Ini payung saya.' }],
+          'Jika Kata Benda₁ di depan menerangkan Kata Benda₂ di belakangnya, kedua Kata Benda disambung dengan の. Pada Pelajaran 1 Kata Benda₁ menunjukkan satu kesatuan Kata Benda₂ (mis. ミラーさんは IMC の 社員です).',
+        contoh: [{ jp: 'ミラーさんは IMC の 社員です。', id: 'Sdr. Miller pegawai perusahaan IMC.' }],
       },
       {
         bab: 2,
-        fungsi: 'Penjelas / kategori',
+        fungsi: 'Penjelas / kepemilikan / pengganti KB',
         keterangan:
-          'Di Bab 2, の menjelaskan KB2 dengan KB1 sebagai kategori/atribut (コンピューターの 本 = buku tentang komputer) dan menggantikan benda yang sudah disebut (ミラーさんのです).',
-        contoh: [{ jp: 'コンピューターの 本です。', id: 'Buku (tentang) komputer.' }],
+          'Jika Kata Benda₁ menerangkan Kata Benda₂, disambung dengan の. (1) KB₁ menerangkan sesuatu dari KB₂ (これは コンピューターの 本です). (2) KB₁ menyatakan pemilik KB₂ (これは わたしの 本です). Kata の juga berfungsi sebagai pengganti Kata Benda yang telah disebut sebelumnya (ミラーさんのです = milik Sdr. Miller).',
+        contoh: [
+          { jp: 'これは コンピューターの 本です。', id: 'Ini buku komputer.' },
+          { jp: 'これは わたしの 本です。', id: 'Ini buku saya.' },
+        ],
       },
       {
         bab: 3,
@@ -490,10 +524,13 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 10,
-        fungsi: 'Dan (daftar contoh)',
+        fungsi: 'Menyebut beberapa hal setara (contoh)',
         keterangan:
-          'Di Bab 10, や menyebutkan beberapa benda sebagai contoh (tidak semua) pada kalimat keberadaan: "…dan … (antara lain)". Berbeda dengan と yang menyebut daftar lengkap.',
-        contoh: [{ jp: '箱の中に 手紙や 写真が あります。', id: 'Di dalam kotak ada surat dan foto (antara lain).' }],
+          'Partikel や digunakan untuk menyebutkan beberapa (lebih dari dua) Kata Benda secara setara — mengambil beberapa hal saja yang mewakili. Berbeda dengan と yang menyebut semua Kata Benda secara setara. Sering dilanjutkan など.',
+        contoh: [
+          { jp: '箱の 中に 手紙や 写真が あります。', id: 'Di dalam kotak ada surat dan foto.' },
+          { jp: '箱の 中に 手紙や 写真などが あります。', id: 'Di dalam kotak ada surat, foto dan lain-lainnya.' },
+        ],
       },
     ],
   },
@@ -513,8 +550,11 @@ export const partikel: Partikel[] = [
         bab: 11,
         fungsi: 'Hanya (membatasi jumlah)',
         keterangan:
-          'Di Bab 11, だけ membatasi jumlah — "hanya/sebanyak itu saja". Menempel pada kata bantu bilangan atau kata benda.',
-        contoh: [{ jp: 'りんごを 一つだけ 買いました。', id: 'Membeli hanya satu apel.' }],
+          'だけ diletakkan di belakang Kata Keterangan Bilangan atau Kata Benda, yang mempunyai arti tidak ada yang lebih dari itu atau tidak ada selain itu.',
+        contoh: [
+          { jp: 'パワー電気に 外国人の 社員が 1人 だけ います。', id: 'Di Power Elektronik hanya ada seorang pegawai orang asing.' },
+          { jp: '休みは 日曜日だけです。', id: 'Hari libur hanya hari Minggu saja.' },
+        ],
       },
     ],
   },
@@ -554,12 +594,12 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 12,
-        fungsi: 'Perbandingan',
+        fungsi: 'Perbandingan (より / の ほうが / ほど)',
         keterangan:
-          'Di Bab 12, より menandai pembanding "lebih … daripada" (A は B より …), dan ほど dipakai pada bentuk negatif "tidak se-… (dengan)" (A は B ほど …negatif).',
+          'より menyatakan sifat/kondisi Kata Benda₁ dengan Kata Benda₂ sebagai patokan (「Kata Benda₁ は Kata Benda₂ より Kata Sifat です」= mobil ini lebih besar daripada mobil itu). Membandingkan dua benda memakai 「Kata Benda₁ と Kata Benda₂ と どちらが ～ですか ……～の ほうが ～です」. Bentuk negatif "tidak se-… " memakai ほど.',
         contoh: [
-          { jp: 'タイは 日本より 暑いです。', id: 'Thailand lebih panas daripada Jepang.' },
-          { jp: '東京は 大阪ほど 暑くないです。', id: 'Tokyo tidak sepanas Osaka.' },
+          { jp: 'この 車は あの 車より 大きいです。', id: 'Mobil ini lebih besar daripada mobil itu.' },
+          { jp: 'サッカーと 野球と どちらが おもしろいですか。……サッカーの ほうが おもしろいです。', id: 'Yang mana lebih menarik, sepak bola atau baseball? ……Sepak bola yang lebih menarik.' },
         ],
       },
     ],
@@ -793,24 +833,27 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 3,
-        fungsi: 'Penegas akhir kalimat',
+        fungsi: 'Penegas akhir kalimat (ね)',
         keterangan:
-          'Di Bab 3, ね meminta persetujuan/simpati lawan bicara ("ya kan?"). Tidak mengubah fakta kalimat, hanya nuansa percakapan.',
+          'Partikel ね dibubuhkan pada akhir kalimat untuk mengharapkan persetujuan atau simpati lawan bicara. Tidak mengubah fakta kalimat, hanya nuansa percakapan.',
         contoh: [{ jp: '今日は 寒いですね。', id: 'Hari ini dingin ya.' }],
       },
       {
         bab: 4,
-        fungsi: 'Penegas (～ね di akhir)',
+        fungsi: 'Penegas (ね di akhir)',
         keterangan:
-          'Di Bab 4, ね dibubuhkan di akhir kalimat ketika mengharapkan persetujuan dari lawan bicara, menegaskan, atau menekankan (毎日 10時まで 勉強します。……大変ですね).',
+          'Partikel ね dibubuhkan pada akhir kalimat, digunakan ketika mengharapkan persetujuan dari lawan bicara, menegaskan, atau menekankan.',
         contoh: [{ jp: '毎日 10時まで 勉強します。……大変ですね。', id: 'Setiap hari belajar sampai pukul sepuluh. ……O, berat ya.' }],
       },
       {
         bab: 5,
-        fungsi: 'よ = penegasan/info baru',
+        fungsi: 'よ = memberi tahu hal baru',
         keterangan:
-          'Di Bab 5, よ memberi penegasan atau menyampaikan info baru ("lho/ya") kepada lawan bicara (あの 店は おいしいですよ).',
-        contoh: [{ jp: 'あの 店は おいしいですよ。', id: 'Toko itu enak lho.' }],
+          'Partikel よ dibubuhkan pada akhir kalimat dan digunakan untuk memberitahukan suatu hal yang belum diketahui oleh lawan bicara, atau menyampaikan tanggapan dan pendapat si pembicara kepada lawan bicaranya.',
+        contoh: [
+          { jp: '次の「普通」ですよ。', id: 'Yang "Biasa" berikutnya.' },
+          { jp: '北海道に 馬が たくさん いますよ。', id: 'Di Hokkaido ada banyak kuda.' },
+        ],
       },
     ],
   },
@@ -907,11 +950,11 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 10,
-        fungsi: 'Dan lain-lain',
+        fungsi: 'Dan lain-lain (memperkirakan masih ada yang lain)',
         keterangan:
-          'Di Bab 10, など berarti "dan lain-lain/semacam itu", sering dipakai setelah contoh benda atau kegiatan. Bentuk santai: なんか.',
+          'など dipakai untuk menyatakan bahwa masih ada Kata Benda lain yang tidak disebutkan secara jelas, dibubuhkan di belakang Kata Benda yang disebut terakhir (sering mengikuti や).',
         contoh: [
-          { jp: '果物は りんごや みかんなどを 食べます。', id: 'Buah, makan apel, jeruk, dan lain-lain.' },
+          { jp: '箱の 中に 手紙や 写真などが あります。', id: 'Di dalam kotak ada surat, foto dan lain-lainnya.' },
         ],
       },
     ],
@@ -954,12 +997,12 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 11,
-        fungsi: 'Kira-kira / sekitar',
+        fungsi: 'Perkiraan jumlah (kira-kira)',
         keterangan:
-          'Di Bab 11, くらい／ぐらい menandai perkiraan jumlah atau waktu ("sekitar/kira-kira"). Juga bisa berarti "sampai (sedemikian)" untuk menekankan derajat.',
+          'ぐらい mengikuti Kata Keterangan Bilangan dan menunjukkan perkiraan jumlah. (Untuk menanyakan lama waktu dipakai どのくらい.)',
         contoh: [
-          { jp: '30分ぐらい かかります。', id: 'Butuh sekitar 30 menit.' },
-          { jp: '10人ぐらい 来ました。', id: 'Sekitar 10 orang datang.' },
+          { jp: '学校に 先生が 30人ぐらい います。', id: 'Di sekolah ada kira-kira tiga puluh orang guru.' },
+          { jp: '15分ぐらい かかります。', id: 'Memerlukan waktu kira-kira lima belas menit.' },
         ],
       },
     ],
