@@ -24,7 +24,7 @@
 | `src/pages/BabDetailPage.tsx` | 969 | Navigasi bab dengan arrow key (←/→) |
 | `src/pages/HomePage.tsx` | 206 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
-| `src/pages/PartikelPage.tsx` | 388 | Kunci localStorage untuk jawaban ujian partikel (id soal) |
+| `src/pages/PartikelPage.tsx` | 474 | Kunci localStorage untuk jawaban ujian partikel (id soal) |
 | `src/pages/SusunCampuranPage.tsx` | 133 | exports: SusunCampuranPage |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |

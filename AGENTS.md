@@ -169,7 +169,10 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 ## 3b. Detail implementasi halaman Partikel (JANGAN di-regresi)
 
 Halaman `/partikel` (fitur baru, sudah live):
-- `src/data/partikel.ts` → **38 partikel**. Interface `Partikel { bentuk, romaji, fungsi, penjelasan, contoh[], bab[], kelompok }`. `kelompok`: `dasar | tempat-arah | waktu | penghubung | akhir | lanjutan` (+ `KELOMPOK`, `babTerkait()`).
+- `src/data/partikel.ts` → **38 partikel**. Interface `Partikel { bentuk, romaji, fungsi, penjelasan, contoh[], bab[], kelompok, perBab?[] }`. `kelompok`: `dasar | tempat-arah | waktu | penghubung | akhir | lanjutan` (+ `KELOMPOK`, `babTerkait()`).
+- **`perBab[]` (FungsiBab):** keterangan lengkap partikel **per bab** (`{ bab, fungsi, keterangan, contoh? }`), diturunkan dari materi bunpou tiap bab (bukan karangan). Aturan: `perBab[].bab ⊆ bab[]`, semua 38 partikel punya `perBab` (13 multi-bab punya entri berbeda per bab). Helper `fungsiUntukBab(p, bab)` → `{ fungsi, keterangan, contoh, spesifik }`.
+- **Tombol pilih bab** di `/partikel` (`.partikel-babbar`): 1 tombol "Semua" + 1 tombol per bab. Berlaku untuk **daftar (filter) & ujian (cakupan soal)**. Dropdown "Bab" lama di bagian search **sudah diganti** oleh baris tombol ini.
+- **Kartu akordeon per bab** (`.partikel-akordeon`): tiap bab jadi panel yang bisa dibuka; bab aktif otomatis terbuka. Panel berisi keterangan lengkap + contoh + link "Buka materi Bab N".
 - `src/data/partikel-soal.ts` → **100 soal** pilihan ganda (`SoalPartikel { id, soal, arti, jawaban, pilihan[], bab }`). `soal` pakai rumpang `___`. **Pastikan `pilihan` tidak duplikat & memuat `jawaban`** (pernah salah: `['や','や']`).
 - `src/pages/PartikelPage.tsx` → 2 mode (Daftar & Penjelasan / Ujian Partikel). Fitur: search, filter kelompok & bab, navigasi prev/next partikel + **keyboard ←/→**, sorot kartu (`.partikel-slot--aktif`), deep-link `#daftar/#ujian/#ujian-mulai`.
 - **Simpan jawaban ujian:** reuse `useNotes.setAnswer` dengan key `partikel-ujian-{id}` (TANPA store baru). Idempoten. Reset = set tiap key ke `''` lalu acak ulang.
