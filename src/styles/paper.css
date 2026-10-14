@@ -1017,11 +1017,14 @@ table.vokab tbody tr:nth-child(10n+11) td { border-top: 2px solid rgb(var(--k-rg
 /* ============ Halaman Partikel (/partikel) ============ */
 .partikel-tab { margin: 8px 0 14px; }
 .partikel-tools { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 14px; }
+/* Input search jangan melar sebagai flex-item di container column. */
+.partikel-tools .home-search { flex: 0 0 auto; width: 100%; }
 .partikel-filter { display: flex; gap: 12px; flex-wrap: wrap; }
 .partikel-filter__label { display: flex; flex-direction: column; gap: 4px; min-width: 150px; }
 .partikel-filter__label select { min-height: 40px; }
 
-/* Pemilih bab (tombol segmen) — berlaku untuk daftar & ujian. */.partikel-babbar {
+/* Pemilih bab (tombol segmen) — berlaku untuk daftar & ujian. */
+.partikel-babbar {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
   margin: 4px 0 14px;
 }
