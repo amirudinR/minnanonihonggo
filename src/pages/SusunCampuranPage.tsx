@@ -49,7 +49,7 @@ export default function SusunCampuranPage() {
   )
 
   return (
-    <div className="app mx-auto max-w-3xl p-4 md:p-8">
+    <div className="app mx-auto max-w-5xl p-4 md:p-8 lg:p-10">
       <main className="book">
         <span className="page-curl" aria-hidden />
         <nav aria-label="Navigasi" className="text-sm">

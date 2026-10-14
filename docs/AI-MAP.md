@@ -7,23 +7,29 @@
 
 | File | Baris | Deskripsi |
 |---|---|---|
-| `src/App.tsx` | 44 | exports: App |
+| `src/App.tsx` | 48 | exports: App |
 | `src/core/audio/manifest.ts` | 52 | Cek konsistensi: jumlah mondai di data bab harus cocok dengan manifest |
 | `src/core/text/normalize.ts` | 79 | Bandingkan jawaban user vs kunci buku |
+| `src/core/text/susun.ts` | 112 | Logika murni latihan menyusun kalimat (tanpa React) |
 | `src/core/text/terjemahan.ts` | 56 | Bandingkan terjemahan user vs terjemahan buku memakai Jaccard + cakupan kata kunci |
-| `src/core/validation/schema.ts` | 165 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
-| `src/features/flashcard/Flashcard.tsx` | 184 | Baca set tersimpan dari localStorage (JSON) |
-| `src/features/kuis/Kuis.tsx` | 158 | Bangun soal pilihan ganda: "Apa arti <kana>?" dengan 3 pengecoh |
+| `src/core/validation/schema.ts` | 188 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
+| `src/features/flashcard/Flashcard.tsx` | 197 | Baca set tersimpan dari localStorage (JSON) |
+| `src/features/kuis/Kuis.tsx` | 159 | Bangun soal pilihan ganda: "Apa arti <kana>?" dengan 3 pengecoh |
+| `src/features/susun/index.ts` | 3 | — |
+| `src/features/susun/MenyusunLatihan.tsx` | 74 | Latihan menyusun kalimat untuk satu bab |
+| `src/features/susun/SoalMenyusun.tsx` | 179 | urutan index bank yang dipilih user (boleh kosong) |
 | `src/features/theme/ThemeToggle.tsx` | 47 | Tombol tema: klik = balik terang <-> gelap (mode manual) |
 | `src/lib/scoring.ts` | 5 | exports: hitungSkor |
 | `src/main.tsx` | 11 | — |
-| `src/pages/BabDetailPage.tsx` | 845 | Navigasi tab Daftar/Flashcard/Kuis dengan arrow-key (pola ARIA tablist). |
-| `src/pages/HomePage.tsx` | 176 | exports: HomePage |
+| `src/pages/BabDetailPage.tsx` | 969 | Navigasi bab dengan arrow key (←/→) |
+| `src/pages/HomePage.tsx` | 206 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
+| `src/pages/PartikelPage.tsx` | 388 | Kunci localStorage untuk jawaban ujian partikel (id soal) |
+| `src/pages/SusunCampuranPage.tsx` | 133 | exports: SusunCampuranPage |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
 | `src/store/useTheme.ts` | 91 | Tema sistem saat ini (fallback 'light' bila tak didukung) |
-| `src/types/bab.ts` | 102 | exports: Furigana, KosaKata, Bunpou, ReibunItem, KaiwaItem, Kaiwa, RenshuuItem, MondaiJenis, MondaiItem, Konteks, Bunsho, Bab |
+| `src/types/bab.ts` | 123 | Latihan menyusun kalimat (sentence building) — fokus pola bunpou bab |
 
 ## 2. Peta dependensi (impor antar modul src)
 
@@ -31,14 +37,29 @@
 src/App.tsx → src/pages/BabDetailPage.tsx
 src/App.tsx → src/pages/HomePage.tsx
 src/App.tsx → src/pages/NotFoundPage.tsx
+src/App.tsx → src/pages/PartikelPage.tsx
+src/App.tsx → src/pages/SusunCampuranPage.tsx
+src/core/text/susun.ts → src/core/text/normalize.ts
+src/core/text/susun.ts → src/types/bab.ts
 src/core/validation/schema.ts → src/core/audio/manifest.ts
+src/core/validation/schema.ts → src/core/text/normalize.ts
+src/core/validation/schema.ts → src/core/text/susun.ts
 src/core/validation/schema.ts → src/types/bab.ts
+src/features/susun/MenyusunLatihan.tsx → src/core/text/susun.ts
+src/features/susun/MenyusunLatihan.tsx → src/features/susun/SoalMenyusun.tsx
+src/features/susun/MenyusunLatihan.tsx → src/store/useNotes.ts
+src/features/susun/MenyusunLatihan.tsx → src/types/bab.ts
+src/features/susun/SoalMenyusun.tsx → src/core/text/susun.ts
+src/features/susun/SoalMenyusun.tsx → src/types/bab.ts
+src/features/susun/index.ts → src/features/susun/MenyusunLatihan.tsx
+src/features/susun/index.ts → src/features/susun/SoalMenyusun.tsx
 src/features/theme/ThemeToggle.tsx → src/store/useTheme.ts
 src/main.tsx → src/App.tsx
 src/pages/BabDetailPage.tsx → src/core/text/normalize.ts
 src/pages/BabDetailPage.tsx → src/core/text/terjemahan.ts
 src/pages/BabDetailPage.tsx → src/features/flashcard/Flashcard.tsx
 src/pages/BabDetailPage.tsx → src/features/kuis/Kuis.tsx
+src/pages/BabDetailPage.tsx → src/features/susun/index.ts
 src/pages/BabDetailPage.tsx → src/features/theme/ThemeToggle.tsx
 src/pages/BabDetailPage.tsx → src/store/useNotes.ts
 src/pages/BabDetailPage.tsx → src/store/useProgress.ts
@@ -46,6 +67,11 @@ src/pages/BabDetailPage.tsx → src/types/bab.ts
 src/pages/HomePage.tsx → src/features/theme/ThemeToggle.tsx
 src/pages/HomePage.tsx → src/store/useProgress.ts
 src/pages/HomePage.tsx → src/store/useTheme.ts
+src/pages/PartikelPage.tsx → src/store/useNotes.ts
+src/pages/SusunCampuranPage.tsx → src/core/text/susun.ts
+src/pages/SusunCampuranPage.tsx → src/features/susun/index.ts
+src/pages/SusunCampuranPage.tsx → src/store/useNotes.ts
+src/pages/SusunCampuranPage.tsx → src/types/bab.ts
 ```
 
 Catatan: `src/data/index.ts` memakai `import.meta.glob` → registry 50 bab otomatis (tidak terlihat sebagai edge statis).

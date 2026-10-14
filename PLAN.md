@@ -478,3 +478,59 @@ export interface SusunItem {
 **Aturan konten:** soal diturunkan dari `reibun` + `contoh` bunpou + `renshuu` bab itu (pola & kalimat yang MEMANG ada di buku); `arti` dari PDF Indonesia. Tidak mengarang tata bahasa. Tidak menyentuh audio & fakta terverifikasi §4.
 
 **Status:** 🟡 rencana → eksekusi (fondasi → bab 1–50 → campuran → verifikasi).
+
+---
+
+## 20. Sesi "Halaman Partikel (助詞)" — referensi + ujian — 2026
+
+**Tujuan:** halaman `/partikel` berisi (1) penjelasan detail semua partikel + terjemahan Indonesia, (2) tiap partikel menautkan **bab berapa** (dari bunpou bab 1–50), (3) bank soal + **mode ujian** pilihan ganda.
+
+**Struktur file (baru):**
+- `src/data/partikel.ts` — 23 partikel (は・が・を・に・へ・で・と・も・の・や・から/まで・だけ・しか・より/ほど・ながら・ので・のに・し・ても・たら/ば/なら/と・ばかり・か・ね/よ). Field: `bentuk`, `romaji`, `fungsi`, `penjelasan`, `contoh[]` (jp+id), `bab[]`, `kelompok`. Plus `KELOMPOK` + `babTerkait()`.
+- `src/data/partikel-soal.ts` — 30 soal pilihan ganda (isi rumpang `___` + arti Indonesia + kunci + bab).
+- `src/pages/PartikelPage.tsx` — 2 mode: **Daftar & Penjelasan** (kartu partikel, search, filter kelompok & bab) dan **Ujian Partikel** (intro → soal → skor, ambang lulus 70%).
+- Route `/partikel` di `App.tsx` + kartu link "Partikel (助詞)" di HomePage.
+- `paper.css` → blok `.partikel-*` (token-only, tanpa `transition`). Deep-link `#ujian` / `#daftar` / `#ujian-mulai`.
+
+**Aturan konten:** partikel `bab[]` dipetakan dari pola bunpou tiap bab (scan otomatis `pola:` → deteksi partikel). Tidak mengarang tata bahasa; terjemahan contoh wajar. Tidak menyentuh audio & fakta terverifikasi §4.
+
+**Verifikasi akhir:**
+```
+check:full → validate 50 bab 0 error 0 warning ✅ · tsc ✅ · build ✓ ✅
+visual     → Desktop mode Daftar (kartu 2 kolom + chip "Ada di bab") ✅
+             Mode Ujian (intro + 30 soal pilihan ganda + progress) ✅
+             DOM /partikel bersih (tanpa error boundary / loop) ✅
+catatan    → screenshot mobile "terpotong" adalah keterbatasan metode window-size
+             headless (halaman lama pun sama), bukan bug layout halaman ini.
+```
+
+**Catatan:** port dev server mnn1 di lingkungan ini = **5174** (5173 dipakai proyek lain).
+
+---
+
+## 21. Sesi "Partikel lanjutan + desktop lebar" — 2026
+
+**Tujuan:** (1) tambah partikel & soal; (2) desktop layar lebar tidak menyisakan ruang kosong besar.
+
+**Partikel & soal tambahan:**
+- `src/data/partikel.ts` 23 → **38 partikel**. Tambahan: にも/でも (Partikel+も), では/には/とは, って, など, とか, くらい/ぐらい, しか～ない (Perhatian), こそ, かしら/かな, のに (akhir), までに, ば/たら (syarat), ところ, ながら (Perhatian), たり～たり.
+- `src/data/partikel-soal.ts` 30 → **50 soal** (p31–p50: や・ぐらい・しか・までに・とか・にも・では・ば・ところ・たり・か・って・こそ・など・が (pertentangan)・から・て・に・で).
+
+**Layout desktop (keputusan user: "cukup perlebar kontainer global"):**
+- `PartikelPage` `max-w-3xl` → **`max-w-6xl`**; `HomePage` `max-w-4xl` → `max-w-6xl`; `SusunCampuranPage` `max-w-3xl` → `max-w-5xl`. Plus `lg:p-10`.
+- `paper.css`: `.partikel-grid` kini **3 kolom** pada `min-width: 1100px` (sebelumnya maks 2).
+- BabDetail tetap `max-w-3xl` (teks bacaan lebih nyaman).
+
+**Verifikasi mobile (device emulation sungguhan via CDP `Emulation.setDeviceMetricsOverride`):**
+```
+/partikel (Daftar)  → vw 320/360/390/414: overflowX=false, 0 pelanggar ✅
+/partikel (Ujian)   → vw 360/390: overflowX=false, 0 pelanggar, 50 soal, opsi 1 kolom ✅
+Home                → vw 320/390: bersih ✅
+/latihan/susun      → vw 390: bersih ✅
+/bab/1              → overflowX=false (elemen TOC horizontal-scroll memang by design, §10) ✅
+```
+**Catatan metode:** screenshot Chrome headless `--window-size` TIDAK benar-benar mengecilkan viewport CSS → tampak "terpotong" (halaman lama pun sama). Untuk verifikasi mobile sebenarnya gunakan CDP device metrics. Skrip sementara `tmp/cek_mobile.mjs` (sudah dihapus setelah pakai).
+
+**Verifikasi akhir:** `check:full` → validate 50 bab 0 error 0 warning ✅ · tsc ✅ · build ✅.
+
+**Port dev server:** kini bisa berpindah (5173/5174) — cek `--dump-dom`/title untuk memastikan instance mnn1.

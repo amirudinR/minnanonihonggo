@@ -4,6 +4,8 @@ import { useProgress } from '../store/useProgress'
 import { useTheme } from '../store/useTheme'
 import { ThemeToggle } from '../features/theme/ThemeToggle'
 import { babs, getBab } from '../data'
+import { partikel } from '../data/partikel'
+import { soalPartikel } from '../data/partikel-soal'
 
 export default function HomePage() {
   const items = useProgress((s) => s.items)
@@ -35,7 +37,7 @@ export default function HomePage() {
   ).length
 
   return (
-    <div className="app mx-auto max-w-4xl p-4 md:p-8">
+    <div className="app mx-auto max-w-6xl p-4 md:p-8 lg:p-10">
       <div className="book">
         <span className="tape" aria-hidden />
         <span className="page-curl" aria-hidden />
@@ -136,6 +138,20 @@ export default function HomePage() {
           </div>
           <Link className="button button--primary" to="/latihan/susun">
             Mulai latihan <span aria-hidden>→</span>
+          </Link>
+        </section>
+
+        <section className="continue-card" aria-labelledby="partikel-title">
+          <div className="continue-card__copy">
+            <span className="eyebrow">Referensi & Ujian</span>
+            <h2 id="partikel-title">Partikel (助詞)</h2>
+            <p>Penjelasan detail semua partikel は・が・を・に…, lengkap terjemahan, bab terkait, dan ujian pilihan ganda.</p>
+            <span className="continue-card__meta">
+              {partikel.length} partikel <span aria-hidden>·</span> {soalPartikel.length} soal ujian
+            </span>
+          </div>
+          <Link className="button button--primary" to="/partikel">
+            Buka partikel <span aria-hidden>→</span>
           </Link>
         </section>
 

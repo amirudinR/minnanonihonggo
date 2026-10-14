@@ -8,6 +8,7 @@ import {
 import HomePage from './pages/HomePage'
 import BabDetailPage from './pages/BabDetailPage'
 import SusunCampuranPage from './pages/SusunCampuranPage'
+import PartikelPage from './pages/PartikelPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function ScrollTop() {
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: 'bab/:no', element: <BabDetailPage /> },
       { path: 'latihan/susun', element: <SusunCampuranPage /> },
+      { path: 'partikel', element: <PartikelPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },
