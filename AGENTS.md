@@ -144,6 +144,38 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 ### #16 — Kanji tanpa furigana BUKAN otomatis bug 🟡
 - Buku MNN sengaja tidak memberi furigana pada kanji yang dianggap sudah dikuasai. Karena itu cek "kanji tanpa furigana" hanya jalan bila `VALIDASI_STRICT=1` (PowerShell: `$env:VALIDASI_STRICT=1; npm run validate`). Angka baseline: **103 temuan**, mayoritas sesuai cetakan buku.
 
+### #18 — Screenshot `--window-size` PALSU untuk cek mobile 🔴 (KRITIS, gampang bikin salah)
+- **Gejala:** screenshot Chrome headless dengan `--window-size=390,...` menampilkan halaman **terpotong di kanan** (konten "meluber"). Terlihat seperti bug overflow.
+- **Kenyataan:** `--window-size` **TIDAK** benar-benar mengecilkan viewport CSS. Headless tetap merender pada lebar default (mis. ~800) lalu **memotong** hasilnya. Bug ini juga muncul di halaman LAMA yang sudah pernah OK (Home, Susun, bab) → jadi **pasti artefak metode, bukan bug kode**.
+- **Akibat nyata di sesi lalu:** hampir "memperbaiki" layout yang sebenarnya sudah benar, dan menyimpulkan mobile rusak padahal tidak.
+- **Fix (jangan diulangi):** untuk menguji mobile dengan BENAR, pakai **CDP device emulation**:
+  ```js
+  // buka Chrome dengan --remote-debugging-port, lalu:
+  Emulation.setDeviceMetricsOverride({ width, height, deviceScaleFactor:1, mobile:true })
+  // lalu Runtime.evaluate untuk hitung overflow:
+  // document.documentElement.scrollWidth > clientWidth  → overflowX
+  // dan cek tiap elemen: el.getBoundingClientRect().right > vw+1
+  ```
+  Skrip sementara contoh: `tmp/cek_mobile.mjs` (hapus setelah pakai). Hasil yang benar: **`overflowX:false, 0 pelanggar`** = layout OK.
+- Aturan: **JANGAN** menyatakan "mobile rusak" hanya dari screenshot `--window-size`. Bandingkan dengan halaman lama; kalau sama-sama nampak terpotong → itu metode, bukan kode.
+
+### #19 — Port dev server bisa BERPINDAH (5173/5174/dst) 🔴
+- **Gejala:** screenshot/DOM dari `localhost:5173` menampilkan **aplikasi lain** (mis. "Buku Hafalan Kanji"), bukan mnn1.
+- **Sebab:** port 5173 bisa dipakai proyek lain; mnn1 naik ke 5174/5175.
+- **Fix:** sebelum screenshot/eval, **pastikan instance = mnn1**: cek `(Invoke-WebRequest <url>).Content` cocokkan `<title>` = "Minna no Nihongo 1 - Belajar Bahasa Jepang", atau `--dump-dom` mengandung penanda app. Jangan asumsi port tetap.
+
+---
+
+## 3b. Detail implementasi halaman Partikel (JANGAN di-regresi)
+
+Halaman `/partikel` (fitur baru, sudah live):
+- `src/data/partikel.ts` → **38 partikel**. Interface `Partikel { bentuk, romaji, fungsi, penjelasan, contoh[], bab[], kelompok }`. `kelompok`: `dasar | tempat-arah | waktu | penghubung | akhir | lanjutan` (+ `KELOMPOK`, `babTerkait()`).
+- `src/data/partikel-soal.ts` → **100 soal** pilihan ganda (`SoalPartikel { id, soal, arti, jawaban, pilihan[], bab }`). `soal` pakai rumpang `___`. **Pastikan `pilihan` tidak duplikat & memuat `jawaban`** (pernah salah: `['や','や']`).
+- `src/pages/PartikelPage.tsx` → 2 mode (Daftar & Penjelasan / Ujian Partikel). Fitur: search, filter kelompok & bab, navigasi prev/next partikel + **keyboard ←/→**, sorot kartu (`.partikel-slot--aktif`), deep-link `#daftar/#ujian/#ujian-mulai`.
+- **Simpan jawaban ujian:** reuse `useNotes.setAnswer` dengan key `partikel-ujian-{id}` (TANPA store baru). Idempoten. Reset = set tiap key ke `''` lalu acak ulang.
+- `paper.css` → blok `.partikel-*` (token-only, tanpa `transition`).
+- Layout desktop: `PartikelPage` `max-w-6xl` + grid **3 kolom** (≥1100px). Home `max-w-6xl`, Susun `max-w-5xl`, BabDetail `max-w-5xl`.
+
 ---
 
 ## 4. FAKTA TERVERIFIKASI — JANGAN "DIPERBAIKI" (sudah benar!)
@@ -282,4 +314,7 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 - **Emoji verdict/terj hasil dihapus** oleh agent lain; pertahankan stripped kecuali user minta dikembalikan.
 - **Offset halaman terverifikasi** (jangan ganti rumus tanpa bukti): Honsatsu `idx = printed + 21`, Indonesia `idx = printed + 20`, printed start Pelajaran N = 6N+4. **`printed start Bab N = 8N-2` SALAH** — bab 6, 13, 19, 22 masing-masing 10 halaman (bukan 8), sehingga rumus lama meleset +2/+4/+6/+8 untuk bab setelahnya. Peta yang BENAR (printed → idx Honsatsu): b6 46–55→67–76, b13 104–113→125–134, b19 154–163→175–184, b22 180–189→201–210. Batas lain: b1 6–13→27–34, b18 146–153→167–174, b20 164–171→185–192, b21 172–179→193–200, b23 190–197→211–218, b24 198–205→219–226, b25 206–213→227–234. **Sumber kebenaran: ToC Honsatsu** (render `tmp/tocmnn1/`).
 - Bab 2 data lengkap (kosakata, bunpou, reibun, kaiwa, renshuu A/B/C, mondai) sudah ada di `src/data/bab02/` — jadi template kualitas untuk bab lain.
+- **Halaman `/partikel` sudah ada** (38 partikel + 100 soal ujian). Detail di §3b. Jangan hapus/regresi route, kartu Home, atau `.partikel-*` di `paper.css`.
+- **Kontainer desktop diperlebar** (keputusan user "cukup perlebar kontainer global"): Home `max-w-6xl`, Partikel `max-w-6xl`, Susun & BabDetail `max-w-5xl`. Jangan kembalikan ke `max-w-3xl/4xl` (dulu menyisakan ruang kosong besar di desktop).
+- **Verifikasi mobile WAJIB pakai CDP device emulation** (§3 #18), bukan `--window-size`. Cek port dulu (§3 #19).
 - GitHub `main` berisi: cb5789e (initial), 7f708b3 (AGENTS.md + polish mobile), 962b555 (Bab 2), a7b95d3 (motion.css).
