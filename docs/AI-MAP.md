@@ -15,6 +15,11 @@
 | `src/core/validation/schema.ts` | 188 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
 | `src/features/flashcard/Flashcard.tsx` | 197 | Baca set tersimpan dari localStorage (JSON) |
 | `src/features/kuis/Kuis.tsx` | 159 | Bangun soal pilihan ganda: "Apa arti <kana>?" dengan 3 pengecoh |
+| `src/features/partikel/index.ts` | 5 | — |
+| `src/features/partikel/KartuPartikel.tsx` | 125 | Label kelompok (untuk badge kartu) |
+| `src/features/partikel/PemilihBab.tsx` | 39 | Baris tombol pemilih bab. Berlaku untuk mode daftar (filter) & ujian (cakupan soal) |
+| `src/features/partikel/TabelRingkas.tsx` | 41 | Rangkuman singkat: arti (fungsi) tiap partikel dalam tabel padat |
+| `src/features/partikel/UjianPartikel.tsx` | 176 | Kunci localStorage untuk jawaban ujian partikel (per id soal) |
 | `src/features/susun/index.ts` | 3 | — |
 | `src/features/susun/MenyusunLatihan.tsx` | 74 | Latihan menyusun kalimat untuk satu bab |
 | `src/features/susun/SoalMenyusun.tsx` | 179 | urutan index bank yang dipilih user (boleh kosong) |
@@ -24,7 +29,7 @@
 | `src/pages/BabDetailPage.tsx` | 969 | Navigasi bab dengan arrow key (←/→) |
 | `src/pages/HomePage.tsx` | 206 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
-| `src/pages/PartikelPage.tsx` | 474 | Kunci localStorage untuk jawaban ujian partikel (id soal) |
+| `src/pages/PartikelPage.tsx` | 191 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
 | `src/pages/SusunCampuranPage.tsx` | 133 | exports: SusunCampuranPage |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
@@ -45,6 +50,11 @@ src/core/validation/schema.ts → src/core/audio/manifest.ts
 src/core/validation/schema.ts → src/core/text/normalize.ts
 src/core/validation/schema.ts → src/core/text/susun.ts
 src/core/validation/schema.ts → src/types/bab.ts
+src/features/partikel/UjianPartikel.tsx → src/store/useNotes.ts
+src/features/partikel/index.ts → src/features/partikel/KartuPartikel.tsx
+src/features/partikel/index.ts → src/features/partikel/PemilihBab.tsx
+src/features/partikel/index.ts → src/features/partikel/TabelRingkas.tsx
+src/features/partikel/index.ts → src/features/partikel/UjianPartikel.tsx
 src/features/susun/MenyusunLatihan.tsx → src/core/text/susun.ts
 src/features/susun/MenyusunLatihan.tsx → src/features/susun/SoalMenyusun.tsx
 src/features/susun/MenyusunLatihan.tsx → src/store/useNotes.ts
@@ -67,7 +77,7 @@ src/pages/BabDetailPage.tsx → src/types/bab.ts
 src/pages/HomePage.tsx → src/features/theme/ThemeToggle.tsx
 src/pages/HomePage.tsx → src/store/useProgress.ts
 src/pages/HomePage.tsx → src/store/useTheme.ts
-src/pages/PartikelPage.tsx → src/store/useNotes.ts
+src/pages/PartikelPage.tsx → src/features/partikel/index.ts
 src/pages/SusunCampuranPage.tsx → src/core/text/susun.ts
 src/pages/SusunCampuranPage.tsx → src/features/susun/index.ts
 src/pages/SusunCampuranPage.tsx → src/store/useNotes.ts

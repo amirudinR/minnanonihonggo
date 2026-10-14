@@ -172,12 +172,27 @@ Halaman `/partikel` (fitur baru, sudah live):
 - `src/data/partikel.ts` → **38 partikel**. Interface `Partikel { bentuk, romaji, fungsi, penjelasan, contoh[], bab[], kelompok, perBab?[] }`. `kelompok`: `dasar | tempat-arah | waktu | penghubung | akhir | lanjutan` (+ `KELOMPOK`, `babTerkait()`).
 - **`perBab[]` (FungsiBab):** keterangan lengkap partikel **per bab** (`{ bab, fungsi, keterangan, contoh? }`), diturunkan dari materi bunpou tiap bab (bukan karangan). Aturan: `perBab[].bab ⊆ bab[]`, semua 38 partikel punya `perBab` (13 multi-bab punya entri berbeda per bab). Helper `fungsiUntukBab(p, bab)` → `{ fungsi, keterangan, contoh, spesifik }`.
 - **Tombol pilih bab** di `/partikel` (`.partikel-babbar`): 1 tombol "Semua" + 1 tombol per bab. Berlaku untuk **daftar (filter) & ujian (cakupan soal)**. Dropdown "Bab" lama di bagian search **sudah diganti** oleh baris tombol ini.
-- **Kartu akordeon per bab** (`.partikel-akordeon`): tiap bab jadi panel yang bisa dibuka; bab aktif otomatis terbuka. Panel berisi keterangan lengkap + contoh + link "Buka materi Bab N".
+- **Kartu akordeon per bab** (`.partikel-akordeon`): tiap bab jadi panel yang bisa dibuka; bab aktif otomatis terbuka + badge "aktif". Label footer kartu = **"Perilaku di tiap bab"**. Panel berisi keterangan lengkap + contoh + link "Buka materi Bab N".
+- **Header kartu tahan bentuk panjang** (`.partikel-card__bentuk`): `bentuk` dipecah per ` / ` jadi beberapa chip `.partikel-card__kanji`; teks dalam `(...)` dipindah ke badge `.partikel-card__catatan`; `romaji` selalu di baris bawah (`flex-basis: 100%`). Kanji `font-size: clamp(20px, 5.2vw, 30px)` + `white-space: nowrap` per chip. **Jangan** kembalikan ke `split` tanpa pecah `/` — bentuk panjang (`だの / たり ～たり`, `たら / ば / なら / と`) akan membungkus liar.
+- **Rangkuman arti** (`.partikel-ringkas`, komponen `TabelRingkas`): tabel padat Partikel | Arti/Fungsi di **bawah** daftar kartu, ikut menyesuaikan filter.
+- **Kredit**: footer `.partikel-kredit` "Build by **amirsan**" di dasar halaman (kedua mode).
 - `src/data/partikel-soal.ts` → **100 soal** pilihan ganda (`SoalPartikel { id, soal, arti, jawaban, pilihan[], bab }`). `soal` pakai rumpang `___`. **Pastikan `pilihan` tidak duplikat & memuat `jawaban`** (pernah salah: `['や','や']`).
-- `src/pages/PartikelPage.tsx` → 2 mode (Daftar & Penjelasan / Ujian Partikel). Fitur: search, filter kelompok & bab, navigasi prev/next partikel + **keyboard ←/→**, sorot kartu (`.partikel-slot--aktif`), deep-link `#daftar/#ujian/#ujian-mulai`.
+- **Struktur modular** — halaman dipecah ke `src/features/partikel/`:
+  - `PartikelPage.tsx` (di `pages/`) → orkestrasi saja (state, filter, layout, ~190 baris). **Jangan** tanam ulang sub-komponen besar di sini.
+  - `features/partikel/KartuPartikel.tsx` → kartu + akordeon per bab.
+  - `features/partikel/UjianPartikel.tsx` → mode ujian (+ `KUNCI_UJIAN`).
+  - `features/partikel/PemilihBab.tsx` → baris tombol bab.
+  - `features/partikel/TabelRingkas.tsx` → tabel rangkuman arti.
+  - `features/partikel/index.ts` → re-export.
+- Fitur halaman: 2 mode (Daftar & Penjelasan / Ujian Partikel), search, filter kelompok & bab, navigasi prev/next partikel + **keyboard ←/→**, sorot kartu (`.partikel-slot--aktif`), deep-link `#daftar/#ujian/#ujian-mulai`.
 - **Simpan jawaban ujian:** reuse `useNotes.setAnswer` dengan key `partikel-ujian-{id}` (TANPA store baru). Idempoten. Reset = set tiap key ke `''` lalu acak ulang.
 - `paper.css` → blok `.partikel-*` (token-only, tanpa `transition`).
+- **Bug pernah terjadi — search melar:** `.partikel-tools` = flex **column**, jadi `.home-search` (`flex: 1 1 180px`) meregang jadi oval raksasa. Fix: `.partikel-tools .home-search { flex: 0 0 auto; width: 100% }`. Jangan hapus rule ini.
 - Layout desktop: `PartikelPage` `max-w-6xl` + grid **3 kolom** (≥1100px). Home `max-w-6xl`, Susun `max-w-5xl`, BabDetail `max-w-5xl`.
+
+**Favicon/app shell** (di luar partikel tapi satu sesi):
+- `public/favicon.svg` → ikon tab bergaya hanko (kotak gradien aksen + karakter 助). Terpasang di `index.html` (`rel="icon" type="image/svg+xml"`) + `<meta name="theme-color" content="#a3562a">`. **Jangan hapus.**
+- Git remote: `origin` → `https://github.com/amirudinR/minnanonihonggo.git` (branch `main`).
 
 ---
 
@@ -208,7 +223,7 @@ src/
   data/
     index.ts              # import.meta.glob('./bab*/index.ts') → auto registry
     babNN/ index · kosakata · bunpou · reibun · kaiwa · renshuu · mondai · konteks
-  features/               # vertical slice: flashcard/, kuis/
+  features/               # vertical slice: flashcard/, kuis/, partikel/
   store/                  # useProgress (mnn1_progress_v1), useNotes (mnn1_notes_v1)
   pages/                  # HomePage, BabDetailPage, NotFoundPage
   styles/                 # tokens.css (@theme), paper.css (tema kertas)
