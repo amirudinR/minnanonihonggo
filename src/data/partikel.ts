@@ -108,36 +108,84 @@ export const partikel: Partikel[] = [
         bab: 1,
         fungsi: 'Penanda subjek pada kalimat tanya',
         keterangan:
-          'Di Bab 1, が menandai subjek pertanyaan pada pola だれ／どなた＋が (mis. あの 方は どなたですか). Subjek ditandai が ketika ingin menanyakan/menegaskan siapa pelakunya, sedangkan は dipakai untuk topik yang sudah jelas.',
+          'Partikel が menandai subjek, dipakai antara lain pada kalimat tanya だれ／どなた＋が (mis. あの 方は どなたですか). Subjek ditandai が ketika menanyakan/menegaskan siapa pelakunya, sedangkan は dipakai untuk topik yang sudah jelas.',
         contoh: [
           { jp: 'あの 方は どなたですか。', id: 'Siapakah orang itu?' },
         ],
       },
       {
         bab: 9,
-        fungsi: 'Subjek pada 好き／上手／わかります',
+        fungsi: 'Objek pada 好き／上手／わかります',
         keterangan:
-          'Di Bab 9, が menandai sasaran kata 好き／嫌い／上手／下手／わかります／あります (kemampuan). Yang disukai/dikuasai ditandai が, bukan を.',
-        contoh: [{ jp: 'わたしは 日本語が わかります。', id: 'Saya mengerti bahasa Jepang.' }],
+          'Sebagian Kata Kerja atau Kata Sifat menunjukkan objek dengan partikel が (Kata Benda が あります／わかります；Kata Benda が 好きです／嫌いです／上手です／下手です).',
+        contoh: [
+          { jp: 'わたしは イタリア料理が 好きです。', id: 'Saya suka masakan Italia.' },
+          { jp: 'わたしは 日本語が わかります。', id: 'Saya mengerti bahasa Jepang.' },
+        ],
       },
       {
         bab: 10,
-        fungsi: 'Subjek dalam keberadaan',
+        fungsi: 'Subjek dalam keberadaan (あります／います)',
         keterangan:
-          'Di Bab 10, が menandai benda/hal yang ada pada pola あります／います (mis. 箱の中に 手紙が あります).',
-        contoh: [{ jp: '箱の中に 手紙や 写真が あります。', id: 'Di dalam kotak ada surat dan foto.' }],
+          'あります dan います menyatakan keberadaan benda atau orang. Karena kalimat ini menggambarkan secara langsung keberadaan benda/orang, Kata Benda dibubuhkan partikel が (コンピューターが あります／男の 人が います).',
+        contoh: [
+          { jp: 'コンピューターが あります。', id: 'Ada komputer.' },
+          { jp: '男の 人が います。', id: 'Ada orang laki-laki.' },
+        ],
       },
       {
         bab: 14,
-        fungsi: 'Subjek anak kalimat (bentuk て)',
+        fungsi: 'Subjek kejadian alam / objektif',
         keterangan:
-          'Di Bab 14, が menandai subjek di dalam anak kalimat yang menerangkan kata benda, terutama bila subjeknya berbeda dari subjek utama.',
+          'Jika menyatakan suatu kejadian alam yang dirasakan dengan panca indera (mata, telinga dan lain-lain), atau menyampaikan peristiwa secara objektivitas, partikel が dipakai untuk subjek.',
+        contoh: [
+          { jp: '雨が 降って います。', id: 'Hujan turun.' },
+          { jp: 'ミラーさんが いませんね。', id: 'Sdr. Miller tidak ada ya.' },
+        ],
       },
       {
         bab: 20,
-        fungsi: 'Subjek pada ～が いる／ある (sopan)',
+        fungsi: 'Partikel yang dihilangkan (bentuk biasa)',
         keterangan:
-          'Di Bab 20, が tetap menandai subjek pada pola keberadaan bentuk sopan (いらっしゃいます／あります) dan percakapan halus.',
+          'Dalam kalimat bentuk biasa, jika sudah dapat memahami hubungan dari konteks sebelum dan sesudahnya, partikel penutup を・へ・は・が adakalanya dihilangkan. Akan tetapi, partikel で、に、から、まで、と dan sebagainya tidak dihilangkan sebab konteksnya menjadi tidak jelas.',
+        contoh: [
+          { jp: 'ごはん[を] 食べる？', id: 'Mau makan?' },
+          { jp: 'そこに はさみ[が] ある？', id: 'Di situ ada gunting?' },
+        ],
+      },
+      {
+        bab: 22,
+        fungsi: 'Subjek di dalam anak kalimat',
+        keterangan:
+          'Subjek di dalam anak kalimat ditunjukan dengan partikel が.',
+        contoh: [
+          { jp: 'これは ミラーさんが 作った ケーキです。', id: 'Ini adalah kue yang dibuat oleh Sdr. Miller.' },
+          { jp: 'これは ミラーさんが 住んでいた うちです。', id: 'Ini adalah rumah yang dihuni Sdr. Miller.' },
+        ],
+      },
+      {
+        bab: 23,
+        fungsi: 'Subjek kalimat adjektival (objektif)',
+        keterangan:
+          'Partikel が menyatakan fenomena yang dirasakan pancaindera secara langsung, atau menyampaikan peristiwa secara objektivitas. Hal ini tidak sebatas kalimat verbal, adakalanya juga dipakai untuk kalimat adjektival.',
+        contoh: [{ jp: '音が 小さいです。', id: 'Suaranya kecil.' }],
+      },
+      {
+        bab: 24,
+        fungsi: 'Subjek kalimat penjawab (「KB が くれました」)',
+        keterangan:
+          'Pada kalimat penjawab 「Kata Benda が くれました」, Kata Benda yang menjadi topik dapat dihilangkan karena sudah dipahami. Dalam kalimat ini orang yang memberi menjadi subjek maka dipakai が.',
+        contoh: [{ jp: 'おいしい ワインですね。……ええ、[この ワインは] 佐藤さんが くれました。', id: 'Anggur yang enak ya. ……Ya, [anggur ini] Sdr. Sato yang berikan.' }],
+      },
+      {
+        bab: 25,
+        fungsi: 'Subjek anak kalimat syarat (たら／ても)',
+        keterangan:
+          'Sama halnya dengan ～てから, ～とき atau ～まえに, untuk ～たら dan ～ても subjek dalam anak kalimat ditunjuk dengan が.',
+        contoh: [
+          { jp: '友達が 約束の 時間に 来なかったら、どう しますか。', id: 'Kalau teman tidak datang pada waktu janji, bagaimana?' },
+          { jp: '友達が 来る まえに、部屋を 掃除します。', id: 'Sebelum teman datang, membersihkan kamar.' },
+        ],
       },
     ],
   },
@@ -176,21 +224,33 @@ export const partikel: Partikel[] = [
         ],
       },
       {
+        bab: 16,
+        fungsi: 'Titik awal / keberangkatan',
+        keterangan:
+          'Kata Kerja でます, おります dan lain-lainnya digunakan bersama dengan partikel を。を ini menunjukkan titik awal atau titik keberangkatan.',
+        contoh: [
+          { jp: '7時に うちを 出ます。', id: 'Pada pukul tujuh keluar dari rumah.' },
+          { jp: '梅田で 電車を 降りました。', id: 'Turun kereta rel listrik di Umeda.' },
+        ],
+      },
+      {
         bab: 17,
         fungsi: 'Naik ke topik (を → は)',
         keterangan:
-          'Di Bab 17: bila objek langsung dijadikan topik, partikel を dihilangkan lalu dibubuhi は dan diletakkan paling depan. Contoh: ここに荷物を置かないでください → 荷物はここに置かないでください.',
+          'Jika menyatakan dengan objek langsung sebagai topik, maka partikel を dihilangkan kemudian membubuhkan partikel は, lalu diletakkan paling di depan dalam kalimat.',
         contoh: [
-          { jp: '荷物は ここに 置かないでください。', id: 'Barangnya jangan diletakkan di sini.' },
+          { jp: '荷物は ここに 置かないで ください。', id: 'Barangnya jangan diletakkan di sini.' },
+          { jp: '昼ごはんは 会社の 食堂で 食べます。', id: 'Makan siangnya makan di kantin perusahaan.' },
         ],
       },
       {
         bab: 23,
-        fungsi: 'Objek pada bentuk kamus／たら',
+        fungsi: 'Tempat yang dilewati (gerakan berpindah)',
         keterangan:
-          'Di Bab 23, を tetap menandai objek pada kata kerja bentuk kamus dan kalimat syarat たら／と.',
+          'を yang digunakan bersama Kata Kerja yang menunjukkan gerakan berpindah seperti さんぽします, わたります, あるきます dan lain-lainnya menunjukkan tempat yang dilewati orang atau benda.',
         contoh: [
-          { jp: '公園を 散歩します。', id: 'Berjalan-jalan (melewati) taman.' },
+          { jp: '公園を 散歩します。', id: 'Berjalan-jalan di taman.' },
+          { jp: '道を 渡ります。', id: 'Menyeberangi jalan.' },
         ],
       },
     ],
@@ -207,7 +267,7 @@ export const partikel: Partikel[] = [
       { jp: '日本に 行きます。', id: 'Pergi ke Jepang.' },
       { jp: 'ミラーさんに 本を あげました。', id: 'Memberi buku kepada Sdr. Miller.' },
     ],
-    bab: [4, 7, 10, 13, 15],
+    bab: [4, 7, 10, 13, 15, 19, 21, 24],
     kelompok: 'tempat-arah',
     perBab: [
       {
@@ -249,9 +309,40 @@ export const partikel: Partikel[] = [
       },
       {
         bab: 15,
-        fungsi: 'Tujuan gerak (ます形 stem + に)',
+        fungsi: 'Tujuan aksi / tempat hasil aksi (に)',
         keterangan:
-          'Di Bab 15, に menandai tujuan pergi untuk melakukan sesuatu: Kata Kerja(bentuk ます tanpa ます) + に 行きます (mis. 映画を見に行きます).',
+          'Partikel に digunakan bersama Kata Kerja seperti はいります, すわります, のります, のぼります, つきます, kemudian menunjukkan hasil melakukan aksi dan tempat subjek berada. に juga menunjukkan tempat Kata Benda₂ berada akibat melakukan aksi (ここに 車を 止めて ください).',
+        contoh: [
+          { jp: 'ここに 入っては いけません。', id: 'Tidak boleh masuk ke sini.' },
+          { jp: 'ここに 住所を 書いて ください。', id: 'Tuliskan alamat di sini.' },
+        ],
+      },
+      {
+        bab: 19,
+        fungsi: 'Perubahan kondisi (に なります)',
+        keterangan:
+          'なります menunjuk perubahan kondisi. Untuk Kata Sifat い → ～く、Kata Sifat な → ～に、Kata Benda dibubuhkan に (寒く なります／元気に なります／25歳に なります).',
+        contoh: [
+          { jp: '寒い → 寒く なります', id: 'menjadi dingin' },
+          { jp: '元気[な] → 元気に なります', id: 'menjadi sehat' },
+        ],
+      },
+      {
+        bab: 21,
+        fungsi: 'Lawan bicara yang mendengarkan',
+        keterangan:
+          'Lawan bicara yang mendengarkan ungkapan pembicara ditunjukan dengan partikel に (mis. 父に 留学したいと 言いました).',
+        contoh: [{ jp: '父に 留学したいと 言いました。', id: 'Saya berkata pada ayah bahwa ingin belajar di luar negeri.' }],
+      },
+      {
+        bab: 24,
+        fungsi: 'Penerima pada ～て あげます／もらいます／くれます',
+        keterangan:
+          'Pada Kata Kerja Bentuk て あげます／もらいます, orang yang menerima/memberi kebaikan ditandai partikel に (mis. 木村さんに 本を 貸して あげました). Bila penerimanya わたし, biasanya dihilangkan.',
+        contoh: [
+          { jp: 'わたしは 木村さんに 本を 貸して あげました。', id: 'Saya meminjamkan Sdr. Kimura buku.' },
+          { jp: 'わたしは 山田さんに 図書館の 電話番号を 教えて もらいました。', id: 'Saya diberi nomor telepon perpustakaan oleh Sdr. Yamada.' },
+        ],
       },
     ],
   },
@@ -302,7 +393,7 @@ export const partikel: Partikel[] = [
       { jp: '電車で 行きます。', id: 'Pergi dengan kereta.' },
       { jp: 'かぜで 学校を 休みました。', id: 'Tidak masuk sekolah karena masuk angin.' },
     ],
-    bab: [5, 6, 7],
+    bab: [5, 6, 7, 18, 21],
     kelompok: 'tempat-arah',
     perBab: [
       {
@@ -332,6 +423,19 @@ export const partikel: Partikel[] = [
           { jp: '日本語で レポートを 書きます。', id: 'Menulis laporan dalam bahasa Jepang.' },
         ],
       },
+      {
+        bab: 18,
+        fungsi: 'Menjadi topik (KB で → では)',
+        keterangan:
+          'Kata Benda yang dibubuhkan で dijadikan topik, maka Kata Benda berbentuk Kata Benda では (mis. 日本では なかなか 馬を 見る ことが できません).',
+        contoh: [{ jp: '日本では なかなか 馬を 見る ことが できません。', id: 'Di Jepang tidak mudah untuk melihat kuda.' }],
+      },
+      {
+        bab: 21,
+        fungsi: 'Tempat berlangsungnya adegan',
+        keterangan: 'Sesuatu adegan yang dilakukan ditunjukan dengan partikel で (mis. 会議で 何か 意見を 言いましたか).',
+        contoh: [{ jp: '会議で 何か 意見を 言いましたか。', id: 'Di dalam rapat, apakah mengutarakan suatu pendapat?' }],
+      },
     ],
   },
   {
@@ -345,14 +449,14 @@ export const partikel: Partikel[] = [
       { jp: '家族と 旅行します。', id: 'Bepergian bersama keluarga.' },
       { jp: '日本語は おもしろいと 思います。', id: 'Menurut saya bahasa Jepang menarik.' },
     ],
-    bab: [4, 5, 21],
+    bab: [4, 5, 21, 23],
     kelompok: 'penghubung',
     perBab: [
       {
         bab: 4,
         fungsi: 'Dan (menyambung benda setaraf)',
         keterangan:
-          'Di Bab 4, と menyambung Kata Benda secara setaraf menjadi daftar lengkap (銀行の 休みは 土曜日と 日曜日です).',
+          'Jika menyambung Kata Benda secara setaraf, Kata Benda disambung dengan と (daftar lengkap). Bandingkan dengan や yang hanya menyebut beberapa contoh.',
         contoh: [{ jp: '銀行の 休みは 土曜日と 日曜日です。', id: 'Hari libur bank adalah Sabtu dan Minggu.' }],
       },
       {
@@ -367,10 +471,23 @@ export const partikel: Partikel[] = [
       },
       {
         bab: 21,
-        fungsi: 'Isi kutipan / pikiran',
+        fungsi: 'Isi pikiran / ucapan (と 思います／言います)',
         keterangan:
-          'Di Bab 21, と menandai isi kutipan pada 言います／思います (～と 思います = saya pikir bahwa…).',
-        contoh: [{ jp: '日本語は おもしろいと 思います。', id: 'Menurut saya bahasa Jepang menarik.' }],
+          'Isi pikiran dan keputusan ditunjukan dengan memakai partikel と (～と 思います). Isi ucapan juga ditunjukan dengan と: (1) kutipan langsung dimasukkan ke dalam kurung 「 」 tanpa diubah; (2) rangkuman isi memakai bentuk biasa sebelum と (～と 言いました).',
+        contoh: [
+          { jp: 'あした 雨が 降ると 思います。', id: 'Saya kira besok hujan turun.' },
+          { jp: '寝る まえに、「お休みなさい」と 言います。', id: 'Sebelum tidur mengucapkan "Selamat tidur".' },
+        ],
+      },
+      {
+        bab: 23,
+        fungsi: 'Akibat otomatis (～と、～)',
+        keterangan:
+          'と menyatakan jika suatu aksi atau kejadian di depan と terjadi, menyatakan secara pasti akibat terjadinya suatu keadaan, aksi, fenomena, dan kejadian yang diikuti kalimat pokok di belakangnya.',
+        contoh: [
+          { jp: 'この ボタンを 押すと、お釣りが 出ます。', id: 'Kalau tekan tombol ini, uang kembaliannya keluar.' },
+          { jp: '右へ 曲がると、郵便局が あります。', id: 'Kalau belok ke kanan, ada kantor pos.' },
+        ],
       },
     ],
   },
@@ -398,7 +515,7 @@ export const partikel: Partikel[] = [
         bab: 3,
         fungsi: 'Juga (tempat/tujuan)',
         keterangan:
-          'Di Bab 3, も menempel pada penanda tempat untuk menyatakan "juga di…" (mis. ここにも あります).',
+          'も memakai pola yang sama dengan は untuk menyatakan "juga" (mis. ここにも あります = juga ada di sini).',
       },
       {
         bab: 5,
@@ -413,10 +530,13 @@ export const partikel: Partikel[] = [
       },
       {
         bab: 30,
-        fungsi: 'Menempel partikel lain + kata tanya',
+        fungsi: 'Partikel + も (にも／でも／からも…)',
         keterangan:
-          'Di Bab 30, も menempel pada partikel lain (にも, でも, とも) untuk "juga ke/untuk…", dan pada kata tanya + bentuk positif/negatif berfungsi "pun/berapa pun" (どこへも 行きません).',
-        contoh: [{ jp: 'どこへも 行きません。', id: 'Tidak pergi ke mana pun.' }],
+          'Jika も digabung dengan Kata Benda yang dibubuhkan が atau を, maka が atau を dihapuskan. Jika selain kata bantu tersebut (mis. に, で, から, まで, と), dibubuhkan di belakangnya. へ boleh dihapuskan dan juga boleh tidak.',
+        contoh: [
+          { jp: 'ほかにも いろいろ あります。', id: 'Selain itu masih ada macam-macam.' },
+          { jp: 'どこ[へ]も 行きません。', id: 'Tidak pergi ke mana-mana.' },
+        ],
       },
     ],
   },
@@ -431,7 +551,7 @@ export const partikel: Partikel[] = [
       { jp: 'コンピューターの 本です。', id: 'Buku (tentang) komputer.' },
       { jp: '(この傘は) ミラーさんのです。', id: '(Payung ini) milik Sdr. Miller.' },
     ],
-    bab: [1, 2, 3, 22],
+    bab: [1, 2, 3, 18, 22, 34, 37, 38],
     kelompok: 'penghubung',
     perBab: [
       {
@@ -453,14 +573,52 @@ export const partikel: Partikel[] = [
       },
       {
         bab: 3,
-        fungsi: 'Kepemilikan tempat',
-        keterangan: 'Di Bab 3, の menyatakan kepemilikan tempat/asosiasi (mis. デパートの 中).',
+        fungsi: 'Kepemilikan tempat/asosiasi',
+        keterangan: 'の menyatakan kepemilikan tempat atau asosiasi (mis. デパートの 中).',
       },
       {
         bab: 22,
         fungsi: 'Menggantikan が di anak kalimat',
         keterangan:
-          'Di Bab 22, の dapat menggantikan が di dalam anak kalimat yang menerangkan kata benda (私が作った → 私の作った).',
+          'の dapat menggantikan が di dalam anak kalimat yang menerangkan kata benda (私が作った → 私の作った). Catatan: subjek di dalam anak kalimat ditunjukan dengan partikel が.',
+      },
+      {
+        bab: 18,
+        fungsi: 'Penghubung KB の まえに',
+        keterangan:
+          'Di belakang Kata Benda membubuhkan の (mis. 食事の まえに、手を 洗います). Menggunakan Kata Benda yang bersifat aksi. [Perhatian] Di belakang Kata Keterangan Bilangan (jangka waktu) TIDAK membubuhkan の (1時間まえに).',
+        contoh: [
+          { jp: '食事の まえに、手を 洗います。', id: 'Sebelum makan mencuci tangan.' },
+          { jp: '田中さんは 1時間まえに、出かけました。', id: 'Sdr. Tanaka telah keluar sejam yang lalu.' },
+        ],
+      },
+      {
+        bab: 34,
+        fungsi: 'Sesuai dengan (とおりに)',
+        keterangan:
+          'とおり adalah Kata Benda, maka menyertai Kata Tunjuk seperti この/その/あの untuk menyatakan keadaan atau cara yang sama seperti ditunjuk Kata Tunjuk tersebut (Kata Benda の とおりに / Kata Kerja Bentuk た とおりに).',
+        contoh: [
+          { jp: '線の とおりに、紙を 切って ください。', id: 'Silakan menggunting kertas sesuai dengan garis!' },
+          { jp: '説明書の とおりに、組み立てました。', id: '(Saya) memasang sesuai dengan petunjuk.' },
+        ],
+      },
+      {
+        bab: 37,
+        fungsi: 'KB₁ の KB₂ (bahan/produk)',
+        keterangan:
+          'の menghubungkan dua Kata Benda, mis. menyebutkan bahan baku suatu barang (げんりょうの むぎ). Contoh lain: ペットの いぬ, むすこの ハンス.',
+        contoh: [{ jp: 'ビールは 麦から 造られます。', id: 'Bir terbuat dari gandum.' }],
+      },
+      {
+        bab: 38,
+        fungsi: 'Pembentuk Kata Benda (nominalisasi)',
+        keterangan:
+          'の berfungsi membentuk Kata Benda dari bermacam-macam ekspresi (Kata Kerja, Kata Sifat, Kata Benda dalam bentuk biasa). Ekspresi yang terbentuk jadi Kata Benda dapat menjadi berbagai unsur, mis. 「Kata Kerja Bentuk Kamus の は ～です」 (topik), 「～の が 好きです」 (sasaran), 「～の を 忘れました／知って いますか」.',
+        contoh: [
+          { jp: 'テニスを するのは おもしろいです。', id: 'Bermain tenis menarik.' },
+          { jp: 'わたしは 花を 育てるのが 好きです。', id: 'Saya suka memelihara bunga.' },
+          { jp: '牛乳を 買うのを 忘れました。', id: 'Lupa membeli susu.' },
+        ],
       },
     ],
   },
@@ -475,38 +633,45 @@ export const partikel: Partikel[] = [
       { jp: '駅から 家まで 歩きました。', id: 'Berjalan dari stasiun sampai rumah.' },
       { jp: '時間が ありませんから、タクシーで 行きます。', id: 'Karena tidak ada waktu, saya pergi naik taksi.' },
     ],
-    bab: [4, 5, 9, 17],
+    bab: [4, 5, 9, 17, 37],
     kelompok: 'waktu',
     perBab: [
       {
         bab: 4,
         fungsi: 'Titik awal & akhir (waktu)',
         keterangan:
-          'Di Bab 4, から dan まで menandai titik permulaan dan akhir waktu, sering dipakai berpasangan (9時から 5時まで 働きます).',
+          'から menunjukkan titik permulaan waktu/tempat, sedangkan まで menunjukkan titik akhirnya. Sering dipakai berpasangan (9時から 5時まで 働きます). Kata Benda waktu seperti きょう、あした tidak dibubuhkan に.',
         contoh: [{ jp: '9時から 5時まで 働きます。', id: 'Bekerja dari jam 9 sampai jam 5.' }],
       },
       {
         bab: 5,
         fungsi: 'Titik awal & akhir (tempat)',
         keterangan:
-          'Di Bab 5, から dan まで menandai titik permulaan dan akhir tempat (駅から 家まで 歩きました).',
+          'から dan まで juga menandai titik permulaan dan akhir tempat (駅から 家まで 歩きました = berjalan dari stasiun sampai rumah).',
         contoh: [{ jp: '駅から 家まで 歩きました。', id: 'Berjalan dari stasiun sampai rumah.' }],
       },
       {
         bab: 9,
-        fungsi: 'から = karena',
+        fungsi: 'から = karena (alasan)',
         keterangan:
-          'Di Bab 9, から mengawali alasan di depan kalimat (～から、…) setara dengan ので, dengan nuansa "karena" yang lebih tegas.',
+          'Hal yang dinyatakan di depan から merupakan alasan dari kalimat yang dinyatakan di belakangnya (～から、～). Digunakan juga untuk menyatakan suatu hal dan alasan dengan memasukkan ～から (mis. menjawab どうして…ですか。……～から).',
         contoh: [
-          { jp: '時間が ありませんから、タクシーで 行きます。', id: 'Karena tidak ada waktu, saya pergi naik taksi.' },
+          { jp: '時間が ありませんから、新聞を 読みません。', id: 'Karena tidak ada waktu, tidak membaca surat kabar.' },
         ],
       },
       {
         bab: 17,
-        fungsi: 'Perbandingan dengan までに',
+        fungsi: 'まで = titik akhir aksi berkelanjutan (bandingkan までに)',
         keterangan:
-          'Di Bab 17, まで (sampai, berkelanjutan) dibedakan dengan までに (paling lambat). Partikel まで yang dipelajari di Bab 4 menunjukkan titik akhir aksi yang sedang berlangsung.',
+          'Partikel まで yang dipelajari pada Pelajaran 4 menunjukkan titik akhir aksi yang sedang berlangsung (5時まで 働きます). Perlu hati-hati sebab bentuknya mirip dengan までに (batas waktu "paling lambat").',
         contoh: [{ jp: '5時まで 働きます。', id: 'Bekerja sampai pukul lima.' }],
+      },
+      {
+        bab: 37,
+        fungsi: 'から = bahan baku (pasif)',
+        keterangan:
+          'Jika membuat barang, bahan baku itu dinyatakan dengan から, dan bahan dinyatakan dengan で (ビールは 麦から 造られます / 昔 日本の 家は 木で 造られました).',
+        contoh: [{ jp: 'ビールは 麦から 造られます。', id: 'Bir terbuat dari gandum.' }],
       },
     ],
   },
@@ -574,8 +739,11 @@ export const partikel: Partikel[] = [
         bab: 27,
         fungsi: 'Hanya (wajib negatif)',
         keterangan:
-          'Di Bab 27, しか selalu berpasangan dengan bentuk negatif dan berarti "hanya" dengan kesan "tidak lebih dari". Berbeda dengan だけ yang boleh dipakai dengan positif.',
-        contoh: [{ jp: 'ローマ字しか 書けません。', id: 'Hanya bisa menulis (huruf) romaji.' }],
+          'しか dibubuhkan pada Kata Benda atau Kata Keterangan Bilangan, dan selalu digunakan dengan kata bentuk negatif. Mengangkat kata yang dibubuhkan しか, dan menyangkal semua kata yang lain. Jika dibubuhkan pada Kata Benda yang dibubuhkan が atau を, maka が atau を dihilangkan.',
+        contoh: [
+          { jp: 'ローマ字しか 書けません。', id: 'Hanya bisa menulis huruf latin saja.' },
+          { jp: 'ローマ字だけ 書けます。', id: 'Bisa menulis huruf latin saja.' },
+        ],
       },
     ],
   },
@@ -620,7 +788,7 @@ export const partikel: Partikel[] = [
         bab: 28,
         fungsi: 'Sambil (dua tindakan bersamaan)',
         keterangan:
-          'Di Bab 28, Kata Kerja (bentuk ます tanpa ます) + ながら + KK2 berarti melakukan dua hal bersamaan. Subjek kedua tindakan harus sama; tindakan utama ada di belakang.',
+          'Kata Kerja₁ (bentuk ます tanpa ます) + ながら + Kata Kerja₂ berarti melakukan dua hal bersamaan. Subjek kedua tindakan harus sama; tindakan utama ada di klausa belakang (Kata Kerja₂).',
         contoh: [{ jp: '音楽を 聞きながら 食事します。', id: 'Makan sambil mendengarkan musik.' }],
       },
     ],
@@ -639,10 +807,10 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 39,
-        fungsi: 'Karena (sebab-akibat, lembut)',
+        fungsi: 'Karena (sebab-akibat, memperlembut)',
         keterangan:
-          'Di Bab 39, ので menyatakan sebab dengan nuansa lembut/objektif: "karena…". Dipakai setelah bentuk biasa. Berbeda dengan から yang lebih tegas/subjektif.',
-        contoh: [{ jp: 'かぜを ひいたので、学校を 休みました。', id: 'Karena masuk angin, tidak masuk sekolah.' }],
+          'Sama halnya dengan ～から (Pel.9), ～ので juga menyatakan sebab atau alasan. ので menyatakan hubungan sebab akibat, kemudian bersifat menjelaskan akibat yang dituntun oleh sebab, maka cocok untuk memperlembut ekspresi alasan meminta izin atau pengertian.',
+        contoh: [{ jp: '日本語が わからないので、英語で 話して いただけませんか。', id: 'Karena tidak mengerti bahasa Jepang, tolong berbicara dalam bahasa Inggris.' }],
       },
     ],
   },
@@ -655,15 +823,18 @@ export const partikel: Partikel[] = [
     contoh: [
       { jp: '薬を 飲んだのに、まだ 熱が あります。', id: 'Walaupun sudah minum obat, masih demam.' },
     ],
-    bab: [42],
+    bab: [45],
     kelompok: 'lanjutan',
     perBab: [
       {
-        bab: 42,
-        fungsi: 'Walaupun (pertentangan)',
+        bab: 45,
+        fungsi: 'Walaupun / padahal (pertentangan)',
         keterangan:
-          'Di Bab 42, のに menyatakan pertentangan yang menyimpang dari harapan: "walaupun seharusnya…, ternyata …". Sering bernuansa heran/kecewa.',
-        contoh: [{ jp: '薬を 飲んだのに、まだ 熱が あります。', id: 'Walaupun sudah minum obat, masih demam.' }],
+          'のに digunakan jika hal yang berbeda dengan dugaan sesungguhnya dari hal di bagian depan kalimat diletakkan di bagian belakang kalimat. Kebanyakan menjelaskan perasaan di luar dugaan atau ketidakpuasan. (Berbeda dengan が yang tidak menyatakan perasaan tsb, dan dengan ても yang paradoks secara prakiraan.)',
+        contoh: [
+          { jp: '約束を したのに、彼女は 来ませんでした。', id: 'Dia tidak datang padahal sudah berjanji.' },
+          { jp: 'きょうは 日曜日なのに、働かなければ なりません。', id: 'Hari ini harus bekerja padahal hari Minggu.' },
+        ],
       },
     ],
   },
@@ -681,9 +852,9 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 28,
-        fungsi: 'Penghubung alasan berderet',
+        fungsi: 'Penghubung alasan/keadaan berderet',
         keterangan:
-          'Di Bab 28, Bentuk biasa + し dipakai untuk menyebut beberapa alasan/keadaan sekaligus: "…, dan juga …" (sering jadi "karena" bila jadi sebab).',
+          'Bentuk Biasa + し dipakai untuk menyebut beberapa alasan/keadaan sekaligus: "…, dan juga …" (sering menjadi sebab). Pola: 「Bentuk Biasa し、Bentuk Biasa し、～」.',
         contoh: [
           { jp: '地下鉄は 速いし、安いし、地下鉄で 行きましょう。', id: 'Kereta bawah tanah cepat dan juga murah, ayo pergi naik kereta bawah tanah.' },
         ],
@@ -704,10 +875,13 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 25,
-        fungsi: 'Walaupun',
+        fungsi: 'Walaupun (persyaratan asumsi paradoks)',
         keterangan:
-          'Di Bab 25, Kata Kerja bentuk て + も (atau kata sifat/lain + ても／でも) berarti "walaupun…/meskipun…". Contoh umum: 雨が 降っても 行きます。',
-        contoh: [{ jp: '雨が 降っても 出かけます。', id: 'Walaupun turun hujan, (saya) pergi keluar.' }],
+          'Ini menunjukkan persyaratan asumsi paradoks. Dengan kalimat yang disusul bentuk ても (mis. ～ても, ～なくても, ～くても, ～でも), ditunjukkan terjadinya hal yang biasanya dapat diduga di bawah persyaratan asumsi, atau tidak terjadinya hal yang biasanya dapat diduga.',
+        contoh: [
+          { jp: '雨が 降っても、洗濯します。', id: 'Walaupun hujan, mencuci pakaian.' },
+          { jp: '安くても、わたしは グループ旅行が 嫌いです。', id: 'Walaupun murah, saya tidak suka tur rombongan.' },
+        ],
       },
     ],
   },
@@ -727,26 +901,32 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 23,
-        fungsi: 'Syarat と／たら',
+        fungsi: 'Ketika (～とき) & akibat pasti (～と)',
         keterangan:
-          'Di Bab 23, と menyatakan konsekuensi otomatis/pasti (春になると、桜が咲きます), sedangkan たら menyatakan "setelah/lalu" (国へ帰ったら、…).',
+          'とき menunjukan waktu terjadinya keadaan/aksi dalam kalimat pokok (mis. 図書館で 本を 借りる とき、カードが 要ります). と menyatakan akibat pasti bila aksi di depannya terjadi (この ボタンを 押すと、お釣りが 出ます).',
         contoh: [
-          { jp: '春に なると、桜が 咲きます。', id: 'Kalau (bila) musim semi tiba, sakura bermekaran.' },
-          { jp: '国へ 帰ったら、医者に なります。', id: 'Kalau sudah pulang ke kampung halaman, akan jadi dokter.' },
+          { jp: 'この ボタンを 押すと、お釣りが 出ます。', id: 'Kalau tekan tombol ini, uang kembaliannya keluar.' },
         ],
       },
       {
         bab: 25,
-        fungsi: 'Syarat たら／ば',
+        fungsi: 'Syarat asumsi (～たら、～)',
         keterangan:
-          'Di Bab 25, たら (bentuk た + ら) dan ば (bentuk syarat kata kerja/kata sifat) menyatakan syarat "kalau…". ば = syarat umum; たら = setelah/andai.',
-        contoh: [{ jp: '安ければ 買います。', id: 'Kalau murah, (saya) beli.' }],
+          'Menyatakan persyaratan asumsi dengan membubuhkan ら pada Bentuk Biasa Lampau Kata Kerja/Kata Sifat/Kata Benda, disusul kalimat pokok. Kalimat pokok dapat memakai ekspresi keinginan, harapan, ajakan, permohonan. [Perhatian] Di belakang ～と (kalimat pokok), ekspresi keinginan/harapan/ajakan/permohonan tidak dapat dipakai.',
+        contoh: [
+          { jp: 'お金が あったら、旅行します。', id: 'Kalau punya uang, berwisata.' },
+          { jp: '暇だったら、手伝って ください。', id: 'Kalau sedang luang, tolong bantu saya.' },
+        ],
       },
       {
         bab: 35,
-        fungsi: 'Syarat なら／ば',
+        fungsi: 'Syarat ば／なら',
         keterangan:
-          'Di Bab 35, なら dipakai setelah Kata Benda dengan arti "kalau soal/mengenai…", dan ば membentuk syarat umum. Bandingkan nuansa keempat bentuk syarat.',
+          'ば membentuk syarat (ここを 押せば、ドアが 開きます). Kata Benda なら、～ dipakai bila merespon perkataan lawan bicara lalu memberi informasi mengenai hal tersebut (温泉なら、白馬が いいですよ). Bandingkan dengan ～と yang menyatakan akibat pasti.',
+        contoh: [
+          { jp: 'ここを 押せば、ドアが 開きます。', id: 'Jika menekan di sini, pintunya terbuka.' },
+          { jp: '温泉なら、白馬が いいですよ。', id: 'Kalau permandian air panas, Hakuba yang bagus.' },
+        ],
       },
     ],
   },
@@ -760,17 +940,17 @@ export const partikel: Partikel[] = [
       { jp: '今 帰ったばかりです。', id: 'Baru saja pulang.' },
       { jp: '肉ばかり 食べています。', id: 'Dia hanya makan daging terus.' },
     ],
-    bab: [30],
+    bab: [46],
     kelompok: 'lanjutan',
     perBab: [
       {
-        bab: 30,
-        fungsi: 'Baru saja / hanya terus',
+        bab: 46,
+        fungsi: 'Baru saja (KK Bentuk た ばかりです)',
         keterangan:
-          'Di Bab 30, Kata Kerja bentuk た + ばかり = "baru saja" (今帰ったばかりです). Kata Benda + ばかり = "penuh dengan / hanya… terus" (肉ばかり 食べています).',
+          'Pola ini menyatakan perasaan si pembicara bahwa waktu belum lama setelah dilakukan aksi atau terjadi peristiwa. Tidak terpengaruh lama/singkatnya waktu sebenarnya, dapat digunakan jika lawan bicara merasa tidak lama — inilah bedanya dengan Kata Kerja Bentuk た ところです.',
         contoh: [
-          { jp: '今 帰ったばかりです。', id: 'Baru saja pulang.' },
-          { jp: '肉ばかり 食べています。', id: 'Dia hanya makan daging terus.' },
+          { jp: 'さっき 昼ごはんを 食べたばかりです。', id: 'Tadi baru makan siang.' },
+          { jp: '木村さんは 先月 この 会社に 入ったばかりです。', id: 'Sdr. Kimura baru masuk ke perusahaan ini bulan lalu.' },
         ],
       },
     ],
@@ -793,28 +973,52 @@ export const partikel: Partikel[] = [
         bab: 1,
         fungsi: 'Penanda tanya',
         keterangan:
-          'Di Bab 1, か di akhir kalimat membentuk kalimat tanya (あなたは 学生ですか).',
-        contoh: [{ jp: 'あなたは 学生ですか。', id: 'Apakah Anda pelajar?' }],
+          'Partikel か menyatakan perasaan ketidakpastian atau heran si pembicara. Dengan memakai か pada akhir kalimat, dapat membuat kalimat tanya (intonasi naik di akhir).',
+        contoh: [{ jp: 'ミラーさんは 会社員ですか。', id: 'Apakah Sdr. Miller pegawai perusahaan?' }],
       },
       {
         bab: 6,
-        fungsi: 'Tanya banding / ajakan',
+        fungsi: 'Mendapat informasi baru (か di akhir)',
         keterangan:
-          'Di Bab 6, か menutup kalimat tanya pada kata kerja (mis. ～ませんか = ajakan) dan pertanyaan pilihan.',
-        contoh: [{ jp: '何か 食べませんか。', id: 'Mau makan sesuatu?' }],
+          'か menyatakan hal untuk mendapatkan informasi baru yang belum diketahui lawan bicara sebelumnya, kemudian memahaminya. Sama dengan cara penggunaan か dari そうですか. (Juga dipakai pada ～ませんか ajakan.)',
+        contoh: [{ jp: '日曜日 京都へ 行きました。……京都ですか。いいですね。', id: 'Hari Minggu yang lalu pergi ke Kyoto. ……Kyoto? Bagus ya.' }],
       },
       {
         bab: 11,
-        fungsi: 'Pilihan (atau)',
+        fungsi: 'Menanyakan kuantitas (いくつ／なん＋KB)',
         keterangan:
-          'Di Bab 11, か diletakkan di antara dua kata benda berarti "atau" (pilihan): コーヒーか 紅茶.',
-        contoh: [{ jp: 'コーヒーか 紅茶を 飲みます。', id: 'Minum kopi atau teh.' }],
+          'いくつ digunakan untuk menanyakan kuantitas benda. なん + Kata Bantu Bilangan digunakan untuk menanyakan kuantitas benda yang dibubuhkan Kata Bantu Bilangan (mis. 何人, 何時間).',
+        contoh: [
+          { jp: 'みかんを いくつ 買いましたか。……8つ 買いました。', id: 'Membeli berapa buah jeruk? ……Membeli delapan buah.' },
+          { jp: 'この 会社に 外国人が 何人 いますか。……5人 います。', id: 'Di perusahaan ini ada berapa orang asing? ……Ada lima orang.' },
+        ],
       },
       {
         bab: 13,
-        fungsi: 'Kata tanya + か (tidak pasti)',
+        fungsi: 'どこか／何か (suatu tempat / sesuatu)',
         keterangan:
-          'Di Bab 13, kata tanya + か (何か, どこか) berarti "sesuatu/suatu tempat" yang tidak pasti.',
+          'どこか berarti suatu tempat, dan なにか berarti sesuatu. Partikel へ atau を di belakang どこか atau なにか dapat dihilangkan.',
+        contoh: [
+          { jp: '冬休みは どこか[へ] 行きましたか。', id: 'Pada waktu liburan musim dingin pergi ke mana?' },
+          { jp: 'のどが かわきましたから、何か[を] 飲みたいです。', id: 'Karena haus, ingin minum sesuatu.' },
+        ],
+      },
+      {
+        bab: 20,
+        fungsi: 'か tidak dibubuhkan (bentuk biasa)',
+        keterangan:
+          'Dalam kalimat tanya dengan bentuk biasa, pada umumnya partikel か tidak dibubuhkan pada akhir kalimat, tetapi diungkapkan dengan nada yang naik seperti の(ん) atau の だ(ん).',
+        contoh: [{ jp: 'コーヒーを 飲む？(↗)……うん、飲む。(↘)', id: 'Mau minum kopi? ……Ya, mau minum.' }],
+      },
+      {
+        bab: 29,
+        fungsi: 'どこかで／どこかに (か + で／に)',
+        keterangan:
+          'Kata Bantu へ dan を di belakang どこか dan なにか dapat dihilangkan, sedangkan Kata Bantu で dan に di belakang どこかで dan どこかに TIDAK dapat dihilangkan.',
+        contoh: [
+          { jp: 'どこかで 財布を なくして しまいました。', id: 'Entah di mana (saya) kehilangan dompet.' },
+          { jp: 'どこかに 電話が ありますか。', id: 'Apakah ada telepon di suatu tempat?' },
+        ],
       },
     ],
   },
@@ -872,9 +1076,9 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 30,
-        fungsi: 'Partikel + も (juga pada…)',
+        fungsi: 'Partikel + も (にも／でも／とも…)',
         keterangan:
-          'Di Bab 30, も dapat menempel pada partikel lain untuk menambah arti "juga": にも = "juga ke/untuk/di", でも = "juga dengan/di", とも = "juga bersama".',
+          'も dapat menempel pada partikel lain untuk menambah arti "juga": にも = "juga ke/untuk/di", でも = "juga dengan/di", とも = "juga bersama". Jika digabung dengan Kata Benda yang dibubuhkan が/を, maka が/を dihapuskan; untuk partikel lain (に, で, から, まで, と) dibubuhkan di belakangnya.',
         contoh: [
           { jp: '日曜日にも 働きます。', id: 'Hari Minggu pun (juga) bekerja.' },
           { jp: 'デパートでも 買えます。', id: 'Bisa membeli juga di department store.' },
@@ -899,14 +1103,14 @@ export const partikel: Partikel[] = [
         bab: 1,
         fungsi: 'Partikel + は (topik)',
         keterangan:
-          'Di Bab 1, は dapat menempel pada partikel lain untuk menjadikannya topik: では (di/untuk…), には (di/pada…), とは (dengan/mengenai…). では juga sering dibaca "ja" (じゃありません).',
+          'は dapat menempel pada partikel lain untuk menjadikannya topik: では (di/untuk…), には (di/pada…), とは (dengan/mengenai…). では juga sering dibaca "ja" (じゃありません).',
         contoh: [{ jp: '学校では 日本語を 勉強します。', id: 'Di sekolah (topik) belajar bahasa Jepang.' }],
       },
       {
         bab: 3,
         fungsi: 'Partikel + は (tempat)',
         keterangan:
-          'Di Bab 3, は menempel pada penanda tempat (では／には) untuk menjadikan tempat sebagai topik kalimat (日本では 桜が きれいです).',
+          'は menempel pada penanda tempat (では／には) untuk menjadikan tempat sebagai topik kalimat (日本では 桜が きれいです).',
         contoh: [{ jp: '日本では 桜が きれいです。', id: 'Di Jepang, sakuranya indah.' }],
       },
     ],
@@ -926,9 +1130,9 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 21,
-        fungsi: 'Topik/kutipan informal',
+        fungsi: 'Topik/kutipan informal (bentuk santai)',
         keterangan:
-          'Di Bab 21, って adalah bentuk santai dari と (kutipan) atau は (topik) dalam percakapan: 「〜って 何？」(〜 itu apa?); 「〜さんって だれ？」.',
+          'って adalah bentuk santai dari と (kutipan) atau は (topik) dalam percakapan: 「〜って 何？」(〜 itu apa?); 「〜さんって だれ？」.',
         contoh: [
           { jp: '田中さんって どんな 人ですか。', id: 'Orang yang bernama Tanaka itu orang seperti apa?' },
           { jp: 'これって 何ですか。', id: 'Ini apa ya?' },
@@ -973,12 +1177,10 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 30,
-        fungsi: 'Contoh (santai)',
+        fungsi: 'Contoh (bahasa lisan, di belakang benda terakhir)',
         keterangan:
-          'Di Bab 30, とか menyebutkan beberapa contoh secara santai ("…atau …"). Dipakai dalam percakapan untuk membuat daftar longgar.',
-        contoh: [
-          { jp: '週末は 映画を見るとか、買い物をします。', id: 'Akhir pekan menonton film, berbelanja, dan sebagainya.' },
-        ],
+          'とか digunakan jika memberikan contoh seperti halnya や. とか, jika dibandingkan dengan や dalam bahasa lisan, dapat digunakan di belakang Kata Benda terakhir di antara yang disebutkan.',
+        contoh: [{ jp: 'テニスとか 水泳とか……', id: 'Tenis, atau renang…' }],
       },
     ],
   },
@@ -1024,7 +1226,7 @@ export const partikel: Partikel[] = [
         bab: 27,
         fungsi: 'Perhatian: しか + negatif',
         keterangan:
-          'Di Bab 27 (Perhatian), しか selalu butuh kalimat negatif. Bila ingin makna positif "hanya", gunakan だけ (dengan positif). Jangan campur: ✗ しか あります. Pasangannya selalu ありません/ません.',
+          'しか selalu butuh kalimat negatif. Bila ingin makna positif "hanya", gunakan だけ (dengan positif). Jangan campur: ✗ しか あります. Pasangannya selalu ありません/ません.',
         contoh: [
           { jp: '水しか ありません。', id: 'Cuma ada air (tidak ada yang lain).' },
           { jp: '100円しか ありません。', id: 'Hanya punya 100 yen.' },
@@ -1048,7 +1250,7 @@ export const partikel: Partikel[] = [
         bab: 26,
         fungsi: 'Justru / tepatnya',
         keterangan:
-          'Di Bab 26, こそ menekankan kata sebelumnya: "justru/tepatnya ini". Contoh: 今度こそ 頑張ります (kali ini pasti saya berusaha).',
+          'こそ menekankan kata sebelumnya: "justru/tepatnya ini". Contoh: 今度こそ 頑張ります (kali ini pasti saya berusaha).',
         contoh: [{ jp: 'こちらこそ お願いします。', id: 'Justru saya yang mohon bantuan Anda.' }],
       },
     ],
@@ -1069,7 +1271,7 @@ export const partikel: Partikel[] = [
         bab: 22,
         fungsi: 'Mungkin / ya kan (ragu)',
         keterangan:
-          'Di Bab 22, かしら (perempuan) dan かな (netral/laki-laki) menyatakan keraguan atau pertanyaan pada diri sendiri: "kira-kira…, ya?", sering di akhir kalimat santai.',
+          'かしら (perempuan) dan かな (netral/laki-laki) menyatakan keraguan atau pertanyaan pada diri sendiri: "kira-kira…, ya?", sering di akhir kalimat santai.',
         contoh: [{ jp: '明日は 晴れるかな。', id: 'Besok cerah nggak ya.' }],
       },
     ],
@@ -1090,7 +1292,7 @@ export const partikel: Partikel[] = [
         bab: 42,
         fungsi: 'Padahal (mengakhiri keluhan)',
         keterangan:
-          'Di Bab 42, のに di akhir kalimat meninggalkan kesan menyesal/kecewa yang tak diucapkan: "padahal…". Berbeda dengan のに penghubung yang menyambung dua klausa.',
+          'のに di akhir kalimat meninggalkan kesan menyesal/kecewa yang tak diucapkan: "padahal…". Berbeda dengan のに penghubung yang menyambung dua klausa.',
         contoh: [{ jp: 'せっかく 来たのに。', id: 'Padahal sudah susah-susah datang (tapi…).' }],
       },
     ],
@@ -1111,7 +1313,7 @@ export const partikel: Partikel[] = [
         bab: 17,
         fungsi: 'Paling lambat / sebelum (batas)',
         keterangan:
-          'Di Bab 17, までに menyatakan batas waktu "paling lambat/sebelum". Bedakan: 5時まで 働く (bekerja sampai jam 5) vs 5時までに 出す (menyerahkan paling lambat jam 5).',
+          'までに menyatakan batas waktu aksi/peristiwa "paling lambat/sebelum". Bedakan: 5時まで 働く (bekerja sampai jam 5) vs 5時までに 出す (menyerahkan paling lambat jam 5).',
         contoh: [{ jp: '金曜日までに 返してください。', id: 'Tolong kembalikan paling lambat hari Jumat.' }],
       },
     ],
@@ -1132,7 +1334,7 @@ export const partikel: Partikel[] = [
         bab: 35,
         fungsi: 'Bentuk syarat (variasi ば／たら)',
         keterangan:
-          'Di Bab 35, ば membentuk syarat dari kata kerja (行く→行けば) atau kata sifat (安い→安ければ); たら memakai bentuk lampau + ら. Keduanya berarti "kalau…" dengan nuansa sedikit berbeda.',
+          'ば membentuk syarat dari kata kerja (行く→行けば) atau kata sifat (安い→安ければ); たら memakai bentuk lampau + ら. Keduanya berarti "kalau…" dengan nuansa sedikit berbeda.',
         contoh: [{ jp: '時間が あれば、映画を 見ます。', id: 'Kalau ada waktu, menonton film.' }],
       },
     ],
@@ -1147,17 +1349,18 @@ export const partikel: Partikel[] = [
       { jp: '今から 出かけるところです。', id: 'Sekarang baru mau pergi keluar.' },
       { jp: '今 食べているところです。', id: 'Sekarang sedang makan.' },
     ],
-    bab: [40],
+    bab: [46],
     kelompok: 'lanjutan',
     perBab: [
       {
-        bab: 40,
-        fungsi: 'Sedang / baru akan (aspek)',
+        bab: 46,
+        fungsi: 'Fase tindakan (sedang / baru akan / baru saja)',
         keterangan:
-          'Di Bab 40, ところ menyatakan fase tindakan: Kata Kerja bentuk kamus + ところ = "baru akan", bentuk て + いる + ところ = "sedang", bentuk た + ところ = "baru saja".',
+          'ところ menyatakan fase tindakan: 「Kata Kerja Bentuk Kamus ところです」 = baru mau ~; 「Kata Kerja Bentuk ている ところです」 = sedang ~; 「Kata Kerja Bentuk た ところです」 = baru saja ~. ～ところです dapat disambung ke berbagai pola kalimat sebagai Kalimat Nominal.',
         contoh: [
-          { jp: '今から 出かけるところです。', id: 'Sekarang baru mau pergi keluar.' },
-          { jp: '今 食べているところです。', id: 'Sekarang sedang makan.' },
+          { jp: 'いいえ、これから 食べる ところです。', id: 'Belum, baru mau makan sekarang.' },
+          { jp: 'いいえ、今 調べて いる ところです。', id: 'Belum, sekarang sedang diperiksa.' },
+          { jp: 'あ、たった今 帰った ところです。', id: 'Ah, baru saja pulang.' },
         ],
       },
     ],
@@ -1178,7 +1381,7 @@ export const partikel: Partikel[] = [
         bab: 28,
         fungsi: 'Catatan ながら',
         keterangan:
-          'Di Bab 28 (Perhatian), ながら hanya untuk dua tindakan dengan subjek yang SAMA. Tindakan utama ada di klausa belakang. Kata Kerja dibentuk dari bentuk ます tanpa ます (食べます→食べながら).',
+          'ながら hanya untuk dua tindakan dengan subjek yang SAMA. Tindakan utama ada di klausa belakang. Kata Kerja dibentuk dari bentuk ます tanpa ます (食べます→食べながら).',
         contoh: [{ jp: '音楽を 聞きながら 宿題を します。', id: 'Mengerjakan PR sambil mendengarkan musik.' }],
       },
     ],
@@ -1197,11 +1400,12 @@ export const partikel: Partikel[] = [
     perBab: [
       {
         bab: 19,
-        fungsi: 'Menyebut beberapa tindakan',
+        fungsi: 'Menyebut beberapa tindakan sebagai contoh (たり～たり)',
         keterangan:
-          'Di Bab 19, Kata Kerja bentuk たり + したり menyebut beberapa tindakan sebagai contoh (tidak berurutan): "melakukan … dan …", diteruskan します.',
+          'Jika mengangkat beberapa Kata Benda (lebih dari dua) yang mewakilinya secara paralel umumnya memakai partikel や, tetapi untuk mengangkat beberapa aksi yang mewakilinya digunakan pola 「Kata Kerja₁ Bentuk たり、Kata Kerja₂ Bentuk たり します」. [Perhatian] Berbeda dengan 「Kata Kerja₁ Bentuk て、[Kata Kerja₂ Bentuk て、] Kata Kerja₃」 yang menyatakan aksi berurutan sesuai urutannya.',
         contoh: [
-          { jp: '休みの日は 本を 読んだり、散歩したり します。', id: 'Hari libur membaca buku, berjalan-jalan, dan sebagainya.' },
+          { jp: '日曜日は テニスを したり、映画を 見たり します。', id: 'Pada hari Minggu bermain tenis, dan menonton film.' },
+          { jp: '日曜日は テニスを して、映画を 見ました。', id: 'Pada hari Minggu yang lalu, bermain tenis, kemudian menonton film.' },
         ],
       },
     ],
