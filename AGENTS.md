@@ -5,7 +5,7 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi UI/UX Overhaul (§18) — P0+P1: koreksi panel, flashcard kanji+keyboard, kuis feedback, latihan kunci inline, audio speed, home filter+cari.
+> Terakhir diperbarui: sesi **„keterangan partikel dari buku MNN 1 & 2 + refactor modular"** (§3 #20–#23, §3b) — data `partikel` dipecah jadi `src/data/partikel/`, invariant dijaga `validate:partikel`, +4 bab partikel dikoreksi dari buku.
 
 ---
 
@@ -164,19 +164,50 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **Sebab:** port 5173 bisa dipakai proyek lain; mnn1 naik ke 5174/5175.
 - **Fix:** sebelum screenshot/eval, **pastikan instance = mnn1**: cek `(Invoke-WebRequest <url>).Content` cocokkan `<title>` = "Minna no Nihongo 1 - Belajar Bahasa Jepang", atau `--dump-dom` mengandung penanda app. Jangan asumsi port tetap.
 
+### #20 — `bab[]` partikel tidak sinkron dgn `perBab[]` → panel per-bab HILANG 🔴
+- **Gejala:** partikel `が` punya entri `perBab` Bab 22/23/24/25 (dari buku), tapi saat memilih Bab 22 **kartu `が` tak muncul** & panelnya tak pernah tampil.
+- **Sebab:** `KartuPartikel` menampilkan panel dari `p.bab.map(...)`, dan filter halaman pakai `p.bab.includes(bab)`. Entri `perBab` yang `bab`-nya **tidak ada** di `bab[]` jadi "yatim" → tak terjangkau. Ditemukan **7 pelanggaran** (が 22/23/24/25, を 16, か 20/29).
+- **Fix:** sinkronkan `bab[]` ⇄ `perBab[]` (dua arah). Sekarang **dijaga otomatis** `npm run validate:partikel`. Kalau menambah entri `perBab`, WAJIB tambah bab itu ke `bab[]`, dan sebaliknya.
+
+### #21 — Soal ujian merujuk bab yang tak punya partikel („bab orphan") 🔴
+- **Gejala:** pilih Bab 40/48/8 di mode **Ujian** → soal muncul, tapi di mode **Daftar** bab itu tak punya kartu partikel → bingung; plus ada soal `ところ` ber-`bab:40` padahal `ところ` di buku MNN2 = **Bab 46**.
+- **Sebab:** `bab` soal diisi manual, tidak dicek terhadap data partikel; pernah salah label (40 vs 46).
+- **Fix:** `validate:partikel` menolak soal yang `bab`-nya tak punya partikel terkait. Untuk kasus nyata: tambah partikel ke bab yang benar (は/が +Bab8, に +Bab48, か +Bab40) & koreksi ところ 40→46. **Selalu verifikasi bab dari render buku**, jangan menebak.
+
+### #22 — Refactor file data gemuk: koma ganda `},,` dari script generate 🔴
+- **Gejala:** setelah memecah `partikel.ts` (70 KB) jadi 6 file via script, `tsc` error `Type '... | undefined' is not assignable to 'Partikel[]'` di baris deklarasi array.
+- **Sebab:** script menulis `objs.join(",\n") + ","` — tiap objek dari sumber sudah berakhir `},` sehingga hasilnya `},,` (koma ganda) di **setiap** batas objek → elemen `undefined` masuk array. Regex fix pertama hanya menambal yang terakhir.
+- **Fix:** `replace(/\},,/g, "},")` (global). **Pelajaran:** setelah refactor/pecah file, WAJIB: (1) `npx tsc --noEmit`; (2) bandingkan jumlah & urutan elemen dengan versi lama (di sini 38 partikel, urutan IDENTIK); (3) diff nilai kunci (`bab`, `keterangan`, `contoh`) vs snapshot — beda harus PERSIS yang disengaja (di sesi ini cuma 4 partikel). Simpan snapshot ke `tmp/` sebelum memecah.
+
+### #23 — Pola aman refactor data besar (resep) 🟢
+1. Snapshot file lama ke `tmp/` (mis. `tmp/refactor/partikel.snapshot.ts`).
+2. Ekstrak objek dgn script Node (jangan copy-tempel tangan) → tulis file per kelompok.
+3. Buat `index.ts` re-export **agar import konsumen tak berubah** (satu pintu).
+4. Verifikasi: `tsc --noEmit` + bandingkan urutan/isi vs snapshot (script, bukan mata).
+5. Tambah validator invariant ke `guard` **sebelum** lanjut fitur lain.
+6. Baru commit + push. Lihat §3b untuk struktur final partikel.
+
 ---
 
 ## 3b. Detail implementasi halaman Partikel (JANGAN di-regresi)
 
-Halaman `/partikel` (fitur baru, sudah live):
-- `src/data/partikel.ts` → **38 partikel**. Interface `Partikel { bentuk, romaji, fungsi, penjelasan, contoh[], bab[], kelompok, perBab?[] }`. `kelompok`: `dasar | tempat-arah | waktu | penghubung | akhir | lanjutan` (+ `KELOMPOK`, `babTerkait()`).
-- **`perBab[]` (FungsiBab):** keterangan lengkap partikel **per bab** (`{ bab, fungsi, keterangan, contoh? }`), diturunkan dari materi bunpou tiap bab (bukan karangan). Aturan: `perBab[].bab ⊆ bab[]`, semua 38 partikel punya `perBab` (13 multi-bab punya entri berbeda per bab). Helper `fungsiUntukBab(p, bab)` → `{ fungsi, keterangan, contoh, spesifik }`.
-- **Tombol pilih bab** di `/partikel` (`.partikel-babbar`): 1 tombol "Semua" + 1 tombol per bab. Berlaku untuk **daftar (filter) & ujian (cakupan soal)**. Dropdown "Bab" lama di bagian search **sudah diganti** oleh baris tombol ini.
-- **Kartu akordeon per bab** (`.partikel-akordeon`): tiap bab jadi panel yang bisa dibuka; bab aktif otomatis terbuka + badge "aktif". Label footer kartu = **"Perilaku di tiap bab"**. Panel berisi keterangan lengkap + contoh + link "Buka materi Bab N".
-- **Header kartu tahan bentuk panjang** (`.partikel-card__bentuk`): `bentuk` dipecah per ` / ` jadi beberapa chip `.partikel-card__kanji`; teks dalam `(...)` dipindah ke badge `.partikel-card__catatan`; `romaji` selalu di baris bawah (`flex-basis: 100%`). Kanji `font-size: clamp(20px, 5.2vw, 30px)` + `white-space: nowrap` per chip. **Jangan** kembalikan ke `split` tanpa pecah `/` — bentuk panjang (`だの / たり ～たり`, `たら / ば / なら / と`) akan membungkus liar.
+Halaman `/partikel` (fitur baru, sudah live). **Data sudah dipecah jadi modul** (sejak refactor „pecah data jadi modul", commit `374a494`):
+
+- `src/data/partikel/` (BUKAN lagi file tunggal `partikel.ts`):
+  - `tipe.ts` → interface `ContohPartikel`, `FungsiBab`, `Partikel`, `KelompokPartikel` + `KELOMPOK`.
+  - `daftar/{dasar,tempat-arah,waktu,penghubung,akhir,lanjutan}.ts` → data partikel per kelompok.
+  - `daftar/index.ts` → **gabungan 38 partikel**. Urutan tampil default = urutan di sini (disusun „dasar → lanjutan", dijaga lewat `pilih()` yang melempar bila nama partikel tak ditemukan).
+  - `fungsi.ts` → `babTerkait()` & `fungsiUntukBab()`.
+  - `index.ts` (root modul) → **re-export** (`partikel`, `KELOMPOK`, `babTerkait`, `fungsiUntukBab`, tipe). Import lama `from '../data/partikel'` tetap jalan — **jangan** pindahkan import konsumen ke path dalam, biar tetap satu pintu.
+- **38 partikel**. `Partikel { bentuk, romaji, fungsi, penjelasan, contoh[], bab[], kelompok, perBab?[] }`. `kelompok`: `dasar | tempat-arah | waktu | penghubung | akhir | lanjutan`.
+- **`perBab[]` (FungsiBab):** keterangan lengkap partikel **per bab** (`{ bab, fungsi, keterangan, contoh? }`), diturunkan dari „IV. Keterangan Tata Bahasa" buku MNN 1 & 2 Indonesia (bukan karangan). Aturan: `perBab[].bab ⊆ bab[]`, semua 38 partikel punya `perBab`. Helper `fungsiUntukBab(p, bab)` → `{ fungsi, keterangan, contoh, spesifik }`.
+- **INVARIAN (dijaga otomatis `npm run validate:partikel`, masuk `check`/`check:full`/`guard`):** bentuk unik; `bab[]` & `perBab[]` terurut menaik tanpa duplikat; **setiap `bab` WAJIB punya entri `perBab`** (kalau tidak → „fallback"); **setiap `perBab[].bab` WAJIB ada di `bab[]`**; `fungsi`/`keterangan`/`contoh.jp`/`contoh.id` tidak kosong; bab 1..50. Untuk soal: id unik, `jawaban ∈ pilihan`, `pilihan` tanpa duplikat, soal memuat `___`, `bab` soal WAJIB punya partikel terkait.
+- **Tombol pilih bab** di `/partikel` (`.partikel-babbar`): 1 tombol "Semua" + 1 tombol per bab dari `babTerkait()`. Berlaku untuk **daftar (filter) & ujian (cakupan soal)**.
+- **Kartu akordeon per bab** (`.partikel-akordeon`): daftar panel diambil dari `p.bab.map(...)`, jadi **`bab[]` menentukan panel yang tampil**. Inilah sebab invarian „`perBab ⊆ bab`" penting: entri `perBab` yang bab-nya tidak ada di `bab[]` **tidak akan pernah tampil**. Label footer = **"Perilaku di tiap bab"**.
+- **Header kartu tahan bentuk panjang** (`.partikel-card__bentuk`): `bentuk` dipecah per ` / ` jadi beberapa chip `.partikel-card__kanji`; teks dalam `(...)` dipindah ke badge `.partikel-card__catatan`; `romaji` selalu di baris bawah (`flex-basis: 100%`). **Jangan** kembalikan ke `split` tanpa pecah `/` — bentuk panjang (`だの / たり ～たり`, `たら / ば / なら / と`) akan membungkus liar.
 - **Rangkuman arti** (`.partikel-ringkas`, komponen `TabelRingkas`): tabel padat Partikel | Arti/Fungsi di **bawah** daftar kartu, ikut menyesuaikan filter.
 - **Kredit**: footer `.partikel-kredit` "Build by **amirsan**" di dasar halaman (kedua mode).
-- `src/data/partikel-soal.ts` → **100 soal** pilihan ganda (`SoalPartikel { id, soal, arti, jawaban, pilihan[], bab }`). `soal` pakai rumpang `___`. **Pastikan `pilihan` tidak duplikat & memuat `jawaban`** (pernah salah: `['や','や']`).
+- `src/data/partikel-soal.ts` → **100 soal** pilihan ganda (`SoalPartikel { id, soal, arti, jawaban, pilihan[], bab }`). `soal` pakai rumpang `___`. **Pastikan `pilihan` tidak duplikat & memuat `jawaban`** (pernah salah: `['や','や']`). `bab` soal WAJIB merujuk bab yang punya partikel (dijaga validator).
 - **Struktur modular** — halaman dipecah ke `src/features/partikel/`:
   - `PartikelPage.tsx` (di `pages/`) → orkestrasi saja (state, filter, layout, ~190 baris). **Jangan** tanam ulang sub-komponen besar di sini.
   - `features/partikel/KartuPartikel.tsx` → kartu + akordeon per bab.
@@ -189,6 +220,8 @@ Halaman `/partikel` (fitur baru, sudah live):
 - `paper.css` → blok `.partikel-*` (token-only, tanpa `transition`).
 - **Bug pernah terjadi — search melar:** `.partikel-tools` = flex **column**, jadi `.home-search` (`flex: 1 1 180px`) meregang jadi oval raksasa. Fix: `.partikel-tools .home-search { flex: 0 0 auto; width: 100% }`. Jangan hapus rule ini.
 - Layout desktop: `PartikelPage` `max-w-6xl` + grid **3 kolom** (≥1100px). Home `max-w-6xl`, Susun `max-w-5xl`, BabDetail `max-w-5xl`.
+
+**⚠️ CANGKANG `bentuk` WAJIB persis sama di 3 tempat** (kalau tidak, `daftar/index.ts` melempar error): nama array `pilih(sumber, '...')` di `daftar/index.ts`, nilai `bentuk:` di file kelompok, dan (bila dipakai) `jawaban` soal. Huruf spasi di sekitar `/` ikut dihitung (mis. `'から / まで'` ≠ `'から/まで'`).
 
 **Favicon/app shell** (di luar partikel tapi satu sesi):
 - `public/favicon.svg` → ikon tab bergaya hanko (kotak gradien aksen + karakter 助). Terpasang di `index.html` (`rel="icon" type="image/svg+xml"`) + `<meta name="theme-color" content="#a3562a">`. **Jangan hapus.**
@@ -280,11 +313,12 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | Perintah | Fungsi |
 |---|---|
 | `npm run verify` | **gerbang akhir sekali jalan**: check:full + screenshot desktop/mobile + cek DOM (`Unexpected Application Error` / `Maximum update depth`). Butuh dev server menyala. |
-| `npm run guard` | validate + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
+| `npm run guard` | validate + **validate:partikel** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
+| `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
 | `npm run map` | regenerate `docs/AI-MAP.md`: daftar modul + peta dependensi + ringkasan 50 bab. |
 | `npm run find <kata>` | cari di KODE / DATA / TOOLS / DOKUMEN, output `file:baris`. Bisa multi-kata (AND). |
 | `npm run add:bab <N>` | scaffold `src/data/babNN/` (8 file berisi checklist). Registry otomatis. |
-| `npm run check` / `check:full` | validate + typecheck (+ build). |
+| `npm run check` / `check:full` | validate + validate:partikel + typecheck (+ build). |
 
 ### Resep cepat (ripgrep / alat built-in)
 ```powershell
@@ -333,6 +367,7 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 - **Offset halaman terverifikasi** (jangan ganti rumus tanpa bukti): Honsatsu `idx = printed + 21`, Indonesia `idx = printed + 20`, printed start Pelajaran N = 6N+4. **`printed start Bab N = 8N-2` SALAH** — bab 6, 13, 19, 22 masing-masing 10 halaman (bukan 8), sehingga rumus lama meleset +2/+4/+6/+8 untuk bab setelahnya. Peta yang BENAR (printed → idx Honsatsu): b6 46–55→67–76, b13 104–113→125–134, b19 154–163→175–184, b22 180–189→201–210. Batas lain: b1 6–13→27–34, b18 146–153→167–174, b20 164–171→185–192, b21 172–179→193–200, b23 190–197→211–218, b24 198–205→219–226, b25 206–213→227–234. **Sumber kebenaran: ToC Honsatsu** (render `tmp/tocmnn1/`).
 - Bab 2 data lengkap (kosakata, bunpou, reibun, kaiwa, renshuu A/B/C, mondai) sudah ada di `src/data/bab02/` — jadi template kualitas untuk bab lain.
 - **Halaman `/partikel` sudah ada** (38 partikel + 100 soal ujian). Detail di §3b. Jangan hapus/regresi route, kartu Home, atau `.partikel-*` di `paper.css`.
+- **Data partikel SUDAH DIPECAH** jadi modul `src/data/partikel/` (commit `374a494`) — bukan lagi `partikel.ts` tunggal. `index.ts` re-export; konsumen tetap `from '../data/partikel'`. Invariant data dijaga `npm run validate:partikel` (masuk `guard`). Jangan menggabung balik jadi satu file. Lihat §3b + §3 #20–#23.
 - **Kontainer desktop diperlebar** (keputusan user "cukup perlebar kontainer global"): Home `max-w-6xl`, Partikel `max-w-6xl`, Susun & BabDetail `max-w-5xl`. Jangan kembalikan ke `max-w-3xl/4xl` (dulu menyisakan ruang kosong besar di desktop).
 - **Verifikasi mobile WAJIB pakai CDP device emulation** (§3 #18), bukan `--window-size`. Cek port dulu (§3 #19).
 - GitHub `main` berisi: cb5789e (initial), 7f708b3 (AGENTS.md + polish mobile), 962b555 (Bab 2), a7b95d3 (motion.css).
