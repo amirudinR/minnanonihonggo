@@ -331,7 +331,7 @@ export const soalPartikel: SoalPartikel[] = [
     arti: 'Sekarang sedang makan.',
     jawaban: 'ところ',
     pilihan: ['ところ', 'ばかり', 'ながら', 'ので'],
-    bab: 40,
+    bab: 46,
   },
   {
     id: 'p40',
@@ -699,7 +699,7 @@ export const soalPartikel: SoalPartikel[] = [
     arti: 'Sekarang baru mau pergi keluar.',
     jawaban: 'ところ',
     pilihan: ['ところ', 'ばかり', 'ように', 'ので'],
-    bab: 40,
+    bab: 46,
   },
   {
     id: 'p86',
