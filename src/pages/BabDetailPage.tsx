@@ -31,9 +31,12 @@ export default function BabDetailPage() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Navigasi bab dengan arrow key (←/→)
+  // Navigasi bab dengan arrow key (←/→) — HANYA saat tab Daftar aktif.
+  // Tab Flashcard/Kuis memakai ←/→ untuk dirinya sendiri (dulu saling bentrok →
+  // menekan panah di Flashcard malah pindah bab).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (modeKosakata !== 'tabel') return
       const t = e.target as HTMLElement | null
       if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return
       if (e.key === 'ArrowLeft' && num > 1) window.location.href = `/bab/${num - 1}`
@@ -41,7 +44,7 @@ export default function BabDetailPage() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [num])
+  }, [num, modeKosakata])
 
   // Navigasi tab Daftar/Flashcard/Kuis dengan arrow-key (pola ARIA tablist).
   const modeTab = ['tabel', 'flash', 'kuis'] as const
@@ -651,7 +654,7 @@ function SoalInteraktif({
     <div className="mb-4">
       <div className="flex gap-2">
         <span className="font-medium text-accent">{no}.</span>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           {lines.map((line, i) => (
             <div key={i} className="soal-baris">
               <span className="soal-baris__teks" lang="ja"><TextWithNewlines text={line} inline /></span>

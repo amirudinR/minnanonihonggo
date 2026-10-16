@@ -1,2 +1,6 @@
 export { SoalMenyusun, urutanKeString, stringKeUrutan } from './SoalMenyusun'
+export type { SusunMode } from './SoalMenyusun'
+export { KeteranganBacaan } from './KeteranganBacaan'
 export { MenyusunLatihan } from './MenyusunLatihan'
+export { PemilihBabSusun } from './PemilihBabSusun'
+export type { PilihBab } from './PemilihBabSusun'

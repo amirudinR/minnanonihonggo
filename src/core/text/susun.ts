@@ -1,4 +1,5 @@
 import { canonical } from './normalize'
+import { segmentAhli, type OpsiSegmentasi } from './segmentPartikel'
 import type { SusunItem } from '../../types/bab'
 
 /**
@@ -108,4 +109,39 @@ export function hitungSkorSusun(
 ): { benar: number; total: number } {
   const benar = items.filter((it) => sudahBenar(it, answers[keyUntuk(it)])).length
   return { benar, total: items.length }
+}
+
+/* =================== MODE AHLI (partikel + verba dipecah) =================== */
+
+/** Token halus mode ahli: unit benar → partikel & akhiran verba terpisah. */
+export function tokenAhli(item: SusunItem, opsi?: OpsiSegmentasi): string[] {
+  return segmentAhli(urutanBenar(item), opsi)
+}
+
+/** Bank mode ahli (acak deterministik → index jawaban selalu valid). */
+export function bankAhli(item: SusunItem, opsi?: OpsiSegmentasi): string[] {
+  const token = tokenAhli(item, opsi)
+  if (token.length < 2) return token
+  return acak(token, hash(item.id + '|ahli|' + item.jawaban))
+}
+
+/** Koreksi mode ahli: token user vs tokenjawaban yang benar. */
+export function sudahBenarAhli(
+  item: SusunItem,
+  value: string | undefined,
+  opsi?: OpsiSegmentasi,
+): boolean {
+  if (!value?.trim()) return false
+  const urut = value
+    .split(',')
+    .map((x) => Number(x))
+    .filter((n) => Number.isInteger(n) && n >= 0)
+  const bank = bankAhli(item, opsi)
+  if (urut.length !== bank.length) return false
+  return (
+    koreksiSusun(
+      urut.map((i) => bank[i] ?? ''),
+      tokenAhli(item, opsi),
+    ) === 'tepat'
+  )
 }

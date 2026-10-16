@@ -1,11 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { SusunItem } from '../../types/bab'
-import { bankUntuk, koreksiSusun, urutanBenar } from '../../core/text/susun'
+import { KATA_DIKENAL } from '../../data/kamus'
+import { bankUntuk, bankAhli, koreksiSusun, urutanBenar, tokenAhli } from '../../core/text/susun'
+import { KeteranganBacaan } from './KeteranganBacaan'
+
+export type SusunMode = 'dasar' | 'ahli'
 
 type Props = {
   item: SusunItem
   nomor?: number
   labelBab?: string
+  mode?: SusunMode
+  /** Auto-check: begitu semua chip terpasang, langsung dikoreksi. */
+  autoCheck?: boolean
   /** urutan index bank yang dipilih user (boleh kosong). */
   value: number[]
   onChange: (v: number[]) => void
@@ -23,55 +30,99 @@ export function stringKeUrutan(s: string): number[] {
     .filter((n) => Number.isInteger(n) && n >= 0)
 }
 
-export function SoalMenyusun({ item, nomor, labelBab, value, onChange }: Props) {
-  // Bank kata stabil (acak deterministik dari id soal) → index sama di mana pun.
-  const bank = useMemo(() => bankUntuk(item), [item])
-  const jawaban = useMemo(() => urutanBenar(item), [item])
-  const [dipilih, setDipilih] = useState<number[]>(value)
-  const [cek, setCek] = useState(false)
+export function SoalMenyusun({
+  item,
+  nomor,
+  labelBab,
+  mode = 'dasar',
+  autoCheck = true,
+  value,
+  onChange,
+}: Props) {
+  // Bank stabil (acak deterministik) → index jawaban tersimpan selalu valid.
+  const bank = useMemo(
+    () => (mode === 'ahli' ? bankAhli(item, { kataDikenal: KATA_DIKENAL }) : bankUntuk(item)),
+    [item, mode],
+  )
+  const jawaban = useMemo(
+    () => (mode === 'ahli' ? tokenAhli(item, { kataDikenal: KATA_DIKENAL }) : urutanBenar(item)),
+    [item, mode],
+  )
+
+  const [cekManual, setCekManual] = useState(false)
   const [showKunci, setShowKunci] = useState(false)
 
-  const tersusun = dipilih.map((i) => bank[i] ?? '')
-  const level = cek ? koreksiSusun(tersusun, jawaban) : null
-  const semuaTerpakai = dipilih.length === bank.length
+  // Urutan disimpan lokal (functional update) supaya klik cepat berturut-turut
+  // tidak saling menimpa; disinkronkan ke store lewat effect di bawah.
+  const [urutan, setUrutan] = useState<number[]>(() =>
+    value.filter((i) => i >= 0 && i < bank.length),
+  )
 
-  const setUrutan = (next: number[]) => {
-    setDipilih(next)
-    onChange(next)
-    setCek(false)
+  // Muat ulang saat soal / mode berubah (bank berbeda → index lama tak berlaku).
+  useEffect(() => {
+    setUrutan(value.filter((i) => i >= 0 && i < bank.length))
+    setCekManual(false)
+    setShowKunci(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.id, mode, bank])
+
+  // Dorong perubahan ke store (idempoten: hanya bila beda).
+  useEffect(() => {
+    if (urutan.join(',') !== value.join(',')) onChange(urutan)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urutan])
+
+  const dipilih = urutan
+  const tersusun = dipilih.map((i) => bank[i] ?? '')
+  const semuaTerpakai = bank.length > 0 && dipilih.length === bank.length
+  const perluCek = (autoCheck && semuaTerpakai) || cekManual
+  const level = perluCek ? koreksiSusun(tersusun, jawaban) : null
+  const benar = level === 'tepat'
+
+  const setUrutanBaru = (ubah: (prev: number[]) => number[]) => {
+    setCekManual(false)
+    setUrutan(ubah)
   }
 
   const tambah = (i: number) => {
-    if (dipilih.includes(i)) return
-    setUrutan([...dipilih, i])
+    setUrutanBaru((prev) => (prev.includes(i) ? prev : [...prev, i]))
   }
 
   const hapusPada = (pos: number) => {
-    const next = [...dipilih]
-    next.splice(pos, 1)
-    setUrutan(next)
+    setUrutanBaru((prev) => prev.filter((_, p) => p !== pos))
   }
 
   const pindah = (from: number, to: number) => {
-    if (to < 0 || to >= dipilih.length || from === to) return
-    const next = [...dipilih]
-    const [x] = next.splice(from, 1)
-    next.splice(to, 0, x)
-    setUrutan(next)
+    setUrutanBaru((prev) => {
+      if (to < 0 || to >= prev.length || from === to) return prev
+      const next = [...prev]
+      const [x] = next.splice(from, 1)
+      next.splice(to, 0, x)
+      return next
+    })
+  }
+
+  /** Masukkan chip bank ke posisi tertentu di baris jawaban. */
+  const sisipkan = (bankIndex: number, pos: number) => {
+    setUrutanBaru((prev) => {
+      if (prev.includes(bankIndex)) return prev
+      const next = [...prev]
+      next.splice(pos, 0, bankIndex)
+      return next
+    })
   }
 
   const reset = () => {
-    setUrutan([])
+    setUrutanBaru(() => [])
     setShowKunci(false)
   }
-
-  const pilihLengkap = () => setUrutan(bank.map((_, i) => i))
 
   return (
     <div className="susun">
       <div className="susun__head">
         {typeof nomor === 'number' && <span className="susun__no">{nomor}.</span>}
         {labelBab && <span className="susun__bab">{labelBab}</span>}
+        {mode === 'ahli' && <span className="susun__badge">Ahli</span>}
         {item.fokus && (
           <span className="susun__fokus" lang="ja">
             {item.fokus}
@@ -83,12 +134,14 @@ export function SoalMenyusun({ item, nomor, labelBab, value, onChange }: Props) 
 
       {/* Baris jawaban */}
       <div
-        className={`susun__jawab ${level === 'tepat' ? 'susun__jawab--ok' : level === 'belum' ? 'susun__jawab--no' : ''}`}
+        className={`susun__jawab ${benar ? 'susun__jawab--ok' : level ? 'susun__jawab--no' : ''}`}
         aria-label="Susunan jawabanmu"
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           const from = e.dataTransfer.getData('text/susun-jawab')
+          const dariBank = e.dataTransfer.getData('text/susun-bank')
           if (from !== '') hapusPada(Number(from))
+          else if (dariBank !== '') tambah(Number(dariBank))
         }}
       >
         {dipilih.length === 0 && <span className="susun__placeholder">Susun kata di sini…</span>}
@@ -99,14 +152,21 @@ export function SoalMenyusun({ item, nomor, labelBab, value, onChange }: Props) 
             className="susun__chip susun__chip--jawab"
             draggable
             onDragStart={(e) => {
+              e.stopPropagation()
               e.dataTransfer.setData('text/susun-jawab', String(pos))
               e.dataTransfer.effectAllowed = 'move'
             }}
-            onDragOver={(e) => e.preventDefault()}
+            onDragOver={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
             onDrop={(e) => {
               e.preventDefault()
+              e.stopPropagation()
               const from = e.dataTransfer.getData('text/susun-jawab')
+              const dariBank = e.dataTransfer.getData('text/susun-bank')
               if (from !== '') pindah(Number(from), pos)
+              else if (dariBank !== '') sisipkan(Number(dariBank), pos)
             }}
             onClick={() => hapusPada(pos)}
             title="Klik untuk mengembalikan · geser untuk mengatur ulang"
@@ -128,6 +188,7 @@ export function SoalMenyusun({ item, nomor, labelBab, value, onChange }: Props) 
               disabled={dipakai}
               draggable={!dipakai}
               onDragStart={(e) => {
+                e.stopPropagation()
                 e.dataTransfer.setData('text/susun-bank', String(i))
                 e.dataTransfer.effectAllowed = 'copy'
               }}
@@ -141,14 +202,16 @@ export function SoalMenyusun({ item, nomor, labelBab, value, onChange }: Props) 
 
       {/* Aksi */}
       <div className="susun__aksi">
-        <button type="button" className="chip" onClick={() => setCek(true)} disabled={!semuaTerpakai}>
+        <button
+          type="button"
+          className="chip"
+          onClick={() => setCekManual(true)}
+          disabled={!semuaTerpakai}
+        >
           Cek
         </button>
-        <button type="button" className="chip" onClick={pilihLengkap} disabled={semuaTerpakai}>
-          Pilih semua
-        </button>
-        <button type="button" className="chip" onClick={reset}>
-          Reset
+        <button type="button" className="chip" onClick={reset} disabled={dipilih.length === 0}>
+          Ulangi
         </button>
         <button
           type="button"
@@ -158,21 +221,20 @@ export function SoalMenyusun({ item, nomor, labelBab, value, onChange }: Props) 
         >
           {showKunci ? 'Sembunyikan kunci' : 'Lihat kunci'}
         </button>
+        {!autoCheck && <span className="susun__hint">Auto-check mati</span>}
       </div>
 
       {level && (
-        <p className={`verdict ${level === 'tepat' ? 'verdict--ok' : 'verdict--no'}`}>
-          {level === 'tepat' ? 'Benar!' : 'Belum cocok — coba atur ulang urutannya.'}
+        <p
+          className={`verdict ${benar ? 'verdict--ok' : 'verdict--no'}`}
+          role="status"
+          aria-live="polite"
+        >
+          {benar ? 'Benar! ✓' : 'Belum cocok — coba atur ulang urutannya.'}
         </p>
       )}
 
-      {(showKunci || level === 'tepat') && (
-        <div className="susun__kunci">
-          <span className="susun__kunci-tag">Jawaban</span>
-          <span lang="ja">{item.jawaban}</span>
-          {item.penjelasan && <span className="susun__ket">{item.penjelasan}</span>}
-        </div>
-      )}
+      {(showKunci || benar) && <KeteranganBacaan item={item} />}
     </div>
   )
 }

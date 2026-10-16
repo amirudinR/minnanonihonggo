@@ -2,7 +2,7 @@ import type { MondaiItem } from '@/types/bab'
 
 export const mondai: MondaiItem[] = [
   { no: 1, jenis: 'mendengarkan', soal: 'Mondai 1 — Dengarkan audio, lalu isi 1) sampai 5).', instruksi: '例を聞いて、同じように1)～5)を書きなさい。', audio: '/audio/bab06_mondai1.mp3', kunciTersedia: false },
-  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 — Isi ( ) sesuai audio (5 soal).', audio: '/audio/bab06_mondai2.mp3', kunciTersedia: false },
+  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 — Isi ( ) sesuai audio (5 soal).', instruksi: 'Dengarkan lalu isi jawaban pada baris kosong.', audio: '/audio/bab06_mondai2.mp3', kunciTersedia: false },
   {
     no: 3, jenis: 'jawaban_pendek',
     soal: '例: 電車（で）会社へ 行きます。\n1) 友達（ ）＿＿＿。\n2) 12時（ ）＿＿＿。\n3) デパート（ ）＿＿＿。\n4) ロビー（ ）＿＿＿。\n5) 8時（ ）＿＿＿ 9時（ ）＿＿＿。',

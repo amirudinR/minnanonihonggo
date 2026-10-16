@@ -148,6 +148,15 @@ const cekFurigana = (
     if (m.jenis === 'pilihan_ganda' && (!m.pilihan || m.pilihan.length === 0)) {
       errors.push(`mondai no ${m.no}: pilihan_ganda tanpa pilihan`)
     }
+    if (m.jenis === 'mendengarkan') {
+      // AGENTS §2/#17: soal listening = tulis APA YANG TERCETAK + instruksi.
+      if (m.kunciTersedia !== false) {
+        errors.push(`mondai no ${m.no}: mendengarkan wajib kunciTersedia:false`)
+      }
+      if (!m.instruksi?.trim()) {
+        errors.push(`mondai no ${m.no}: mendengarkan tanpa instruksi`)
+      }
+    }
     if (m.kunciTersedia !== false && !m.jawaban?.trim()) {
       warnings.push(`mondai no ${m.no}: kunciTersedia true tapi jawaban kosong`)
     }

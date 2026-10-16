@@ -2,8 +2,8 @@ import type { MondaiItem } from '@/types/bab'
 
 export const mondai: MondaiItem[] = [
   { no: 1, jenis: 'mendengarkan', soal: 'Mondai 1 — Dengarkan audio, lihat gambar, lalu sebutkan.\n①辞書 ②コンピューター ③名刺 ④自動車の 雑誌 ⑤かばん', instruksi: '例: それは ノートです。→ (①〜⑤を聞いて)', audio: '/audio/bab02_mondai1.mp3', kunciTersedia: false },
-  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 — Pilih ①/②/③ yang sesuai audio (2 soal).', audio: '/audio/bab02_mondai2.mp3', kunciTersedia: false },
-  { no: 3, jenis: 'mendengarkan', soal: 'Mondai 3 — Isi 1) 2) 3) sesuai audio.', audio: '/audio/bab02_mondai3.mp3', kunciTersedia: false },
+  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 — Pilih ①/②/③ yang sesuai audio (2 soal).', instruksi: 'Dengarkan lalu pilih gambar yang sesuai.', audio: '/audio/bab02_mondai2.mp3', kunciTersedia: false },
+  { no: 3, jenis: 'mendengarkan', soal: 'Mondai 3 — Isi 1) 2) 3) sesuai audio.', instruksi: 'Dengarkan lalu isi jawaban pada baris kosong.', audio: '/audio/bab02_mondai3.mp3', kunciTersedia: false },
   {
     no: 4, jenis: 'jawaban_pendek',
     soal: '例: それは（だれ、何、本）ですか。……本です。\n1) ミラーさんは（どなた、何歳、何）ですか。……28歳です。\n2) ワンさんは（だれ、先生、何）ですか。……いいえ、違います。\n3) それは（イーさん、だれ、何）の 雑誌ですか。……カメラの 雑誌です。\n4) これは（わたし、あなた、あの人）のですか。……はい、わたしのです。',

@@ -534,3 +534,27 @@ Home                → vw 320/390: bersih ✅
 **Verifikasi akhir:** `check:full` → validate 50 bab 0 error 0 warning ✅ · tsc ✅ · build ✅.
 
 **Port dev server:** kini bisa berpindah (5173/5174) — cek `--dump-dom`/title untuk memastikan instance mnn1.
+
+## 22. Sesi "Latihan Susun: mode Ahli + auto-check + panel bacaan" — 2026-10-17
+
+**Keluhan user (dengan screenshot):** halaman /latihan/susun harus di-scroll "sepanjang ini" → tidak profesional. Plus permintaan: menyusun **partikel**, bisa **pilih bab**, **auto-check** (tanpa tekan tombol), dan **keterangan** kanji/cara baca/katakana/hiragana setelah selesai.
+
+**Akar masalah (terukur):** halaman merender **1.000 soal sekaligus** → 3.440 chip, **21.919 node DOM**, tinggi dokumen **259.443 px**.
+
+**Yang dikerjakan:**
+1. **Bug (Sprint 0)** — 4 temuan nyata, semua diperbaiki & diuji ulang lewat CDP:
+   - chip jawaban **hilang** saat digeser (onDrop tanpa stopPropagation) → sekarang bertukar posisi, dan bisa menerima drop dari bank;
+   - **klik cepat berturut-turut** hanya menyisakan chip terakhir (closure basi) → state lokal + updater fungsional + sinkron idempoten ke store;
+   - panah ←/→ di tab **Flashcard** malah pindah bab → navigasi bab hanya saat tab Daftar;
+   - **8 mondai mendengarkan** tanpa instruksi → diisi + jadi invariant ERROR di schema.
+2. **Halaman susun = sesi** — satu soal per layar, pemilih bab (Semua/MNN I/MNN II/1–50), mode Dasar/Ahli, jumlah 10/20/50, progress bar, Sebelumnya/Berikutnya, ringkasan akhir + "Ulangi yang salah"/"Sesi baru", deep-link ?bab=&mode=&n=.
+   - Hasil: **171 node DOM**, tinggi **~1.066 px**, overflowX=false pada vw 390.
+3. **Auto-check** — begitu semua chip terpasang, koreksi jalan sendiri (dibuktikan: set jawaban benar → verdict "Benar! ✓" tanpa menekan Cek, panel keterangan muncul otomatis).
+4. **Panel Keterangan** — kalimat kanji + furigana (<ruby>), cara baca hiragana penuh, daftar kanji (kanji+baca+arti), daftar katakana (+arti), pola.
+5. **Mode Ahli** (core/text/segmentPartikel.ts) — 1.000 soal → **7.112 token** (dari 3.440), partikel & akhiran verba terpisah. Prinsip konservatif; akhiran kata sifat dimatikan karena terbukti salah pecah (がくせいじゃ → がくせ + い + じゃ).
+6. **Kamus bacaan** (src/data/kamus/) — dibangun dari 2.149 kosakata 50 bab dengan **penjajaran okurigana** + override.ts untuk yang tak ter-cover. Hasil: **0 kanji tanpa bacaan** dari 1.000 soal (awalnya 143 soal/68 kata).
+7. **Validator** `npm run validate:susun` (masuk `check`/`check:full`/`guard`).
+
+**Verifikasi:** `validate` 50 bab 0 error/0 warning · `validate:susun` 0 error · `typecheck` bersih · `check:full` build OK · `guard` 7/7 PASS · CDP: BUG-1, BUG-2, auto-check, mobile 390 px (0 pelanggar overflow). Screenshot: `tmp/mobile-susun-ahli.png`, `tmp/desktop-susun-ahli.png`.
+
+**Catatan & batas diketahui:** bacaan kanji **tanpa konteks** — kanji ber-on/kun ganda bisa salah (mis. 汚れ → きたなれ); tambahkan entri di override.ts bila ketemu. Desain masih memakai identitas kertas; modernisasi token/shell belum dikerjakan (masih rencana).

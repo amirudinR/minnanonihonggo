@@ -5,7 +5,8 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi **„keterangan partikel dari buku MNN 1 & 2 + refactor modular"** (§3 #20–#23, §3b) — data `partikel` dipecah jadi `src/data/partikel/`, invariant dijaga `validate:partikel`, +4 bab partikel dikoreksi dari buku.
+> Terakhir diperbarui: sesi **„latihan susun mode Ahli + auto-check + panel bacaan + sesi 20 soal"** (§3 #24–#27, §3c) — halaman `/latihan/susun` tidak lagi merender 1.000 soal, chip bisa digeser tanpa hilang, mode Ahli menyusun partikel & akhiran verba, dan tiap kanji punya cara baca (dijaga `validate:susun`).
+> Sebelumnya: sesi **„keterangan partikel dari buku MNN 1 & 2 + refactor modular"** (§3 #20–#23, §3b) — data `partikel` dipecah jadi `src/data/partikel/`, invariant dijaga `validate:partikel`, +4 bab partikel dikoreksi dari buku.
 
 ---
 
@@ -20,9 +21,10 @@ npm run dev        # port 5173
 npm run typecheck  # tsc --noEmit
 npm run build      # typecheck + vite build
 npm run validate   # validasi data bab (tsx tools/validate.ts)
+npm run validate:susun # invariant data susun + kamus bacaan kanji
 npm run audit      # audit kelengkapan data bab
-npm run check      # validate + typecheck (loop cepat, TANPA build)
-npm run check:full # validate + typecheck + vite build (gerbang "selesai")
+npm run check      # validate (+partikel+susun) + typecheck (loop cepat, TANPA build)
+npm run check:full # validate (+partikel+susun) + typecheck + vite build (gerbang "selesai")
 npm run verify     # check:full + screenshot + cek error boundary (butuh dev server)
 npm run guard      # validate + audit + cek aturan keras §1
 npm run map        # regenerate docs/AI-MAP.md
@@ -187,6 +189,25 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 5. Tambah validator invariant ke `guard` **sebelum** lanjut fitur lain.
 6. Baru commit + push. Lihat §3b untuk struktur final partikel.
 
+### #24 — Chip jawaban HILANG saat digeser (drag-drop) 🔴
+- **Gejala:** di latihan susun, menggeser chip jawaban ke posisi chip lain membuat satu kata **hilang** (bukan bertukar posisi).
+- **Sebab:** `SoalMenyusun` — `onDrop` chip tidak `stopPropagation()`, event naik ke container `.susun__jawab` yang `onDrop`-nya memanggil `hapusPada(from)`.
+- **Fix:** `e.stopPropagation()` + `preventDefault()` pada `onDrop`/`onDragOver` chip; chip juga menerima drop dari bank (`text/susun-bank`) untuk menyisipkan di posisi itu. **Jangan hapus.** Uji ulang lewat CDP (dispatch `DragEvent` ber-`DataTransfer`).
+
+### #25 — Klik cepat berturut-turut menimpa urutan (closure basi) 🔴
+- **Gejala:** klik beberapa chip bank cepat berturut-turut → hanya chip terakhir yang terpasang.
+- **Sebab:** handler memakai nilai `dipilih` dari render yang sama; semua `setState` dalam satu batch melihat nilai lama.
+- **Fix:** state urutan disimpan **lokal** di komponen dengan updater fungsional (`setUrutan(prev => …)`), lalu disinkronkan ke store lewat `useEffect` **idempoten** (hanya menulis bila string urutan berbeda). Komponen diberi `key={id-mode}` di pemanggil supaya reset saat soal/mode berganti. Pola ini dipakai semua mutasi (tambah/hapus/pindah/sisipkan).
+
+### #26 — Panah ←/→ di tab Flashcard malah PINDAH BAB 🔴
+- **Gejala:** buka Bab 2 → tab Flashcard → tekan `→` → pindah ke `/bab/3`.
+- **Sebab:** `BabDetailPage` dan `Flashcard` sama-sama memasang `window` keydown; `preventDefault()` tidak menghentikan listener lain.
+- **Fix:** navigasi bab hanya aktif saat tab **Daftar** (`modeKosakata === 'tabel'`); effect ikut mendepend `modeKosakata`. Jangan kembalikan tanpa penjaga ini.
+
+### #27 — Mondai mendengarkan tanpa `instruksi` 🟡
+- **Gejala:** 8 entri `jenis: 'mendengarkan'` (bab02 no 2–3, bab04 no 2–4, bab05 no 2–3, bab06 no 2) tanpa `instruksi`.
+- **Fix:** isi `instruksi` (kalimat tugas dalam bahasa Indonesia, **tanpa** mengarang isi audio) + invariant baru di `schema.ts`: `jenis === 'mendengarkan'` ⇒ wajib `kunciTersedia: false` **dan** `instruksi` non-kosong (sekarang ERROR, bukan warning).
+
 ---
 
 ## 3b. Detail implementasi halaman Partikel (JANGAN di-regresi)
@@ -229,6 +250,21 @@ Halaman `/partikel` (fitur baru, sudah live). **Data sudah dipecah jadi modul** 
 
 ---
 
+## 3c. Latihan Susun (mode Dasar/Ahli + auto-check + panel bacaan) — JANGAN di-regresi
+
+Model: satu soal = `SusunItem { id, arti, kata[], jawaban, fokus?, penjelasan? }`. Jawaban user disimpan sebagai **index bank** ("2,0,1,5") di `useNotes.answers`, key `campur-{babNo}-{id}` (Dasar) / `campur-{babNo}-{id}-ahli` (Ahli). Key per-bab: `b{babNo}-susun-{id}` / `…-ahli`. **Key lama TIDAK diubah** (progres user aman).
+
+- **Halaman `/latihan/susun`** = sesi **satu soal per layar**: pemilih bab (Semua / MNN I / MNN II / 1–50), mode, jumlah (10/20/50), progress bar, tombol Sebelumnya/Berikutnya, **ringkasan akhir sesi** + tombol "Ulangi yang salah" / "Sesi baru". Deep-link: `?bab=23&mode=ahli&n=20`.
+  - Dulu halaman ini merender **1.000 soal sekaligus** (21.919 node DOM, tinggi halaman 259.443 px) — sekarang 171 node / ~1.066 px. **Jangan** kembalikan render massal.
+- **Auto-check** (`autoCheck` default ON): begitu semua chip terpakai, koreksi jalan sendiri (verdict muncul tanpa menekan "Cek"). Tombol "Cek" tetap ada untuk a11y. Panel **Keterangan** muncul otomatis saat benar (atau saat "Lihat kunci").
+- **Panel Keterangan** (`features/susun/KeteranganBacaan.tsx`): kalimat kanji + **furigana** (`<ruby>`), **cara baca hiragana penuh**, daftar **kanji** (kanji + baca + arti), daftar **katakana** (+ arti), dan `penjelasan` pola.
+- **Mode Ahli** (`segmentPartikel.ts`): unit `kata` dipecah jadi partikel + akhiran verba (`これは 本です` → `これ|は|本|です`). Prinsip **KONSERVATIF: kalau ragu JANGAN pecah** — hasil lebih kasar boleh, salah pecah = bug. Akhiran kata sifat (`い`/`く`) **sengaja dimatikan** (pernah salah: `がくせいじゃ` → `がくせ + い + じゃ`). Daftar larangan ada di `JANGAN_PECAH` (mis. `あした`, `どうして`, `また`, `はい`, `いい`, `よく`, `だいたい`, `しばらく`, `どのくらい`).
+- **Kamus bacaan** (`src/data/kamus/`): `bangun.ts` (`bangunKamus`/`bangunKataDikenal`/`bangunArti`, **impor relatif** agar jalan di tsx) + `override.ts` (entri manual: nama diri/tempat + kanji yang tak memberi bacaan lewat kosakata). Bacaan diambil dengan **penjajaran okurigana** (`行きます`+`いきます` → `行`→`い`), bukan memotong kanji mentah.
+  - Batas diketahui: bacaan **tanpa konteks** — kanji ber-*on/kun* ganda bisa salah (mis. `汚れ` → `きたなれ`, seharusnya `よごれ`). Tambah entri di `override.ts` bila menemukan yang salah; jangan ganti arsitektur.
+- **Validator `npm run validate:susun`** (masuk `check`/`check:full`/`guard`): (1) `canonical(tokenAhli.join('')) === canonical(jawaban)`, (2) bank ahli memuat token yang sama, (3) **setiap kanji di `jawaban` WAJIB punya bacaan**, (4) struktur item. Saat ini: **1.000 soal · 7.112 token ahli · 955 kamus · 0 error**.
+
+---
+
 ## 4. FAKTA TERVERIFIKASI — JANGAN "DIPERBAIKI" (sudah benar!)
 
 | Item | Sering salah diklaim | **Yang BENAR** |
@@ -251,12 +287,16 @@ src/
   core/        # domain murni, 0 React
     text/normalize.ts     # stripEnumerators, canonical, matchLevel, isCorrect, countCorrect, adaJawaban
     text/terjemahan.ts    # nilaiTerjemahan (soft-match Jaccard)
+    text/susun.ts         # bank/jawaban/koreksi susun + varian MODE AHLI (bankAhli/tokenAhli)
+    text/segmentPartikel.ts # pecah unit susun → partikel + akhiran verba (KONSERVATIF)
+    text/baca.ts          # keHiragana, bagianBaca (furigana), uraiKata (kanji/katakana + arti)
     audio/manifest.ts     # MONDAI_COUNT per bab + getAudio + cekKonsistensiAudio
     validation/schema.ts  # validasiBab (pakai import RELATIF, bukan '@/')
   data/
     index.ts              # import.meta.glob('./bab*/index.ts') → auto registry
+    kamus/                # bangun.ts (kamus kanji→kana dari kosakata) + override.ts + index.ts
     babNN/ index · kosakata · bunpou · reibun · kaiwa · renshuu · mondai · konteks
-  features/               # vertical slice: flashcard/, kuis/, partikel/
+  features/               # vertical slice: flashcard/, kuis/, partikel/, susun/
   store/                  # useProgress (mnn1_progress_v1), useNotes (mnn1_notes_v1)
   pages/                  # HomePage, BabDetailPage, NotFoundPage
   styles/                 # tokens.css (@theme), paper.css (tema kertas)
@@ -315,10 +355,11 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | `npm run verify` | **gerbang akhir sekali jalan**: check:full + screenshot desktop/mobile + cek DOM (`Unexpected Application Error` / `Maximum update depth`). Butuh dev server menyala. |
 | `npm run guard` | validate + **validate:partikel** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
 | `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
+| `npm run validate:susun` | jaga INVARIAN data susun: gabungan token mode ahli == `jawaban`, bank konsisten, **semua kanji punya bacaan**, struktur item. Lihat §3c. |
 | `npm run map` | regenerate `docs/AI-MAP.md`: daftar modul + peta dependensi + ringkasan 50 bab. |
 | `npm run find <kata>` | cari di KODE / DATA / TOOLS / DOKUMEN, output `file:baris`. Bisa multi-kata (AND). |
 | `npm run add:bab <N>` | scaffold `src/data/babNN/` (8 file berisi checklist). Registry otomatis. |
-| `npm run check` / `check:full` | validate + validate:partikel + typecheck (+ build). |
+| `npm run check` / `check:full` | validate + validate:partikel + validate:susun + typecheck (+ build). |
 
 ### Resep cepat (ripgrep / alat built-in)
 ```powershell
@@ -371,3 +412,4 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 - **Kontainer desktop diperlebar** (keputusan user "cukup perlebar kontainer global"): Home `max-w-6xl`, Partikel `max-w-6xl`, Susun & BabDetail `max-w-5xl`. Jangan kembalikan ke `max-w-3xl/4xl` (dulu menyisakan ruang kosong besar di desktop).
 - **Verifikasi mobile WAJIB pakai CDP device emulation** (§3 #18), bukan `--window-size`. Cek port dulu (§3 #19).
 - GitHub `main` berisi: cb5789e (initial), 7f708b3 (AGENTS.md + polish mobile), 962b555 (Bab 2), a7b95d3 (motion.css).
+- **Latihan susun dirombak** (lihat §3c): sesi satu-soal-per-layar (20 soal), pemilih bab, mode Dasar/Ahli, **auto-check**, panel keterangan bacaan. Key localStorage lama dipertahankan; mode ahli memakai key `…-ahli` terpisah. **Jangan** kembalikan render 1.000 soal sekaligus, jangan hapus auto-check/panel bacaan, dan jangan pecah kanji tanpa bacaan (dijaga `npm run validate:susun`).

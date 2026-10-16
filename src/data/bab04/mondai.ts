@@ -2,9 +2,9 @@ import type { MondaiItem } from '@/types/bab'
 
 export const mondai: MondaiItem[] = [
   { no: 1, jenis: 'mendengarkan', soal: 'Mondai 1 — Dengarkan audio, lalu isi 1) sampai 5).', instruksi: '例を聞いて、同じように1)～5)を書きなさい。', audio: '/audio/bab04_mondai1.mp3', kunciTersedia: false },
-  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 — Pilih ①/②/③ yang sesuai audio (時計).', audio: '/audio/bab04_mondai2.mp3', kunciTersedia: false },
-  { no: 3, jenis: 'mendengarkan', soal: 'Mondai 3 — Isi ( ) sesuai audio (3 soal).', audio: '/audio/bab04_mondai3.mp3', kunciTersedia: false },
-  { no: 4, jenis: 'mendengarkan', soal: 'Mondai 4 — Pilih yang benar dari kedua pilihan (8 soal).', audio: '/audio/bab04_mondai4.mp3', kunciTersedia: false },
+  { no: 2, jenis: 'mendengarkan', soal: 'Mondai 2 — Pilih ①/②/③ yang sesuai audio (時計).', instruksi: 'Dengarkan lalu pilih gambar jam yang sesuai.', audio: '/audio/bab04_mondai2.mp3', kunciTersedia: false },
+  { no: 3, jenis: 'mendengarkan', soal: 'Mondai 3 — Isi ( ) sesuai audio (3 soal).', instruksi: 'Dengarkan lalu isi jawaban pada baris kosong.', audio: '/audio/bab04_mondai3.mp3', kunciTersedia: false },
+  { no: 4, jenis: 'mendengarkan', soal: 'Mondai 4 — Pilih yang benar dari kedua pilihan (8 soal).', instruksi: 'Dengarkan lalu pilih jawaban yang benar.', audio: '/audio/bab04_mondai4.mp3', kunciTersedia: false },
   {
     no: 5, jenis: 'jawaban_pendek',
     soal: '例1: これは スイス（ の ）時計です。\n例2: 電話は どこ（ × ）ですか。\n1) 毎朝（ ）6時（ ）起きます。\n2) 美術館は 何時（ ）何時（ ）ですか。\n3) 今 何時（ ）ですか。\n4) 木曜日（ ）午後 病院は 休みです。\n5) 大学は 何時（ ）終わりますか。\n6) 銀行の 休みは 土曜日（ ）日曜日です。',
