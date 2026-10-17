@@ -100,6 +100,7 @@ if (existsSync(audioDir)) {
   for (const a of audioManifest) {
     if (a.kaiwa) expected.add(a.kaiwa.split('/').pop() as string)
     for (const m of a.mondai) expected.add(m.split('/').pop() as string)
+    for (const c of a.choukai) expected.add(c.split('/').pop() as string)
   }
   const yok = files.filter((f) => expected.has(f))
   const takAda = [...expected].filter((f) => !files.includes(f)).sort()

@@ -1,16 +1,19 @@
-import { useEffect } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import {
   RouterProvider,
   createBrowserRouter,
   Outlet,
   useLocation,
 } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import BabDetailPage from './pages/BabDetailPage'
-import SusunCampuranPage from './pages/SusunCampuranPage'
-import PartikelPage from './pages/PartikelPage'
-import NotFoundPage from './pages/NotFoundPage'
 import { TopNav } from './components/TopNav'
+
+// Halaman di-`lazy` (code-split) supaya bundel AWAL kecil: data 50 bab +
+// partikel = ±91% ukuran sumber, jadi tidak ikut terunduh sebelum dibuka.
+const HomePage = lazy(() => import('./pages/HomePage'))
+const BabDetailPage = lazy(() => import('./pages/BabDetailPage'))
+const SusunCampuranPage = lazy(() => import('./pages/SusunCampuranPage'))
+const PartikelPage = lazy(() => import('./pages/PartikelPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 function ScrollTop() {
   const { pathname } = useLocation()
@@ -20,12 +23,26 @@ function ScrollTop() {
   return null
 }
 
+function MemuatHalaman() {
+  return (
+    <div className="app mx-auto max-w-6xl p-4 md:p-8 lg:p-10">
+      <div className="book">
+        <p className="text-ink-soft" role="status">
+          Memuat…
+        </p>
+      </div>
+    </div>
+  )
+}
+
 function RootLayout() {
   return (
     <>
       <TopNav />
       <ScrollTop />
-      <Outlet />
+      <Suspense fallback={<MemuatHalaman />}>
+        <Outlet />
+      </Suspense>
     </>
   )
 }

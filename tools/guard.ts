@@ -83,7 +83,28 @@ lapor(transisi.length === 0, 'paper.css (+paper/*) tidak memuat transition (suda
 
 // 5. HomePage: jumlah bab harus dinamis dari registry (AGENTS §9)
 const home = readFileSync(join(root, 'src', 'pages', 'HomePage.tsx'), 'utf8')
-lapor(!/TOTAL\s*=\s*25/.test(home) && /babs\.length/.test(home), 'HomePage memakai babs.length (dinamis), bukan TOTAL = 25')
+lapor(
+  !/TOTAL\s*=\s*25/.test(home) && /(meta|babs)\.(length|map)/.test(home),
+  'HomePage memakai jumlah bab dinamis (meta.length), bukan TOTAL = 25',
+)
+
+// 5b. Kode aplikasi DILARANG impor `src/data/all` (eager glob = data 50 bab
+//     masuk bundel; lihat catatan di src/data/index.ts).
+const pelanggarAll: string[] = []
+for (const dir of ['pages', 'features', 'components', 'store']) {
+  const akar = join(root, 'src', dir)
+  if (!existsSync(akar)) continue
+  for (const f of readdirSync(akar, { recursive: true, encoding: 'utf8' })) {
+    if (!/\.tsx?$/.test(f) || f.endsWith('.test.ts')) continue
+    const isi = readFileSync(join(akar, f), 'utf8')
+    if (/from '.*data\/all'/.test(isi)) pelanggarAll.push(`${dir}/${f}`)
+  }
+}
+lapor(
+  pelanggarAll.length === 0,
+  'tidak ada kode aplikasi yang impor data/all (eager = data 50 bab ke bundel)',
+  pelanggarAll.slice(0, 6),
+)
 
 // 6. Data: karakter rusak OCR (\ufffd) — '??' ditangani validator (AGENTS §3 #12-13)
 const rusak: string[] = []

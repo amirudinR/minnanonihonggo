@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { babs } from '../data'
-import type { SusunItem } from '../types/bab'
+import { loadSemuaBab } from '../data'
+import type { Bab, SusunItem } from '../types/bab'
 import { useNotes } from '../store/useNotes'
 import { acak, sudahBenar, sudahBenarAhli } from '../core/text/susun'
 import { KATA_DIKENAL } from '../data/kamus'
 import {
+  DengarkanLatihan,
   PemilihBabSusun,
   SoalMenyusun,
   stringKeUrutan,
@@ -15,6 +16,8 @@ import {
 } from '../features/susun'
 
 type ItemCampur = SusunItem & { babNo: number }
+
+type Latihan = 'susun' | 'dengar'
 
 const JML = [10, 20, 50] as const
 
@@ -36,15 +39,33 @@ export default function SusunCampuranPage() {
     ? Number(params.get('n'))
     : 20
 
+  const latihan: Latihan = params.get('t') === 'dengar' ? 'dengar' : 'susun'
+
   const [seed, setSeed] = useState(1)
   const [pos, setPos] = useState(0)
   const [autoCheck, setAutoCheck] = useState(true)
   const [ulang, setUlang] = useState<ItemCampur[] | null>(null)
 
+  // Seluruh bab dimuat DINAMIS (code-split) — halaman ini memang perlu semua bab.
+  const [babs, setBabs] = useState<Bab[]>([])
+  const [siap, setSiap] = useState(false)
+  useEffect(() => {
+    let batal = false
+    loadSemuaBab().then((b) => {
+      if (!batal) {
+        setBabs(b)
+        setSiap(true)
+      }
+    })
+    return () => {
+      batal = true
+    }
+  }, [])
+
   const semua = useMemo<ItemCampur[]>(
     () =>
       babs.flatMap((b) => (b.susun ?? []).map((s) => ({ ...s, babNo: b.no }))),
-    [],
+    [babs],
   )
 
   const jumlahPerBab = useMemo(() => {
@@ -86,6 +107,13 @@ export default function SusunCampuranPage() {
     setPos(0)
   }
 
+  const pindahLatihan = (v: Latihan) => {
+    const next = new URLSearchParams(params)
+    if (v === 'dengar') next.set('t', 'dengar')
+    else next.delete('t')
+    setParams(next)
+  }
+
   const sesiBaru = (dariSalah: boolean) => {
     setUlang(dariSalah ? sesi.filter((it) => !cekBenar(it)) : null)
     setSeed((s) => s + 1)
@@ -98,18 +126,47 @@ export default function SusunCampuranPage() {
         <span className="page-curl" aria-hidden />
 
         <header className="bab-hero">
-          <span className="bab-hero__no">✎</span>
+          <span className="bab-hero__no">{latihan === 'dengar' ? '♪' : '✎'}</span>
           <div className="bab-hero__body">
             <span className="bab-hero__label">Latihan</span>
-            <h1 className="bab-hero__title">Menyusun Kalimat</h1>
+            <h1 className="bab-hero__title">
+              {latihan === 'dengar' ? 'Mendengarkan' : 'Menyusun Kalimat'}
+            </h1>
             <span className="bab-hero__sub">
-              {mode === 'ahli'
-                ? 'Mode Ahli — partikel & akhiran kata kerja ikut disusun'
-                : 'Satu soal per sesi, langsung dikoreksi begitu lengkap'}
+              {latihan === 'dengar'
+                ? 'Dengarkan track Mondai & Choukai (聴解), lalu tulis yang kamu tangkap'
+                : mode === 'ahli'
+                  ? 'Mode Ahli — partikel & akhiran kata kerja ikut disusun'
+                  : 'Satu soal per sesi, langsung dikoreksi begitu lengkap'}
             </span>
           </div>
         </header>
 
+        <div className="seg susun-tab" role="tablist" aria-label="Jenis latihan">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={latihan === 'susun'}
+            className={`seg__item ${latihan === 'susun' ? 'seg__item--aktif' : ''}`}
+            onClick={() => pindahLatihan('susun')}
+          >
+            Menyusun Kalimat
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={latihan === 'dengar'}
+            className={`seg__item ${latihan === 'dengar' ? 'seg__item--aktif' : ''}`}
+            onClick={() => pindahLatihan('dengar')}
+          >
+            Mendengarkan ♪
+          </button>
+        </div>
+
+        {latihan === 'dengar' && <DengarkanLatihan daftar={babs} />}
+
+        {latihan === 'susun' && (
+          <>
         <div className="susun-tools">
           <div className="seg" role="group" aria-label="Tingkat kesulitan">
             <button
@@ -159,7 +216,9 @@ export default function SusunCampuranPage() {
           jumlah={jumlahPerBab}
         />
 
-        {sesi.length === 0 ? (
+        {!siap ? (
+          <p className="text-sm text-ink-soft" role="status">Memuat soal…</p>
+        ) : sesi.length === 0 ? (
           <p className="text-sm text-ink-soft">Belum ada soal menyusun di pilihan ini.</p>
         ) : (
           <>
@@ -236,6 +295,8 @@ export default function SusunCampuranPage() {
                 </div>
               </div>
             )}
+          </>
+        )}
           </>
         )}
       </main>

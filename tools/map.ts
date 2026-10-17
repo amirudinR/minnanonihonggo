@@ -162,6 +162,8 @@ ${tabel.join('\n')}
 | \`npm run check\` | validate + typecheck (loop cepat) |
 | \`npm run check:full\` | validate + typecheck + test + build (gerbang selesai) |
 | \`npm run test\` | tes unit Vitest (core/* + snapshot data) |
+| \`npm run gen:meta\` | regenerate src/data/meta.ts (ringkasan bab) |
+| \`npm run gen:kamus\` | regenerate src/data/kamus/terbangun.ts (kamus kanji) |
 | \`npm run verify\` | check:full + screenshot desktop/mobile + cek error boundary |
 | \`npm run map\` | regenarate file ini |
 | \`npm run find <kata>\` | cari di kode/data/docs, output terkelompok |

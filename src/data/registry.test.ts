@@ -4,7 +4,8 @@
  * data, perbarui angka snapshot di sini.
  */
 import { describe, expect, it } from 'vitest'
-import { babs, getBab } from './index'
+import { babs, getBab } from './all'
+import { getMeta, meta, TOTAL_BAB } from './meta'
 
 const TOTAL_KOSAKATA = 2149
 const SUSUN_PER_BAB = 20
@@ -37,6 +38,28 @@ describe('isi minimum tiap bab', () => {
         expect(d.pembicara?.trim(), `bab ${b.no} pembicara`).toBeTruthy()
         expect(d.teks?.trim(), `bab ${b.no} teks`).toBeTruthy()
       }
+    }
+  })
+})
+
+describe('meta (ringkasan) sinkron dengan data', () => {
+  it('menutup semua bab, tanpa duplikat', () => {
+    expect(TOTAL_BAB).toBe(50)
+    expect(meta.map((m) => m.no)).toEqual(babs.map((b) => b.no))
+    expect(new Set(meta.map((m) => m.no)).size).toBe(meta.length)
+  })
+
+  it('topik, kaiwaJudul, dan jumlah cocok dengan data asli', () => {
+    for (const b of babs) {
+      const m = getMeta(b.no)
+      expect(m, `meta bab ${b.no} ada`).toBeDefined()
+      expect(m!.topik, `bab ${b.no} topik`).toBe(b.topik)
+      expect(m!.kaiwaJudul, `bab ${b.no} kaiwaJudul`).toBe(b.kaiwa?.judul ?? '')
+      expect(m!.kosakata, `bab ${b.no} kosakata`).toBe(b.kosakata.length)
+      expect(m!.bunpou, `bab ${b.no} bunpou`).toBe(b.bunpou.length)
+      expect(m!.latihan, `bab ${b.no} latihan`).toBe(
+        b.renshuuA.length + b.renshuuB.length + b.renshuuC.length,
+      )
     }
   })
 })

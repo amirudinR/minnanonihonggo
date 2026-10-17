@@ -22,6 +22,8 @@ npm run dev        # port 5173
 npm run typecheck  # tsc --noEmit
 npm run build      # typecheck + vite build
 npm run validate   # validasi data bab (tsx tools/validate.ts)
+npm run gen:meta   # regenerate src/data/meta.ts (ringkasan bab untuk Home/TopNav)
+npm run gen:kamus  # regenerate src/data/kamus/terbangun.ts (kamus kanji)
 npm run test       # tes unit Vitest (core/* + snapshot data) — cepat, tanpa build
 npm run validate:susun # invariant data susun + kamus bacaan kanji
 npm run audit      # audit kelengkapan data bab
@@ -220,6 +222,19 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **Gejala:** mode Ahli + pengecoh → auto-check baru jalan setelah SEMUA chip (termasuk pengecoh) terpasang, padahal pengecoh tak perlu dipakai.
 - **Fix:** auto-check = "semua token WAJIB terpasang" (`wajibTerpakai === jawaban.length`), bukan "bank habis". Benar/salah dinilai dari token wajib (`benarDari()`), pengecoh netral (kelas `--pengecoh`).
 
+### #30 — `import.meta.glob(..., { eager: true })` untuk data bab = bundel raksasa 🔴
+- **Gejala:** bundel awal **1.987 kB** (gzip 524 kB), Vite memperingatkan chunk > 500 kB. Membuka **satu bab** pun mengunduh data 50 bab.
+- **Sebab:** `src/data/index.ts` memakai eager glob → semua modul bab **terjangkau statis**. Rollup menggabung modul yang juga diimpor dinamis (`loadBab`) jadi SATU chunk besar. Data = **91%** ukuran sumber (1,83 dari 2,00 MiB).
+- **Fix (jangan di-regresi):**
+  - Isi bab dimuat **dinamis** (`src/data/load.ts`: `loadBab`/`loadSemuaBab`).
+  - Ringkasan (no, topik, jumlah) dari `src/data/meta.ts` (di-generate `npm run gen:meta`).
+  - Kamus dari `src/data/kamus/terbangun.ts` (di-generate `npm run gen:kamus`) — **bukan** dihitung dari `babs` saat runtime.
+  - Rute di-`lazy` (`src/App.tsx`).
+  - Halaman yang butuh semua bab (latihan campuran) memakai `loadSemuaBab()` + state loading.
+  - **JANGAN** impor `src/data/all` (eager; hanya untuk TES) dari kode aplikasi — dijaga `npm run guard`.
+- **Hasil terukur:** bundel awal **108 kB** (dari 524 kB) · `/bab/34` **193 kB** (dari 524 kB) · `/partikel` **131 kB**.
+- **Pelajaran umum:** untuk data besar, `eager` membuat *semua* modulnya statis-terjangkau → sekali ada satu importer statis, code-splitting mati. Verifikasi dengan hitung byte nyata (`Performance.getEntriesByType('resource')`), jangan menebak.
+
 ---
 
 ## 3d. Bilah navigasi lengket (shell) + fondasi token — JANGAN dihapus
@@ -387,6 +402,8 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
 | `npm run validate:susun` | jaga INVARIAN data susun: gabungan token mode ahli == `jawaban`, bank konsisten, **semua kanji punya bacaan**, struktur item. Lihat §3c. |
 | `npm run test` | tes unit Vitest: `core/*` (normalize, terjemahan, susun, segmentPartikel, baca, manifest) + snapshot data (50 bab, total kosakata/susun) + invariant partikel. Masuk `check:full`. |
+| `npm run gen:meta` | regenerate `src/data/meta.ts` (ringkasan bab untuk Home/TopNav). Tes `registry.test.ts` gagal bila lupa. |
+| `npm run gen:kamus` | regenerate `src/data/kamus/terbangun.ts` (kamus kanji siap-pakai). Tes `kamus.test.ts` gagal bila lupa. |
 | `npm run map` | regenerate `docs/AI-MAP.md`: daftar modul + peta dependensi + ringkasan 50 bab. |
 | `npm run find <kata>` | cari di KODE / DATA / TOOLS / DOKUMEN, output `file:baris`. Bisa multi-kata (AND). |
 | `npm run add:bab <N>` | scaffold `src/data/babNN/` (8 file berisi checklist). Registry otomatis. |
@@ -454,7 +471,9 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 | Mau mengubah… | Sentuh file/folder |
 |---|---|
 | isi materi 1 bab (kosakata/bunpou/reibun/kaiwa/renshuu/mondai/susun) | `src/data/babNN/*.ts` (+ `index.ts`) |
-| menambah bab baru | `npm run add:bab NN` → isi; registry otomatis (`import.meta.glob`) |
+| menambah bab baru | `npm run add:bab NN` → isi; lalu `npm run gen:meta` + `npm run gen:kamus`; registry otomatis (`import.meta.glob`) |
+| bundel awal / data per bab (code-split) | `src/data/load.ts` (loadBab) · `src/data/meta.ts` (ringkasan, di-generate) · `src/App.tsx` (rute lazy) |
+| kamus kanji (baca/arti/ dikenal) | `src/data/kamus/terbangun.ts` (di-generate `npm run gen:kamus`) + `override.ts` |
 | logika benar/salah jawaban | `src/core/text/normalize.ts` |
 | koreksi terjemahan (soft-match) | `src/core/text/terjemahan.ts` |
 | latihan menyusun (bank/koreksi/pengecoh) | `src/core/text/susun.ts` |

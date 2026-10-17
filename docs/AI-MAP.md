@@ -7,22 +7,23 @@
 
 | File | Baris | Deskripsi |
 |---|---|---|
-| `src/App.tsx` | 50 | exports: App |
+| `src/App.tsx` | 67 | Halaman di-`lazy` (code-split) supaya bundel AWAL kecil: data 50 bab + |
 | `src/components/TopNav.tsx` | 65 | Bilah navigasi utama (lengket di atas). Menggantikan pola "← Daftar Bab" |
-| `src/core/audio/manifest.ts` | 52 | Cek konsistensi: jumlah mondai di data bab harus cocok dengan manifest |
+| `src/core/audio/manifest.ts` | 70 | Track Choukai (聴解). Kosong untuk Bab 1–25 (MNN1 tidak punya choukai) |
 | `src/core/text/baca.ts` | 120 | Baca kanji → kana (untuk panel "Keterangan" latihan susun) |
 | `src/core/text/normalize.ts` | 114 | Partikel dan akhiran gramatikal boleh "hilang" tanpa mengubah benar/salah |
 | `src/core/text/segmentPartikel.ts` | 126 | Segmentasi unit `susun` jadi token halus untuk MODE AHLI |
 | `src/core/text/susun.ts` | 193 | Logika murni latihan menyusun kalimat (tanpa React) |
 | `src/core/text/terjemahan.ts` | 56 | Bandingkan terjemahan user vs terjemahan buku memakai Jaccard + cakupan kata kunci |
 | `src/core/validation/schema.ts` | 197 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
-| `src/features/bab/AudioBar.tsx` | 37 | Pemutar audio Kaiwa/Mondai dengan tombol Ulang (loop) + pengatur kecepatan |
+| `src/features/bab/AudioBar.tsx` | 77 | Pemutar audio Kaiwa/Mondai dengan tombol Ulang (loop) + pengatur kecepatan |
 | `src/features/bab/BabHero.tsx` | 22 | Header bab: nomor, label, topik, judul kaiwa (JP), + stempel selesai/skor |
 | `src/features/bab/BabToc.tsx` | 25 | Daftar isi bab (anchor). Membuka `<details>` tujuan bila masih tertutup |
 | `src/features/bab/BagianProgress.tsx` | 45 | Checklist "sudah dikuasai" per bagian bab (di luar 'coretan'/'bagian') |
 | `src/features/bab/BunshoSection.tsx` | 18 | Seksi Bunsho (bacaan) — judul opsional + teks + terjemahan opsional |
+| `src/features/bab/ChoukaiSection.tsx` | 34 | Seksi Choukai (聴解) — track dari buku terpisah「聴解タスク25」(MNN II) |
 | `src/features/bab/CoretanSection.tsx` | 26 | Seksi Coretan & Catatan pribadi per bab (textarea) |
-| `src/features/bab/index.ts` | 30 | Primitif |
+| `src/features/bab/index.ts` | 31 | Primitif |
 | `src/features/bab/KaiwaSection.tsx` | 36 | Seksi Kaiwa: audio + dialog (furigana) + latihan terjemahan |
 | `src/features/bab/KonteksSection.tsx` | 18 | Seksi Konteks Latihan B (teks pendukung renshuuB) |
 | `src/features/bab/KoreksiPanel.tsx` | 81 | Ringkasan koreksi satu bab (skor latihan A/B/C/Mondai) + kualitas terjemahan |
@@ -35,7 +36,7 @@
 | `src/features/bab/RenshuuSection.tsx` | 25 | Seksi latihan Renshuu (A / B / C) |
 | `src/features/bab/Ruby.tsx` | 49 | Render furigana `<ruby>` untuk satu teks |
 | `src/features/bab/Section.tsx` | 27 | Satu bagian materi bab: `<details>` akordeon dengan judul + jangkar `id` |
-| `src/features/bab/sectionsOf.ts` | 28 | Daftar bagian yang ADA di satu bab → dipakai untuk TOC & Progress Per-Bagian |
+| `src/features/bab/sectionsOf.ts` | 30 | Daftar bagian yang ADA di satu bab → dipakai untuk TOC & Progress Per-Bagian |
 | `src/features/bab/SoalInteraktif.tsx` | 102 | Satu butir Mondai: baris soal + input per baris, opsional pilihan ganda, |
 | `src/features/bab/SusunSection.tsx` | 13 | Seksi latihan Menyusun Kalimat untuk satu bab |
 | `src/features/bab/TerjemahanList.tsx` | 84 | Daftar latihan terjemahan (Reibun/Kaiwa): tiap baris ada input terjemahan, |
@@ -45,21 +46,22 @@
 | `src/features/kuis/Kuis.tsx` | 159 | Bangun soal pilihan ganda: "Apa arti <kana>?" dengan 3 pengecoh |
 | `src/features/partikel/index.ts` | 5 | — |
 | `src/features/partikel/KartuPartikel.tsx` | 125 | Label kelompok (untuk badge kartu) |
-| `src/features/partikel/PemilihBab.tsx` | 39 | Baris tombol pemilih bab. Berlaku untuk mode daftar (filter) & ujian (cakupan soal) |
+| `src/features/partikel/PemilihBab.tsx` | 41 | Baris tombol pemilih bab. Berlaku untuk mode daftar (filter) & ujian (cakupan soal) |
 | `src/features/partikel/TabelRingkas.tsx` | 41 | Rangkuman singkat: arti (fungsi) tiap partikel dalam tabel padat |
 | `src/features/partikel/UjianPartikel.tsx` | 176 | Kunci localStorage untuk jawaban ujian partikel (per id soal) |
-| `src/features/susun/index.ts` | 7 | — |
+| `src/features/susun/DengarkanLatihan.tsx` | 184 | Latihan MENDENGARKAN — memakai track audio yang SUDAH ada: |
+| `src/features/susun/index.ts` | 8 | — |
 | `src/features/susun/KeteranganBacaan.tsx` | 83 | Panel keterangan setelah kalimat selesai/benar: |
 | `src/features/susun/MenyusunLatihan.tsx` | 113 | Latihan menyusun kalimat untuk satu bab |
 | `src/features/susun/PemilihBabSusun.tsx` | 50 | Pilihan bab untuk latihan susun: Semua · MNN I · MNN II · 1–50 |
 | `src/features/susun/SoalMenyusun.tsx` | 310 | Auto-check: begitu semua chip terpasang, langsung dikoreksi |
 | `src/features/theme/ThemeToggle.tsx` | 47 | Tombol tema: klik = balik terang <-> gelap (mode manual) |
 | `src/main.tsx` | 11 | — |
-| `src/pages/BabDetailPage.tsx` | 196 | Navigasi bab dengan arrow key (←/→) — HANYA saat tab Daftar aktif. |
-| `src/pages/HomePage.tsx` | 203 | exports: HomePage |
+| `src/pages/BabDetailPage.tsx` | 227 | Bab dimuat DINAMIS (code-split per bab) — lihat src/data/load.ts. |
+| `src/pages/HomePage.tsx` | 202 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
 | `src/pages/PartikelPage.tsx` | 187 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
-| `src/pages/SusunCampuranPage.tsx` | 245 | exports: SusunCampuranPage |
+| `src/pages/SusunCampuranPage.tsx` | 306 | Seluruh bab dimuat DINAMIS (code-split) — halaman ini memang perlu semua bab. |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
 | `src/store/useTheme.ts` | 91 | Tema sistem saat ini (fallback 'light' bila tak didukung) |
@@ -69,11 +71,6 @@
 
 ```
 src/App.tsx → src/components/TopNav.tsx
-src/App.tsx → src/pages/BabDetailPage.tsx
-src/App.tsx → src/pages/HomePage.tsx
-src/App.tsx → src/pages/NotFoundPage.tsx
-src/App.tsx → src/pages/PartikelPage.tsx
-src/App.tsx → src/pages/SusunCampuranPage.tsx
 src/components/TopNav.tsx → src/features/theme/ThemeToggle.tsx
 src/components/TopNav.tsx → src/store/useProgress.ts
 src/core/text/susun.ts → src/core/text/normalize.ts
@@ -92,6 +89,9 @@ src/features/bab/BagianProgress.tsx → src/store/useProgress.ts
 src/features/bab/BagianProgress.tsx → src/types/bab.ts
 src/features/bab/BunshoSection.tsx → src/features/bab/Section.tsx
 src/features/bab/BunshoSection.tsx → src/types/bab.ts
+src/features/bab/ChoukaiSection.tsx → src/core/audio/manifest.ts
+src/features/bab/ChoukaiSection.tsx → src/features/bab/AudioBar.tsx
+src/features/bab/ChoukaiSection.tsx → src/features/bab/Section.tsx
 src/features/bab/CoretanSection.tsx → src/features/bab/Section.tsx
 src/features/bab/KaiwaSection.tsx → src/features/bab/AudioBar.tsx
 src/features/bab/KaiwaSection.tsx → src/features/bab/Ruby.tsx
@@ -140,6 +140,7 @@ src/features/bab/index.ts → src/features/bab/BabHero.tsx
 src/features/bab/index.ts → src/features/bab/BabToc.tsx
 src/features/bab/index.ts → src/features/bab/BagianProgress.tsx
 src/features/bab/index.ts → src/features/bab/BunshoSection.tsx
+src/features/bab/index.ts → src/features/bab/ChoukaiSection.tsx
 src/features/bab/index.ts → src/features/bab/CoretanSection.tsx
 src/features/bab/index.ts → src/features/bab/KaiwaSection.tsx
 src/features/bab/index.ts → src/features/bab/KonteksSection.tsx
@@ -159,12 +160,17 @@ src/features/bab/index.ts → src/features/bab/TerjemahanList.tsx
 src/features/bab/index.ts → src/features/bab/TextWithNewlines.tsx
 src/features/bab/index.ts → src/features/bab/ToolbarTampilan.tsx
 src/features/bab/index.ts → src/features/bab/sectionsOf.ts
+src/features/bab/sectionsOf.ts → src/core/audio/manifest.ts
 src/features/bab/sectionsOf.ts → src/types/bab.ts
 src/features/partikel/UjianPartikel.tsx → src/store/useNotes.ts
 src/features/partikel/index.ts → src/features/partikel/KartuPartikel.tsx
 src/features/partikel/index.ts → src/features/partikel/PemilihBab.tsx
 src/features/partikel/index.ts → src/features/partikel/TabelRingkas.tsx
 src/features/partikel/index.ts → src/features/partikel/UjianPartikel.tsx
+src/features/susun/DengarkanLatihan.tsx → src/core/audio/manifest.ts
+src/features/susun/DengarkanLatihan.tsx → src/features/bab/AudioBar.tsx
+src/features/susun/DengarkanLatihan.tsx → src/features/susun/PemilihBabSusun.tsx
+src/features/susun/DengarkanLatihan.tsx → src/types/bab.ts
 src/features/susun/KeteranganBacaan.tsx → src/core/text/baca.ts
 src/features/susun/KeteranganBacaan.tsx → src/types/bab.ts
 src/features/susun/MenyusunLatihan.tsx → src/core/text/susun.ts
@@ -175,6 +181,7 @@ src/features/susun/SoalMenyusun.tsx → src/core/text/normalize.ts
 src/features/susun/SoalMenyusun.tsx → src/core/text/susun.ts
 src/features/susun/SoalMenyusun.tsx → src/features/susun/KeteranganBacaan.tsx
 src/features/susun/SoalMenyusun.tsx → src/types/bab.ts
+src/features/susun/index.ts → src/features/susun/DengarkanLatihan.tsx
 src/features/susun/index.ts → src/features/susun/KeteranganBacaan.tsx
 src/features/susun/index.ts → src/features/susun/MenyusunLatihan.tsx
 src/features/susun/index.ts → src/features/susun/PemilihBabSusun.tsx
@@ -184,6 +191,7 @@ src/main.tsx → src/App.tsx
 src/pages/BabDetailPage.tsx → src/features/bab/index.ts
 src/pages/BabDetailPage.tsx → src/store/useNotes.ts
 src/pages/BabDetailPage.tsx → src/store/useProgress.ts
+src/pages/BabDetailPage.tsx → src/types/bab.ts
 src/pages/HomePage.tsx → src/store/useProgress.ts
 src/pages/HomePage.tsx → src/store/useTheme.ts
 src/pages/PartikelPage.tsx → src/features/partikel/index.ts
@@ -259,6 +267,8 @@ bab | kos  bun  cat  rei  kai  rA  rB  rC  mon  bunS  kon
 | `npm run check` | validate + typecheck (loop cepat) |
 | `npm run check:full` | validate + typecheck + test + build (gerbang selesai) |
 | `npm run test` | tes unit Vitest (core/* + snapshot data) |
+| `npm run gen:meta` | regenerate src/data/meta.ts (ringkasan bab) |
+| `npm run gen:kamus` | regenerate src/data/kamus/terbangun.ts (kamus kanji) |
 | `npm run verify` | check:full + screenshot desktop/mobile + cek error boundary |
 | `npm run map` | regenarate file ini |
 | `npm run find <kata>` | cari di kode/data/docs, output terkelompok |

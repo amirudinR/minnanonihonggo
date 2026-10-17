@@ -33,6 +33,8 @@ npm run dev      # buka http://localhost:5173
 | `npm run validate:partikel` | Invariant data partikel (bab ⇄ perBab, 100 soal) |
 | `npm run validate:susun` | Invariant data susun (token mode ahli, bacaan kanji) |
 | `npm run test` | Tes unit Vitest (core/* + snapshot data) |
+| `npm run gen:meta` | Regenerate ringkasan bab (`src/data/meta.ts`) untuk Home/TopNav |
+| `npm run gen:kamus` | Regenerate kamus siap-pakai (`src/data/kamus/terbangun.ts`) |
 | `npm run audit` | Audit kelengkapan data bab |
 | `npm run check` | validate (+partikel+susun) + typecheck — loop cepat, tanpa build |
 | `npm run check:full` | check + build — gerbang "selesai" |
@@ -78,4 +80,14 @@ PLAN.md        # rencana, keputusan, log sesi
 ```
 
 Menambah bab: buat folder `src/data/babNN/` (atau `npm run add:bab NN`), lalu
-`npm run validate` + `npm run build`. Registry otomatis, tidak perlu menyentuh kode lain.
+`npm run gen:meta` + `npm run gen:kamus`, lalu `npm run validate` + `npm run build`.
+Registry otomatis, tidak perlu menyentuh kode lain.
+
+> **File di-generate** (jangan edit manual): `src/data/meta.ts` (ringkasan bab) dan
+> `src/data/kamus/terbangun.ts` (kamus kanji). Jalankan `npm run gen:meta` &
+> `npm run gen:kamus` setiap kali data bab/kosakata berubah — tes akan gagal bila lupa.
+>
+> **Arsitektur data (penting):** isi bab dimuat **dinamis per bab**
+> (`src/data/load.ts`) agar bundel awal kecil. Jangan menambah
+> `import.meta.glob(..., { eager: true })` untuk data bab — itu menggabungkan
+> seluruh data 50 bab ke satu chunk (lihat `AGENTS.md` §3 #30).

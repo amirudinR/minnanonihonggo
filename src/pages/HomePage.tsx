@@ -2,29 +2,28 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProgress } from '../store/useProgress'
 import { useTheme } from '../store/useTheme'
-import { babs, getBab } from '../data'
-import { partikel } from '../data/partikel'
-import { soalPartikel } from '../data/partikel-soal'
+import { getMeta, JUMLAH_PARTIKEL, JUMLAH_SOAL_PARTIKEL, meta, TOTAL_BAB } from '../data/meta'
 
 export default function HomePage() {
   const items = useProgress((s) => s.items)
   useTheme((s) => s.theme) // berlangganan agar toggle ikut re-render
   const [cari, setCari] = useState('')
   const [fase, setFase] = useState<'semua' | 'I' | 'II'>('semua')
-  const TOTAL = babs.length
+  const TOTAL = TOTAL_BAB
   const selesaiCount = items.filter((x) => x.selesai).length
   const pct = TOTAL > 0 ? Math.round((selesaiCount / TOTAL) * 100) : 0
-  const chapters = Array.from({ length: TOTAL }, (_, i) => {
-    const no = i + 1
-    return { no, bab: getBab(no), progress: items.find((x) => x.no === no) }
-  })
+  const chapters = meta.map((m) => ({
+    no: m.no,
+    bab: getMeta(m.no),
+    progress: items.find((x) => x.no === m.no),
+  }))
   const cariNorm = cari.trim().toLowerCase()
   const availableChapters = chapters.filter((chapter) => {
     if (!chapter.bab) return false
     if (fase === 'I' && chapter.no > 25) return false
     if (fase === 'II' && chapter.no <= 25) return false
     if (!cariNorm) return true
-    const hay = `${chapter.no} ${chapter.bab.topik} ${chapter.bab.kaiwa?.judul ?? ''}`.toLowerCase()
+    const hay = `${chapter.no} ${chapter.bab.topik} ${chapter.bab.kaiwaJudul}`.toLowerCase()
     return hay.includes(cariNorm)
   })
   const activeChapter =
@@ -115,7 +114,7 @@ export default function HomePage() {
               <h2 id="continue-title">{allAvailableComplete ? `Tinjau Bab ${activeChapter.no}` : `Lanjutkan Bab ${activeChapter.no}`}</h2>
               <p>{activeChapter.bab!.topik}</p>
               <span className="continue-card__meta">
-                {activeChapter.bab!.kosakata.length} kosakata <span aria-hidden>·</span> {activeChapter.bab!.bunpou.length} pola
+                {activeChapter.bab!.kosakata} kosakata <span aria-hidden>·</span> {activeChapter.bab!.bunpou} pola
               </span>
             </div>
             <Link className="button button--primary" to={`/bab/${activeChapter.no}`}>
@@ -144,7 +143,7 @@ export default function HomePage() {
             <h2 id="partikel-title">Partikel (助詞)</h2>
             <p>Penjelasan detail semua partikel は・が・を・に…, lengkap terjemahan, bab terkait, dan ujian pilihan ganda.</p>
             <span className="continue-card__meta">
-              {partikel.length} partikel <span aria-hidden>·</span> {soalPartikel.length} soal ujian
+              {JUMLAH_PARTIKEL} partikel <span aria-hidden>·</span> {JUMLAH_SOAL_PARTIKEL} soal ujian
             </span>
           </div>
           <Link className="button button--primary" to="/partikel">
@@ -171,7 +170,7 @@ export default function HomePage() {
                     <span className="bab-item__body">
                       <span className="bab-item__title">{bab!.topik}</span>
                             <span className="bab-item__meta">
-                        {bab!.kosakata.length} kosakata · {bab!.bunpou.length} pola
+                        {bab!.kosakata} kosakata · {bab!.bunpou} pola
                       </span>
                     </span>
                     <span className="bab-item__badges">

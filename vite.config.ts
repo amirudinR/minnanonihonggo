@@ -8,4 +8,16 @@ export default defineConfig({
   resolve: {
     alias: { '@': '/src' },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Pisahkan data TIAP bab jadi chunk sendiri (jaring pengaman agar data
+        // satu bab tak pernah tercampur jadi chunk raksasa).
+        manualChunks(id) {
+          const cocok = /src[\\/]data[\\/](bab\d+)[\\/]/.exec(id)
+          return cocok ? `bab-${cocok[1]}` : undefined
+        },
+      },
+    },
+  },
 })

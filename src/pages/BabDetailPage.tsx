@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getBab } from '../data'
+import type { Bab } from '../types/bab'
+import { loadBab } from '../data/load'
 import { useProgress } from '../store/useProgress'
 import { useNotes } from '../store/useNotes'
 import {
@@ -16,6 +17,7 @@ import {
   SusunSection,
   RenshuuSection,
   MondaiSection,
+  ChoukaiSection,
   BunshoSection,
   RangkumanSection,
   CoretanSection,
@@ -26,7 +28,9 @@ import {
 export default function BabDetailPage() {
   const { no } = useParams()
   const num = Number(no)
-  const bab = getBab(num)
+  // Bab dimuat DINAMIS (code-split per bab) — lihat src/data/load.ts.
+  // undefined = sedang dimuat · null = tidak ada.
+  const [bab, setBab] = useState<Bab | null | undefined>(undefined)
   const p = useProgress((s) => s.items.find((x) => x.no === num))
   const setSelesai = useProgress((s) => s.setSelesai)
   const catatan = useNotes((s) => s.catatan)
@@ -35,6 +39,19 @@ export default function BabDetailPage() {
   const [showFurigana, setShowFurigana] = useState(true)
   const [modeKosakata, setModeKosakata] = useState<KosakataMode>('tabel')
   const [showTop, setShowTop] = useState(false)
+
+  // Muat bab terpilih (dinamis). `batal` menjaga agar hasil yang sudah usang
+  // (setelah pindah bab) tidak menimpa state.
+  useEffect(() => {
+    let batal = false
+    setBab(undefined)
+    loadBab(num).then((b) => {
+      if (!batal) setBab(b ?? null)
+    })
+    return () => {
+      batal = true
+    }
+  }, [num])
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 600)
@@ -80,7 +97,19 @@ export default function BabDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (!bab) {
+  if (bab === undefined) {
+    return (
+      <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
+        <div className="book">
+          <p className="text-ink-soft" role="status">
+            Memuat bab {num}…
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (bab === null) {
     return (
       <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
         <div className="book">
@@ -156,6 +185,8 @@ export default function BabDetailPage() {
         {bab.renshuuC.length > 0 && <RenshuuSection id="renshuuC" title="Renshuu C" section="C" items={bab.renshuuC} num={num} />}
 
         {bab.mondai.length > 0 && <MondaiSection items={bab.mondai} num={num} />}
+
+        <ChoukaiSection num={num} />
 
         {bab.bunsho.length > 0 && <BunshoSection items={bab.bunsho} />}
 

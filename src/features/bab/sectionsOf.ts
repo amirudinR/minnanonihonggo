@@ -1,4 +1,5 @@
 import type { Bab } from '../../types/bab'
+import { adaChoukai } from '../../core/audio/manifest'
 
 export type BabSection = { id: string; short: string; label: string }
 
@@ -19,6 +20,7 @@ export function sectionsOf(bab: Bab): BabSection[] {
   if (bab.renshuuB.length > 0) arr.push({ id: 'renshuuB', short: 'Latih B', label: 'Latih B' })
   if (bab.renshuuC.length > 0) arr.push({ id: 'renshuuC', short: 'Latih C', label: 'Latih C' })
   if (bab.mondai.length > 0) arr.push({ id: 'mondai', short: 'Mondai', label: 'Mondai' })
+  if (adaChoukai(bab.no)) arr.push({ id: 'choukai', short: 'Choukai', label: 'Choukai (聴解)' })
   if (bab.bunsho.length > 0) arr.push({ id: 'bunsho', short: 'Bunsho', label: 'Bunsho' })
   if (bab.rangkuman) arr.push({ id: 'rangkuman', short: 'Rangkuman', label: 'Rangkuman' })
   arr.push({ id: 'bagian', short: 'Progress', label: 'Progress Per-Bagian' })

@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { ThemeToggle } from '../features/theme/ThemeToggle'
-import { babs } from '../data'
+import { meta } from '../data/meta'
 import { useProgress } from '../store/useProgress'
 
 /**
@@ -12,7 +12,7 @@ import { useProgress } from '../store/useProgress'
  */
 export function TopNav() {
   const items = useProgress((s) => s.items)
-  const total = babs.length
+  const total = meta.length
   const selesai = items.filter((x) => x.selesai).length
   const pct = total > 0 ? Math.round((selesai / total) * 100) : 0
 

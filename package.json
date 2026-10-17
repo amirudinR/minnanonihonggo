@@ -17,6 +17,8 @@
     "check": "tsx tools/validate.ts && tsx tools/validate_partikel.ts && tsx tools/validate_susun.ts && tsc --noEmit",
     "check:full": "tsx tools/validate.ts && tsx tools/validate_partikel.ts && tsx tools/validate_susun.ts && tsc --noEmit && vitest run && vite build",
     "map": "tsx tools/map.ts",
+    "gen:meta": "tsx tools/gen-meta.ts",
+    "gen:kamus": "tsx tools/gen-kamus.ts",
     "find": "tsx tools/find.ts",
     "guard": "tsx tools/validate.ts && tsx tools/validate_partikel.ts && tsx tools/validate_susun.ts && tsx tools/audit_kelengkapan.ts && tsx tools/guard.ts",
     "verify": "npm run check:full && node tools/screenshot.mjs",

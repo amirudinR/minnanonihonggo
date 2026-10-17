@@ -77,6 +77,31 @@
   color: var(--color-paper-light); background: var(--color-accent);
   border-radius: 999px; padding: 2px 8px;
 }
+/* Choukai (聴解) dibedakan warnanya dari Mondai */
+.susun__badge--choukai { background: rgb(var(--k-rgb-ok)); }
+
+/* Tab "Menyusun / Mendengarkan" di halaman latihan */
+.susun-tab { margin: 14px 0 4px; }
+
+/* ---- Latihan Mendengarkan ---- */
+.dengar__info { font-size: 12px; color: var(--color-ink-soft); margin: 4px 0 10px; }
+.dengar__ket { color: var(--color-ink-faint); }
+.dengar__kartu { padding: 14px 16px; }
+.dengar__head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 6px; }
+.dengar__topik { font-size: 13px; color: var(--color-ink-soft); }
+.dengar__label { font-family: var(--font-title); font-size: 18px; font-weight: 700; margin: 2px 0 4px; }
+.dengar__catatan { display: block; margin-top: 10px; }
+.dengar__catatan .eyebrow { display: block; margin-bottom: 4px; }
+
+/* ---- Seksi Choukai di halaman bab ---- */
+.choukai__catatan { font-size: 13px; color: var(--color-ink-soft); margin: 0 0 10px; }
+.choukai__baris { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.choukai__no {
+  flex: 0 0 auto; width: 26px; height: 26px; border-radius: 8px;
+  display: grid; place-items: center; font-size: 12px; font-weight: 700;
+  background: rgb(var(--k-rgb-accent) / 0.14); color: var(--color-accent);
+}
+.choukai__baris .audio-bar { flex: 1 1 auto; min-width: 0; margin: 4px 0; }
 .susun__hint { font-size: 12px; color: var(--color-ink-soft); align-self: center; }
 
 .babbar {
