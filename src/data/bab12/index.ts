@@ -1,5 +1,6 @@
 import type { Bab } from '@/types/bab'
 import { bunpou, catatanTataBahasa } from './bunpou'
+import { bunpouSoal } from './bunpouSoal'
 import { kaiwa } from './kaiwa'
 import { kosakata } from './kosakata'
 import { mondai } from './mondai'
@@ -21,6 +22,7 @@ export const bab12: Bab = {
   mondai,
   bunsho: [],
   susun,
+  bunpouSoal,
 }
 
 export default bab12
