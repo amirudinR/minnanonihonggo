@@ -13,3 +13,4 @@
 export { meta, getMeta, TOTAL_BAB, JUMLAH_PARTIKEL, JUMLAH_SOAL_PARTIKEL } from './meta'
 export type { BabMeta } from './meta'
 export { loadBab, loadSemuaBab, nomorBabTersedia } from './load'
+export { loadLatihanCampuran, type BabLatihan } from './latihan-campuran'

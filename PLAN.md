@@ -690,6 +690,14 @@ Diukur lewat CDP: h1/hero = serif (`--font-display`), h2/section = Kalam (`--fon
 
 **Verifikasi:** `check:full` (validate 0/0 · 74 tes · build) · `guard` **8/8** · CDP 390 px: `overflowX=false` & tanpa error di `/`, `/bab/34`, `/latihan/susun`, `/partikel`, `/bab/999`. Commit `c6fdf01` (ikut memuat WIP sesi paralel yang tersambung agar pohon konsisten). Pelajaran dicatat di `AGENTS.md` §3 #30.
 
+**Lanjutan (pangkas halaman latihan campuran).** Halaman itu ternyata memuat **bab penuh**, padahal hanya perlu `susun` + `mondai` (untuk tab Mendengarkan). Ditambahkan `src/data/latihan-campuran.ts` (`loadLatihanCampuran`, tipe `BabLatihan`) dan `vite.config.ts` memisah `susun.ts`/`mondai.ts` ke chunk `ringan-babNN` — sehingga yang penuh hanya diunduh saat membuka bab.
+
+| Halaman | Sebelum | Selesai |
+|---|---|---|
+| `/latihan/susun` | 524 kB | **338 kB** (−35%) |
+
+`/bab/34` 196 kB, `/partikel` 131 kB, Home 108 kB. Tes anti-drift baru (`latihan-campuran.test.ts`) memastikan data ringan **identik** dengan data bab penuh → **76 tes**. `check:full` ✅ · `guard` 8/8 ✅ · CDP 390 px tanpa error (susun 4 chip, `/bab/34` 20 soal).
+
 
 
 ## 27. Sesi "Audio Choukai 聴解 MNN II + latihan Mendengarkan" — 2026-10-17

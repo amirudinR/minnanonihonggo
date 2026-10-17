@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { Bab } from '../../types/bab'
+import type { BabLatihan } from '../../data'
 import { getAudio } from '../../core/audio/manifest'
 import { AudioBar } from '../bab/AudioBar'
 import { PemilihBabSusun } from './PemilihBabSusun'
@@ -25,7 +25,7 @@ type Saring = 'semua' | 'mondai' | 'choukai'
  * tidak menyertakan transkrip dan mengarang isi audio = pelanggaran aturan
  * keras §1. Jadi fokusnya "dengarkan & tulis yang kamu tangkap" (bebas).
  */
-export function DengarkanLatihan({ daftar }: { daftar: Bab[] }) {
+export function DengarkanLatihan({ daftar }: { daftar: BabLatihan[] }) {
   const [bab, setBab] = useState<PilihBab>('semua')
   const [saring, setSaring] = useState<Saring>('semua')
   const [pos, setPos] = useState(0)

@@ -61,7 +61,7 @@
 | `src/pages/HomePage.tsx` | 202 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
 | `src/pages/PartikelPage.tsx` | 187 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
-| `src/pages/SusunCampuranPage.tsx` | 306 | Seluruh bab dimuat DINAMIS (code-split) — halaman ini memang perlu semua bab. |
+| `src/pages/SusunCampuranPage.tsx` | 306 | Data ringan: hanya `susun` + `mondai` per bab (bukan seluruh isi bab). |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
 | `src/store/useTheme.ts` | 91 | Tema sistem saat ini (fallback 'light' bila tak didukung) |
@@ -170,7 +170,6 @@ src/features/partikel/index.ts → src/features/partikel/UjianPartikel.tsx
 src/features/susun/DengarkanLatihan.tsx → src/core/audio/manifest.ts
 src/features/susun/DengarkanLatihan.tsx → src/features/bab/AudioBar.tsx
 src/features/susun/DengarkanLatihan.tsx → src/features/susun/PemilihBabSusun.tsx
-src/features/susun/DengarkanLatihan.tsx → src/types/bab.ts
 src/features/susun/KeteranganBacaan.tsx → src/core/text/baca.ts
 src/features/susun/KeteranganBacaan.tsx → src/types/bab.ts
 src/features/susun/MenyusunLatihan.tsx → src/core/text/susun.ts

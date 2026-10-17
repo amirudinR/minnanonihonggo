@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { loadSemuaBab } from '../data'
-import type { Bab, SusunItem } from '../types/bab'
+import { loadLatihanCampuran, type BabLatihan } from '../data'
+import type { SusunItem } from '../types/bab'
 import { useNotes } from '../store/useNotes'
 import { acak, sudahBenar, sudahBenarAhli } from '../core/text/susun'
 import { KATA_DIKENAL } from '../data/kamus'
@@ -46,12 +46,12 @@ export default function SusunCampuranPage() {
   const [autoCheck, setAutoCheck] = useState(true)
   const [ulang, setUlang] = useState<ItemCampur[] | null>(null)
 
-  // Seluruh bab dimuat DINAMIS (code-split) — halaman ini memang perlu semua bab.
-  const [babs, setBabs] = useState<Bab[]>([])
+  // Data ringan: hanya `susun` + `mondai` per bab (bukan seluruh isi bab).
+  const [babs, setBabs] = useState<BabLatihan[]>([])
   const [siap, setSiap] = useState(false)
   useEffect(() => {
     let batal = false
-    loadSemuaBab().then((b) => {
+    loadLatihanCampuran().then((b) => {
       if (!batal) {
         setBabs(b)
         setSiap(true)

@@ -230,9 +230,9 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
   - Ringkasan (no, topik, jumlah) dari `src/data/meta.ts` (di-generate `npm run gen:meta`).
   - Kamus dari `src/data/kamus/terbangun.ts` (di-generate `npm run gen:kamus`) — **bukan** dihitung dari `babs` saat runtime.
   - Rute di-`lazy` (`src/App.tsx`).
-  - Halaman yang butuh semua bab (latihan campuran) memakai `loadSemuaBab()` + state loading.
+  - Halaman latihan campuran TIDAK memuat bab penuh: `src/data/latihan-campuran.ts` (`loadLatihanCampuran`) hanya mengimpor `susun` + `mondai` per bab (tipe `BabLatihan`), dan `vite.config.ts` memisah chunk `susun.ts`/`mondai.ts` jadi `ringan-babNN`.
   - **JANGAN** impor `src/data/all` (eager; hanya untuk TES) dari kode aplikasi — dijaga `npm run guard`.
-- **Hasil terukur:** bundel awal **108 kB** (dari 524 kB) · `/bab/34` **193 kB** (dari 524 kB) · `/partikel` **131 kB**.
+- **Hasil terukur (gzip):** bundel awal **108 kB** (dari 524 kB) · `/bab/34` **196 kB** (dari 524 kB) · `/partikel` **131 kB** · `/latihan/susun` **338 kB** (dari 588 kB setelah langkah pertama; semula 524 kB).
 - **Pelajaran umum:** untuk data besar, `eager` membuat *semua* modulnya statis-terjangkau → sekali ada satu importer statis, code-splitting mati. Verifikasi dengan hitung byte nyata (`Performance.getEntriesByType('resource')`), jangan menebak.
 
 ### #31 — Identifikasi audio pakai DURASI = menipu 🔴
