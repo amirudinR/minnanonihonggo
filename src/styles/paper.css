@@ -89,6 +89,57 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .topnav__link { padding: 0 10px; min-height: 34px; }
 }
 
+/* ============ Komponen bersama (satu bahasa visual) ============ */
+/* Kartu permukaan 3 tingkat; dipakai lintas halaman agar konsisten. */
+.card {
+  background: var(--k-surface-1);
+  border: 1px solid var(--k-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+}
+.card--2 { background: var(--k-surface-2); box-shadow: var(--shadow-soft); }
+.card--3 { background: var(--k-surface-3); box-shadow: none; }
+
+/* Segmented control (pilihan tunggal: mode/jumlah/fase). */
+.seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: var(--k-surface-2);
+  border: 1px solid var(--k-border-soft);
+  border-radius: var(--radius-pill);
+  flex-wrap: wrap;
+}
+.seg__item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.seg__item:hover { color: var(--color-ink); }
+.seg__item--aktif {
+  background: var(--color-accent);
+  color: var(--color-paper-light);
+}
+.seg__item--aktif:hover { color: var(--color-paper-light); }
+.seg__item:disabled { opacity: 0.45; cursor: default; }
+
+/* Fokus terlihat konsisten di seluruh app. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--k-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);

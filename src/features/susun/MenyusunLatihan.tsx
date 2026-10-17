@@ -49,19 +49,21 @@ export function MenyusunLatihan({
           Skor Susun: {totalBenar} benar dari {items.length}
           {mode === 'ahli' && ' · mode ahli'}
         </p>
-        <div className="susun__aksi">
-          <div className="flash__seg" role="group" aria-label="Tingkat kesulitan">
+        <div className="susun-tools">
+          <div className="seg" role="group" aria-label="Tingkat kesulitan">
             <button
               type="button"
-              className={`chip ${mode === 'dasar' ? 'chip--aktif' : ''}`}
+              className={`seg__item ${mode === 'dasar' ? 'seg__item--aktif' : ''}`}
               onClick={() => setMode('dasar')}
+              aria-pressed={mode === 'dasar'}
             >
               Dasar
             </button>
             <button
               type="button"
-              className={`chip ${mode === 'ahli' ? 'chip--aktif' : ''}`}
+              className={`seg__item ${mode === 'ahli' ? 'seg__item--aktif' : ''}`}
               onClick={() => setMode('ahli')}
+              aria-pressed={mode === 'ahli'}
             >
               Ahli
             </button>

@@ -21,7 +21,7 @@
   --k-rule: rgba(59, 53, 46, 0.08);
   --k-selesai: #3b825b;
   --k-salah: #b03a3a;
-  --k-ink-faint: #9c948a;
+  --k-ink-faint: #7d7568;
   --k-wash: rgba(154, 101, 52, 0.05);
   --k-surface-dim: #f0eee6;
 
@@ -40,6 +40,15 @@
   /* efek kertas */
   --k-shadow-paper: 0 12px 30px rgba(59, 53, 46, 0.08);
   --k-shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.04);
+
+  /* 3 tingkat elevasi permukaan (kartu/toolbar/segmen) — token-only */
+  --k-surface-1: #ffffff;
+  --k-surface-2: #f7f4ec;
+  --k-surface-3: #efeae0;
+  --k-border: rgba(59, 53, 46, 0.16);
+  --k-border-soft: rgba(59, 53, 46, 0.09);
+  --k-ring: rgba(154, 101, 52, 0.5);
+  --k-shadow-card: 0 1px 2px rgba(59, 53, 46, 0.05), 0 8px 20px rgba(59, 53, 46, 0.06);
 
   /* kanal RGB untuk rgba(... / alpha) yang bisa ditukar tema */
   --k-rgb-ink: 67 56 43;
@@ -64,7 +73,7 @@ html[data-theme='dark'] {
   --k-rule: rgba(236, 227, 212, 0.12);
   --k-selesai: #6fbf8f;
   --k-salah: #e08a8a;
-  --k-ink-faint: #8a8073;
+  --k-ink-faint: #a99f8d;
   --k-wash: rgba(207, 154, 92, 0.1);
   --k-surface-dim: #1b1712;
 
@@ -81,6 +90,15 @@ html[data-theme='dark'] {
 
   --k-shadow-paper: 0 12px 30px rgba(0, 0, 0, 0.5);
   --k-shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.35);
+
+  /* 3 tingkat elevasi permukaan (versi gelap) */
+  --k-surface-1: #2a241d;
+  --k-surface-2: #332c24;
+  --k-surface-3: #3d352b;
+  --k-border: rgba(236, 227, 212, 0.18);
+  --k-border-soft: rgba(236, 227, 212, 0.1);
+  --k-ring: rgba(207, 154, 92, 0.55);
+  --k-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.35);
 
   /* kanal RGB versi gelap */
   --k-rgb-ink: 236 227 212;
@@ -106,6 +124,11 @@ html[data-theme='dark'] {
   --color-accent-deep: var(--k-accent-deep);
   --color-wash: var(--k-wash);
   --color-surface-dim: var(--k-surface-dim);
+  --color-surface-1: var(--k-surface-1);
+  --color-surface-2: var(--k-surface-2);
+  --color-surface-3: var(--k-surface-3);
+  --color-border: var(--k-border);
+  --color-border-soft: var(--k-border-soft);
 
   /* fonts */
   --font-sans: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN",
@@ -116,6 +139,14 @@ html[data-theme='dark'] {
 
   /* skala */
   --radius-card: 6px;
+
+  /* skala radius konsisten (satu bahasa visual) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
   --shadow-paper: var(--k-shadow-paper);
   --shadow-soft: var(--k-shadow-soft);
+  --shadow-card: var(--k-shadow-card);
 }

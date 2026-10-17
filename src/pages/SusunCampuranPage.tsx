@@ -111,29 +111,32 @@ export default function SusunCampuranPage() {
         </header>
 
         <div className="susun-tools">
-          <div className="flash__seg" role="group" aria-label="Tingkat kesulitan">
+          <div className="seg" role="group" aria-label="Tingkat kesulitan">
             <button
               type="button"
-              className={`chip ${mode === 'dasar' ? 'chip--aktif' : ''}`}
+              className={`seg__item ${mode === 'dasar' ? 'seg__item--aktif' : ''}`}
               onClick={() => ganti({ mode: 'dasar' })}
+              aria-pressed={mode === 'dasar'}
             >
               Dasar
             </button>
             <button
               type="button"
-              className={`chip ${mode === 'ahli' ? 'chip--aktif' : ''}`}
+              className={`seg__item ${mode === 'ahli' ? 'seg__item--aktif' : ''}`}
               onClick={() => ganti({ mode: 'ahli' })}
+              aria-pressed={mode === 'ahli'}
             >
               Ahli
             </button>
           </div>
-          <div className="flash__seg" role="group" aria-label="Jumlah soal per sesi">
+          <div className="seg" role="group" aria-label="Jumlah soal per sesi">
             {JML.map((j) => (
               <button
                 key={j}
                 type="button"
-                className={`chip ${n === j ? 'chip--aktif' : ''}`}
+                className={`seg__item ${n === j ? 'seg__item--aktif' : ''}`}
                 onClick={() => ganti({ n: String(j) })}
+                aria-pressed={n === j}
               >
                 {j} soal
               </button>
@@ -208,7 +211,7 @@ export default function SusunCampuranPage() {
                 </div>
               </>
             ) : (
-              <div className="sesi__ringkas">
+              <div className="sesi__ringkas card">
                 <p className="sesi__ringkas-judul">
                   Sesi selesai — benar {skor} dari {sesi.length}
                 </p>

@@ -583,3 +583,23 @@ Home                → vw 320/390: bersih ✅
 **CDP:** 7 rute × {390px mobile, 1280px desktop}: `overflowX=false`, **0 pelanggar**, 0 error boundary; `/partikel` tetap utuh (77 blok). Skenario benar → "Benar! ✓" + keterangan otomatis; skenario salah → chip merah + "kata ke-1 masih salah".
 
 **Belum dikerjakan (sisa Sprint 1):** kalibrasi kontras token & audit dark mode, komponen bersama `.card/.btn/.seg/.pill` (masih Tailwind + `.chip`/`.button` lama), tipografi serif-judul/Inter-body/Caveat-aksen belum seragam.
+
+
+## 24. Sesi "Fondasi token: kontras, elevasi, komponen bersama" — 2026-10-17
+
+**Lanjutan Sprint 1** (modernisasi). Prinsip: **ukur, jangan tebak**.
+
+**Audit terukur (CDP, fungsi kontras WCAG di browser):**
+- `--k-ink-faint` **GAGAL AA**: 2.99 (terang) / 3.29 (gelap) — padahal dipakai di teks 10–11px (eyebrow edisi, subjudul brand).
+- Pasangan lain lolos: `ink-soft` 5.48/6.95, tombol primary 4.90/6.16.
+
+**Perbaikan:**
+1. Kontras: `--k-ink-faint` → `#7d7568` (terang) / `#a99f8d` (gelap) = **4.55 / 4.88**, lulus AA.
+2. Token baru (semua lewat `@theme` → Tailwind): `--k-surface-1/2/3` (elevasi), `--k-border`/`--k-border-soft`, `--k-ring`, `--k-shadow-card`, `--radius-sm/md/lg/pill`, `--shadow-card`.
+3. Komponen bersama (token-only, tanpa `transition`): `.card`(+--2/--3), `.seg`/`.seg__item`/`.seg__item--aktif`, dan **fokus ring global** `:focus-visible{outline:3px solid var(--k-ring)}`.
+4. Migrasi nyata: pilihan tunggal mode Dasar/Ahli & jumlah soal di `MenyusunLatihan` + `SusunCampuranPage` dari `.flash__seg`+`.chip` → `.seg`; ringkasan sesi pakai `.card`.
+
+**Verifikasi:** `typecheck` bersih · `guard` 7/7 PASS (termasuk "paper.css hanya token" & "tanpa transition") · `check:full` build OK · `map` 33 modul. CDP: 3 halaman × {desktop gelap, mobile terang} → `overflowX=false`, 0 pelanggar, 0 error boundary; `.seg__item` tinggi 32px, aktif benar; kontras diukur ulang & lulus.
+
+**Sengaja TIDAK diubah:** identitas kertas, blok `.partikel-*` (77 kartu utuh), fakta §4, key localStorage.
+**Sisa opsional:** menyamakan tipografi (serif judul / Inter body / Caveat aksen) & migrasi `.seg`/`.card` ke halaman Partikel/Kuis/Flashcard (belum perlu — tidak ada regresi).

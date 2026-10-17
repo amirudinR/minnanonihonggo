@@ -25,7 +25,7 @@
 | `src/features/partikel/UjianPartikel.tsx` | 176 | Kunci localStorage untuk jawaban ujian partikel (per id soal) |
 | `src/features/susun/index.ts` | 7 | — |
 | `src/features/susun/KeteranganBacaan.tsx` | 83 | Panel keterangan setelah kalimat selesai/benar: |
-| `src/features/susun/MenyusunLatihan.tsx` | 111 | Latihan menyusun kalimat untuk satu bab |
+| `src/features/susun/MenyusunLatihan.tsx` | 113 | Latihan menyusun kalimat untuk satu bab |
 | `src/features/susun/PemilihBabSusun.tsx` | 50 | Pilihan bab untuk latihan susun: Semua · MNN I · MNN II · 1–50 |
 | `src/features/susun/SoalMenyusun.tsx` | 310 | Auto-check: begitu semua chip terpasang, langsung dikoreksi |
 | `src/features/theme/ThemeToggle.tsx` | 47 | Tombol tema: klik = balik terang <-> gelap (mode manual) |
@@ -35,7 +35,7 @@
 | `src/pages/HomePage.tsx` | 202 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
 | `src/pages/PartikelPage.tsx` | 187 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
-| `src/pages/SusunCampuranPage.tsx` | 242 | exports: SusunCampuranPage |
+| `src/pages/SusunCampuranPage.tsx` | 245 | exports: SusunCampuranPage |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
 | `src/store/useTheme.ts` | 91 | Tema sistem saat ini (fallback 'light' bila tak didukung) |

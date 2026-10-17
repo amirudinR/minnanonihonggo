@@ -221,12 +221,18 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 
 ---
 
-## 3d. Bilah navigasi lengket (shell) — JANGAN dihapus
+## 3d. Bilah navigasi lengket (shell) + fondasi token — JANGAN dihapus
 
 - `src/components/TopNav.tsx` dipasang di `RootLayout` (`src/App.tsx`), di atas semua rute: brand + tautan **Beranda / Bab / Susun / Partikel** + progres ringkas (`%`, `tabular-nums`) + `ThemeToggle`.
 - Menggantikan pola "**← Daftar Bab**" yang dulu diulang manual di tiap halaman (`BabDetailPage`, `PartikelPage`, `SusunCampuranPage`) — **dan** `ThemeToggle` ganda (dulu: nav + toolbar BabDetail + cover Home). Tema sekarang **satu titik** di nav.
 - Gaya `.topnav*` di `paper.css` (token-only, **tanpa `transition`**). Di ≤640px: sembunyikan subjudul brand + bar progres, tautan tetap utuh → **tidak** overflow (diuji 390px, 0 pelanggar).
 - Jangan kembali ke pola "← Daftar Bab" per halaman; cukup tambah tautan di `TopNav` bila ada halaman baru.
+
+**Fondasi token (`tokens.css`) — jangan hardcode hex di `paper.css` (guard menolak):**
+- **Kontras diukur, bukan ditebak.** `--k-ink-faint` dulu **gagal WCAG AA** (2.99 terang / 3.29 gelap) padahal dipakai teks 10–11px → dikoreksi jadi `#7d7568` / `#a99f8d` (**4.55 / 4.88**, lulus). Kalau mengubah warna teks, **ukur ulang** lewat CDP (fungsi kontras di dalam `evaluate_script`), minimal 4.5:1.
+- Token baru: `--k-surface-1/2/3` (3 tingkat elevasi), `--k-border`, `--k-border-soft`, `--k-ring`, `--k-shadow-card`, `--radius-sm/md/lg/pill`, `--shadow-card`. Semuanya dipetakan ke Tailwind `--color-*` di `@theme`.
+- **Komponen bersama** (di `paper.css`, token-only): `.card` / `.card--2` / `.card--3`, `.seg` + `.seg__item` / `.seg__item--aktif` (segmented control), dan **fokus ring global** `:focus-visible { outline: 3px solid var(--k-ring) }`.
+- **Pakai `.seg` (bukan `.flash__seg` + `.chip`) untuk pilihan tunggal** (mode Dasar/Ahli, jumlah soal, fase). `.chip` tetap untuk aksi toggle. Migrasi sudah dilakukan di susun (Bab & Campuran); halaman lain boleh menyusul — **jangan** kembalikan `.flash__seg` di susun.
 
 ---
 
