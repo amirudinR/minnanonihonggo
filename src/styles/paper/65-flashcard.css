@@ -1,8 +1,6 @@
 /* ============ Flashcard ============ */
 .flash { margin-top: 4px; }
 .flash__bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-.flash__seg { display: inline-flex; gap: 6px; flex-wrap: wrap; }
-.flash__seg[role="tablist"] .chip--aktif { border-bottom: 3px solid var(--color-accent); border-radius: 6px 6px 0 0; }
 .flash__acak { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--color-ink-soft); cursor: pointer; }
 .flash__acak input { accent-color: var(--color-accent); width: 15px; height: 15px; }
 .flash__card {

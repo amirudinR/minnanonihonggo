@@ -30,17 +30,12 @@
   .toc::-webkit-scrollbar { display: none; }
   .toc a { flex: 0 0 auto; }
 
-  .flash__seg { width: 100%; }
-  .flash__seg .chip { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
-
   /* Komponen bersama juga melebar penuh di mobile */
   .seg { width: 100%; }
   .seg__item { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
 
   /* Home: search full-width, chips wrap below */
   .home-search { flex-basis: 100%; }
-  .home-filter .flash__seg { flex-basis: 100%; flex-wrap: wrap; width: 100%; }
-  .home-filter .flash__seg .chip { flex: 0 1 auto; }
   .home-filter .seg { flex-basis: 100%; flex-wrap: wrap; width: 100%; }
   .home-filter .seg__item { flex: 0 1 auto; }
 

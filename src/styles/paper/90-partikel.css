@@ -17,7 +17,10 @@
   text-transform: uppercase; color: var(--color-ink-soft);
   margin-right: 2px;
 }
-.partikel-babbar .chip { min-height: 34px; }
+/* Pemilih bab = pilihan tunggal → pakai `.seg` (komponen bersama).
+   Scoped agar tidak melebar penuh di mobile seperti `.seg` generik. */
+.partikel-babbar .seg { width: auto; flex-wrap: wrap; flex: 1 1 auto; }
+.partikel-babbar .seg__item { flex: 0 1 auto; min-height: 34px; }
 
 /* Keterangan partikel per bab (akordeon di dalam kartu). */
 .partikel-akordeon { display: grid; gap: 6px; margin-top: 6px; }
