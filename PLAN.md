@@ -658,3 +658,35 @@ Diukur lewat CDP: h1/hero = serif (`--font-display`), h2/section = Kalam (`--fon
 - CDP **6 rute × {390px mobile terang, 1280px desktop gelap}**: `overflowX=false`, **0 pelanggar**, 0 error boundary; `/partikel` 38 kartu utuh; `.seg__item` ≥32px; `/bab/*` hero + 20 soal susun utuh.
 
 **Kesimpulan: Sprint 1 (modernisasi) SELESAI.** Sisa sepenuhnya opsional: penyeragaman `.partikel-card`/`.koreksi`/`flash__card` → `.card`, dan code-split bundle (peringatan 500kB Vite — sudah ada sebelum sesi ini, bukan regresi).
+
+---
+
+## 26. Sesi "percepat bundel: muat bab per-bab" — 2026-10-17
+
+**Tujuan:** aplikasi lebih cepat (permintaan user), bukan sekadar enak dirawat.
+
+**F1 — ukur dulu.** Bundle = **1.987 kB (gzip 524 kB) dalam SATU chunk**; Vite memperingatkan > 500 kB. `src/data` = **1,83 dari 2,00 MiB sumber (91%)**. Membuka Home pun mengunduh 50 bab + partikel.
+
+**Akar masalah.** `src/data/index.ts` memakai `import.meta.glob(..., { eager: true })` → semua modul bab *terjangkau statis*, jadi Rollup menggabung modul yang juga diimpor dinamis menjadi satu chunk 1,49 MB. Dibuktikan dengan menonaktifkan eager glob: hasil `statis=0 dinamis=50` (chunk raksasa hilang).
+
+**Perbaikan (F2–F5).**
+- `src/data/load.ts` — `loadBab`/`loadSemuaBab` (dinamis → 1 chunk per bab).
+- `src/data/meta.ts` (+`npm run gen:meta`) — ringkasan bab untuk Home & TopNav.
+- `src/data/kamus/terbangun.ts` (+`npm run gen:kamus`) — kamus dibekukan (183 kB), tidak lagi dihitung dari `babs` saat runtime.
+- `src/data/all.ts` — eager glob **khusus tes**; kode aplikasi dilarang impor (dijaga `guard`).
+- `src/App.tsx` — rute `React.lazy` + `Suspense`; `BabDetailPage` memuat 1 bab dinamis; `SusunCampuranPage` pakai `loadSemuaBab()` + status "Memuat…".
+- `vite.config.ts` — `manualChunks` per bab. Tes baru: sinkronisasi `meta` & kamus (total 74 tes).
+
+**Hasil terukur (gzip, `vite preview` + CDP):**
+
+| Halaman | Sebelum | Sesudah |
+|---|---|---|
+| Home `/` | 524 kB | **108 kB** (−79%) |
+| `/bab/34` | 524 kB | **193 kB** (−63%) |
+| `/partikel` | 524 kB | **131 kB** (−75%) |
+| `/latihan/susun` | 524 kB | 588 kB (+12%; memang perlu 50 bab) |
+
+1 chunk → **58 chunk**; chunk bab terbesar 43 kB; waktu build ~sama (5,4 s).
+
+**Verifikasi:** `check:full` (validate 0/0 · 74 tes · build) · `guard` **8/8** · CDP 390 px: `overflowX=false` & tanpa error di `/`, `/bab/34`, `/latihan/susun`, `/partikel`, `/bab/999`. Commit `c6fdf01` (ikut memuat WIP sesi paralel yang tersambung agar pohon konsisten). Pelajaran dicatat di `AGENTS.md` §3 #30.
+
