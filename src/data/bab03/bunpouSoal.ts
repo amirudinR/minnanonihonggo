@@ -21,20 +21,20 @@ export const bunpouSoal: SoalBunpou[] = [
 
   // ── Catatan 1 · ここ／そこ／あそこ／こちら／そちら／あちら ──────────
   { id: 'b3-c1-1', grup: 'catatan', no: 1, soal: 'お手洗いは ___ですか。……あちらです。', arti: 'Kamar kecil di sebelah mana? ……Di sebelah sana. (sopan)', jawaban: 'どちら', pilihan: ['どちら', 'どこ', 'どれ', 'だれ'] },
-  { id: 'b3-c1-2', grup: 'catatan', no: 1, soal: '受付は ___です。', arti: 'Resepsionis di sini. (sopan)', jawaban: 'こちら', pilihan: ['こちら', 'ここ', 'どちら', 'あちら'] },
-  { id: 'b3-c1-3', grup: 'catatan', no: 1, soal: '食堂は ___です。', arti: 'Kantin di situ. (sopan, dekat lawan bicara)', jawaban: 'そちら', pilihan: ['そちら', 'そこ', 'どちら', 'こちら'] },
-  { id: 'b3-c1-4', grup: 'catatan', no: 1, soal: '事務所は あちらです。ロビーも ___です。', arti: 'Kantor di sebelah sana. Lobi juga di sebelah sana.', jawaban: 'あちら', pilihan: ['あちら', 'こちら', 'そちら', 'どちら'] },
+  { id: 'b3-c1-2', grup: 'catatan', no: 1, soal: 'A：受付は どこですか。B：___です。', arti: 'A：Di mana resepsionis? B：Di sini. (sopan)', jawaban: 'こちら', pilihan: ['こちら', 'ここ', 'どちら', 'あちら'] },
+  { id: 'b3-c1-3', grup: 'catatan', no: 1, soal: '自動販売機は ___です。', arti: 'Mesin penjual otomatis di situ. (sopan, dekat lawan bicara)', jawaban: 'そちら', pilihan: ['そちら', 'そこ', 'どちら', 'こちら'] },
+  { id: 'b3-c1-4', grup: 'catatan', no: 1, soal: '事務所は あちらです。ロビー___ あちらです。', arti: 'Kantor di sebelah sana. Lobi juga di sebelah sana.', jawaban: 'も', pilihan: ['も', 'は', 'が', 'の'] },
   { id: 'b3-c1-5', grup: 'catatan', no: 1, soal: 'お手洗いは ___ですか。……あそこです。', arti: 'Kamar kecil di mana? ……Di sana.', jawaban: 'どこ', pilihan: ['どこ', 'どちら', 'どれ', 'だれ'] },
 
   // ── Catatan 2 · Kata Benda は tempat です ───────────────────────
-  { id: 'b3-c2-1', grup: 'catatan', no: 2, soal: '電話は ___です。……2階です。', arti: 'Telepon di mana? Di lantai dua.', jawaban: '2階', pilihan: ['2階', '2時', '2日', '2月'] },
-  { id: 'b3-c2-2', grup: 'catatan', no: 2, soal: '会議室は ___です。……3階です。', arti: 'Ruang rapat di lantai tiga.', jawaban: '3階', pilihan: ['3階', '3時', '3日', '3月'] },
-  { id: 'b3-c2-3', grup: 'catatan', no: 2, soal: '山田さんは ___です。……事務所です。', arti: 'Sdr. Yamada di kantor.', jawaban: '事務所', pilihan: ['事務所', '受付', 'ロビー', '階段'] },
-  { id: 'b3-c2-4', grup: 'catatan', no: 2, soal: '受付は ___です。……1階です。', arti: 'Resepsionis di lantai satu.', jawaban: '1階', pilihan: ['1階', '1時', '1日', '1月'] },
-  { id: 'b3-c2-5', grup: 'catatan', no: 2, soal: 'お手洗いは ___です。……2階です。', arti: 'Kamar kecil di lantai dua.', jawaban: '2階', pilihan: ['2階', '1階', '3階', '4階'] },
+  { id: 'b3-c2-1', grup: 'catatan', no: 2, soal: '食堂は ___です。', arti: 'Kantin di lantai dua.', jawaban: '2階', pilihan: ['2階', '2時', '2日', '2月'] },
+  { id: 'b3-c2-2', grup: 'catatan', no: 2, soal: '靴の 売り場は ___です。', arti: 'Tempat penjualan sepatu di lantai satu.', jawaban: '1階', pilihan: ['1階', '1時', '1日', '1月'] },
+  { id: 'b3-c2-3', grup: 'catatan', no: 2, soal: '教室は ___です。', arti: 'Ruang kelas di lantai tiga.', jawaban: '3階', pilihan: ['3階', '3時', '3日', '3月'] },
+  { id: 'b3-c2-4', grup: 'catatan', no: 2, soal: '部屋は ___です。', arti: 'Kamar di lantai empat.', jawaban: '4階', pilihan: ['4階', '4時', '4日', '4月'] },
+  { id: 'b3-c2-5', grup: 'catatan', no: 2, soal: 'お手洗いは ___です。', arti: 'Kamar kecil di lantai bawah tanah.', jawaban: '地下', pilihan: ['地下', '2階', '3階', '4階'] },
 
   // ── Catatan 3 · どこ／どちら ────────────────────────────────────
-  { id: 'b3-c3-1', grup: 'catatan', no: 3, soal: 'お手洗いは ___ですか。……あそこです。', arti: 'Kamar kecil di mana? ……Di sana.', jawaban: 'どこ', pilihan: ['どこ', 'どちら', 'どれ', 'だれ'] },
+  { id: 'b3-c3-1', grup: 'catatan', no: 3, soal: '会議室は ___ですか。……3階です。', arti: 'Ruang rapat di mana? ……Di lantai tiga.', jawaban: 'どこ', pilihan: ['どこ', 'どちら', 'どれ', 'だれ'] },
   { id: 'b3-c3-2', grup: 'catatan', no: 3, soal: 'エレベーターは ___ですか。……そちらです。', arti: 'Lift di sebelah mana? (sopan) ……Di sebelah situ.', jawaban: 'どちら', pilihan: ['どちら', 'どこ', 'どれ', 'なに'] },
   { id: 'b3-c3-3', grup: 'catatan', no: 3, soal: '受付は ___ですか。……1階です。', arti: 'Resepsionis di mana? ……Di lantai satu.', jawaban: 'どこ', pilihan: ['どこ', 'どちら', 'どれ', 'だれ'] },
   { id: 'b3-c3-4', grup: 'catatan', no: 3, soal: '［お］国は ___ですか。', arti: 'Berasal dari mana? (sopan)', jawaban: 'どちら', pilihan: ['どちら', 'どこ', 'どれ', 'だれ'] },

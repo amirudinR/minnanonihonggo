@@ -16,7 +16,7 @@ export const bunpouSoal: SoalBunpou[] = [
   // ── 文型 2 · ～から ～まで Kata Kerja ──────────────────────────
   { id: 'b4-2-1', grup: 'bunpou', no: 2, soal: 'わたしは 9時___ 5時まで 働きます。', arti: 'Saya bekerja dari pukul sembilan sampai pukul lima.', jawaban: 'から', pilihan: ['から', 'まで', 'に', 'を'] },
   { id: 'b4-2-2', grup: 'bunpou', no: 2, soal: '銀行は 9時から 3時___です。', arti: 'Bank dari pukul sembilan sampai pukul tiga.', jawaban: 'まで', pilihan: ['まで', 'から', 'に', 'を'] },
-  { id: 'b4-2-3', grup: 'bunpou', no: 2, soal: '銀行は 何時___ 何時までですか。……9時から 3時までです。', arti: 'Bank dari pukul berapa sampai pukul berapa?', jawaban: 'から', pilihan: ['から', 'まで', 'に', 'の'] },
+  { id: 'b4-2-3', grup: 'bunpou', no: 2, soal: '銀行は 何時___ 何時までですか。', arti: 'Bank dari pukul berapa sampai pukul berapa?', jawaban: 'から', pilihan: ['から', 'まで', 'に', 'の'] },
   { id: 'b4-2-4', grup: 'bunpou', no: 2, soal: 'わたしは 月曜日から 金曜日___ 働きます。', arti: 'Saya bekerja dari hari Senin sampai hari Jumat.', jawaban: 'まで', pilihan: ['まで', 'から', 'に', 'と'] },
   { id: 'b4-2-5', grup: 'bunpou', no: 2, soal: 'A：何時から 働きますか。B：___から 働きます。', arti: 'Dari pukul berapa bekerja? ……Dari pukul sembilan.', jawaban: '9時', pilihan: ['9時', '9分', '9日', '9月'] },
 

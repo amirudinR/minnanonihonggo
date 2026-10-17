@@ -11,6 +11,38 @@ function kelasOpsi(pilih: string, opsi: string, jawaban: string): string {
 }
 
 /**
+ * Acak urutan opsi secara DETERMINISTIK (seeded dari `id`).
+ *
+ * Di data, `jawaban` sengaja ditaruh paling depan supaya mudah diperiksa; kalau
+ * ditampilkan apa adanya, jawaban selalu opsi A. Pengacakan ini membuat posisi
+ * jawaban bervariasi (≈25% tiap posisi) namun tetap stabil: id sama → urutan sama,
+ * jadi tidak berkedip saat re-render.
+ */
+function acakOpsi(id: string, pilihan: string[]): string[] {
+  // FNV-1a 32-bit sebagai benih, lalu mulberry32 sebagai PRNG.
+  let benih = 2166136261
+  for (let i = 0; i < id.length; i++) {
+    benih ^= id.charCodeAt(i)
+    benih = Math.imul(benih, 16777619)
+  }
+  let a = benih >>> 0
+  const rnd = () => {
+    a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+  const out = [...pilihan]
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1))
+    const tmp = out[i]
+    out[i] = out[j]
+    out[j] = tmp
+  }
+  return out
+}
+
+/**
  * Kuis pilihan ganda per pola tata bahasa (5 soal tiap pola).
  *
  * Pilih pola (chip) → 5 soal. Satu opsi dipilih = langsung dikoreksi (auto-check).
@@ -77,7 +109,7 @@ export function KuisBunpou({
             </p>
             <p className="kuis-bunpou__arti">{s.arti}</p>
             <div className="kuis__opsi" role="group" aria-label={`Pilihan soal ${idx + 1}`}>
-              {s.pilihan.map((p) => (
+              {acakOpsi(s.id, s.pilihan).map((p) => (
                 <button
                   key={p}
                   type="button"

@@ -34,7 +34,7 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b33-4-2', grup: 'bunpou', no: 4, soal: '田中さんは あした ___と 言っていました。', arti: 'Katanya sdr. Tanaka besok libur.', jawaban: '休む', pilihan: ['休む', '休みます', '休んで', '休んだ'] },
   { id: 'b33-4-3', grup: 'bunpou', no: 4, soal: 'グプタさんは 30分ぐらいで ___と 言っていました。', arti: 'Katanya sdr. Gupta akan kembali dalam tiga puluh menit.', jawaban: '戻る', pilihan: ['戻る', '戻ります', '戻って', '戻った'] },
   { id: 'b33-4-4', grup: 'bunpou', no: 4, soal: 'ミラーさんは 来週 大阪へ 出張すると ___。', arti: 'Katanya sdr. Miller minggu depan dinas ke Osaka.', jawaban: '言っていました', pilihan: ['言っていました', '言います', '言いました', '言ってください'] },
-  { id: 'b33-4-5', grup: 'bunpou', no: 4, soal: 'A：だれが 来ると 言っていましたか。B：田中さんが ___と 言っていました。', arti: 'A：Katanya siapa yang datang? B：Katanya sdr. Tanaka yang datang.', jawaban: '来る', pilihan: ['来る', '来ます', '来て', '来た'] },
+  { id: 'b33-4-5', grup: 'bunpou', no: 4, soal: 'A：だれが 来ると 言っていましたか。B：田中さんが 来ると 言って ___。', arti: 'A：Katanya siapa yang datang? B：Katanya sdr. Tanaka yang datang.', jawaban: 'いました', pilihan: ['いました', 'います', 'いません', 'いましたか'] },
 
   // ── Catatan 1 · 〜と 書いて あります／〜と 読みます ──────────────────
   { id: 'b33-c1-1', grup: 'catatan', no: 1, soal: 'あの 漢字は ___ 読みますか。', arti: 'Huruf kanji itu cara membacanya bagaimana?', jawaban: '何と', pilihan: ['何と', '何を', '何が', '何に'] },
@@ -47,6 +47,6 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b33-c2-1', grup: 'catatan', no: 2, soal: 'ワンさんに「あとで 電話を ください」と ___ いただけませんか。', arti: 'Tolong sampaikan kepada sdr. Wang bahwa "Minta telepon nanti".', jawaban: '伝えて', pilihan: ['伝えて', '伝え', '伝える', '伝えた'] },
   { id: 'b33-c2-2', grup: 'catatan', no: 2, soal: '渡辺さんに あしたの パーティーは 6時からだ___ 伝えて いただけませんか。', arti: 'Maaf, tolong sampaikan kepada sdri. Watanabe bahwa pesta besok dari pukul enam.', jawaban: 'と', pilihan: ['と', 'を', 'が', 'に'] },
   { id: 'b33-c2-3', grup: 'catatan', no: 2, soal: 'すみませんが、田中さんに 会議は 3時からだと ___ いただけませんか。', arti: 'Maaf, tolong sampaikan kepada sdr. Tanaka bahwa rapat dari pukul tiga.', jawaban: '伝えて', pilihan: ['伝えて', '伝え', '伝える', '伝えた'] },
-  { id: 'b33-c2-4', grup: 'catatan', no: 2, soal: 'A：ワンさんに 伝えましたか。B：いいえ。___ 伝えて いただけませんか。', arti: 'A：Sudah menyampaikan kepada sdr. Wang? B：Belum. Boleh tolong sampaikan kepada sdr. Wang?', jawaban: 'ワンさんに', pilihan: ['ワンさんに', 'ワンさんを', 'ワンさんが', 'ワンさんと'] },
+  { id: 'b33-c2-4', grup: 'catatan', no: 2, soal: 'A：佐藤さんに 伝えましたか。B：いいえ。___ 伝えて いただけませんか。', arti: 'A：Sudah menyampaikan kepada sdr. Sato? B：Belum. Boleh tolong sampaikan kepada sdr. Wang?', jawaban: 'ワンさんに', pilihan: ['ワンさんに', 'ワンさんを', 'ワンさんが', 'ワンさんと'] },
   { id: 'b33-c2-5', grup: 'catatan', no: 2, soal: 'ミラーさんに あしたは 休みだと 伝えて ___か。', arti: 'Boleh tolong sampaikan kepada sdr. Miller bahwa besok libur?', jawaban: 'いただけません', pilihan: ['いただけません', 'いただけます', 'いただきました', 'いただきます'] },
 ]

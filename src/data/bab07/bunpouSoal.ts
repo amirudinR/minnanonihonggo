@@ -31,10 +31,10 @@ export const bunpouSoal: SoalBunpou[] = [
 
   // ── 文型 4 · もう Kata Kerja ました ────────────────────────────────
   { id: 'b7-4-1', grup: 'bunpou', no: 4, soal: 'わたしは もう メールを ___。', arti: 'Saya telah mengirim e-mail.', jawaban: '送りました', pilihan: ['送りました', '送ります', '送りません', '送りましょう'] },
-  { id: 'b7-4-2', grup: 'bunpou', no: 4, soal: 'もう 昼ごはんを ___か。……はい、もう 食べました。', arti: 'Sudah makan siang? ……Ya, sudah makan.', jawaban: '食べました', pilihan: ['食べました', '食べます', '食べません', '食べましょう'] },
+  { id: 'b7-4-2', grup: 'bunpou', no: 4, soal: 'もう 昼ごはんを ___か。', arti: 'Sudah makan siang? ……Ya, sudah makan.', jawaban: '食べました', pilihan: ['食べました', '食べます', '食べません', '食べましょう'] },
   { id: 'b7-4-3', grup: 'bunpou', no: 4, soal: 'もう 新幹線の 切符を 買いましたか。……はい、もう ___。', arti: 'Karcis Shinkansen sudah dibeli? ……Ya, sudah dibeli.', jawaban: '買いました', pilihan: ['買いました', '買います', '買いません', '買いましょう'] },
   { id: 'b7-4-4', grup: 'bunpou', no: 4, soal: 'もう 荷物を 送りましたか。……いいえ、___。', arti: 'Apakah barang sudah dikirim? ……Belum.', jawaban: 'まだです', pilihan: ['まだです', '送りませんでした', 'はい', 'もうです'] },
-  { id: 'b7-4-5', grup: 'bunpou', no: 4, soal: 'もう クリスマスカードを ___か。……はい、もう 書きました。', arti: 'Sudah menulis kartu Natal? ……Ya, sudah menulis.', jawaban: '書きました', pilihan: ['書きました', '書きます', '書きません', '書きましょう'] },
+  { id: 'b7-4-5', grup: 'bunpou', no: 4, soal: 'もう クリスマスカードを ___か。', arti: 'Sudah menulis kartu Natal? ……Ya, sudah menulis.', jawaban: '書きました', pilihan: ['書きました', '書きます', '書きません', '書きましょう'] },
 
   // ── Catatan 1 · Kata Benda(alat/sarana) で Kata Kerja ──────────────
   { id: 'b7-c1-1', grup: 'catatan', no: 1, soal: 'スプーン___ 食べます。', arti: 'Makan dengan sendok.', jawaban: 'で', pilihan: ['で', 'に', 'を', 'へ'] },
@@ -65,7 +65,7 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b7-c4-5', grup: 'catatan', no: 4, soal: 'A：だれ___ CDを 借りましたか。B：カリナさんに 借りました。', arti: 'A：Dari siapa Anda meminjam CD? B：Dari Karina.', jawaban: 'に', pilihan: ['に', 'を', 'で', 'と'] },
 
   // ── Catatan 5 · もう Kata Kerja ました ─────────────────────────────
-  { id: 'b7-c5-1', grup: 'catatan', no: 5, soal: 'もう 荷物を ___か。……はい、もう 送りました。', arti: 'Apakah barang sudah dikirim? ……Ya, sudah dikirim.', jawaban: '送りました', pilihan: ['送りました', '送ります', '送りません', '送りましょう'] },
+  { id: 'b7-c5-1', grup: 'catatan', no: 5, soal: 'もう 荷物を ___か。', arti: 'Apakah barang sudah dikirim? ……Ya, sudah dikirim.', jawaban: '送りました', pilihan: ['送りました', '送ります', '送りません', '送りましょう'] },
   { id: 'b7-c5-2', grup: 'catatan', no: 5, soal: 'もう 昼ごはんを 食べましたか。……いいえ、___。', arti: 'Sudah makan siang? ……Belum.', jawaban: 'まだです', pilihan: ['まだです', '食べませんでした', 'はい', 'もうです'] },
   { id: 'b7-c5-3', grup: 'catatan', no: 5, soal: 'もう 切符を 買いましたか。……はい、___。', arti: 'Sudah membeli karcis? ……Ya, sudah membeli.', jawaban: 'もう 買いました', pilihan: ['もう 買いました', 'まだです', '買いません', '買いましょう'] },
   { id: 'b7-c5-4', grup: 'catatan', no: 5, soal: 'A：もう メールを 送りましたか。B：いいえ、まだです。これから ___。', arti: 'A：Sudah mengirim e-mail? B：Belum. Mulai sekarang saya akan mengirim.', jawaban: '送ります', pilihan: ['送ります', '送りました', '送りません', '送りましょう'] },

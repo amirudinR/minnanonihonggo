@@ -14,7 +14,7 @@ export const bunpouSoal: SoalBunpou[] = [
 
   // ── 文型 2 · どのくらい Kata Kerjaますか ───────────────────────────
   { id: 'b11-2-1', grup: 'bunpou', no: 2, soal: '___ スペイン語を 勉強しましたか。……３か月 勉強しました。', arti: 'Berapa lama belajar bahasa Spanyol? ……Belajar 3 bulan.', jawaban: 'どのくらい', pilihan: ['どのくらい', 'いつ', '何時', 'いくら'] },
-  { id: 'b11-2-2', grup: 'bunpou', no: 2, soal: '大阪から 東京まで どのくらい ___か。……新幹線で ２時間半 かかります。', arti: 'Dari Osaka sampai Tokyo berapa lama? ……Dengan Shinkansen 2 jam setengah.', jawaban: 'かかります', pilihan: ['かかります', 'あります', 'います', 'します'] },
+  { id: 'b11-2-2', grup: 'bunpou', no: 2, soal: '大阪から 東京まで どのくらい ___か。', arti: 'Dari Osaka sampai Tokyo berapa lama? ……Dengan Shinkansen 2 jam setengah.', jawaban: 'かかります', pilihan: ['かかります', 'あります', 'います', 'します'] },
   { id: 'b11-2-3', grup: 'bunpou', no: 2, soal: '大阪から 東京まで 新幹線で ___ かかります。', arti: 'Dari Osaka sampai Tokyo dengan Shinkansen memerlukan waktu 2 jam setengah.', jawaban: '２時間半', pilihan: ['２時間半', '２時間', '２か月', '２日'] },
   { id: 'b11-2-4', grup: 'bunpou', no: 2, soal: '___ 日本語を 勉強しましたか。……２年 勉強しました。', arti: 'Berapa lama belajar bahasa Jepang? ……Belajar 2 tahun.', jawaban: 'どのくらい', pilihan: ['どのくらい', 'いくつ', '何人', 'どれ'] },
   { id: 'b11-2-5', grup: 'bunpou', no: 2, soal: '田中さんは どのくらい スペイン語を 勉強しましたか。……___ 勉強しました。', arti: 'Sdr. Tanaka sudah berapa lama belajar bahasa Spanyol? ……Belajar 3 bulan.', jawaban: '３か月', pilihan: ['３か月', '３人', '３つ', '３枚'] },

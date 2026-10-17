@@ -42,6 +42,15 @@ type Masalah = { bab: number; pesan: string }
 const masalah: Masalah[] = []
 const rusak = (s: string) => s.includes('\ufffd') || /\?\?/.test(s)
 
+/**
+ * Kandidat "giveaway" = jawaban tercetak di luar rumpang sehingga bisa dijiplak.
+ * Sisanya yang WAJAR (drill ubah-kalimat yang memang menampilkan kalimat sumber,
+ * Q&A yang bentuk katanya beda, & 1 false positive `お願いします`) dijadikan baseline:
+ * kalau jumlahnya melebihi baseline → ERROR (ada soal baru yang bocor jawabannya).
+ */
+const BASELINE_GIVEAWAY = 8
+const giveaway: string[] = []
+
 let sudah = 0
 let totalSoal = 0
 let totalPola = 0
@@ -85,6 +94,24 @@ for (const dir of dirs) {
 
     for (const teks of [s.id, s.soal, s.arti, s.jawaban, ...s.pilihan])
       if (rusak(teks)) catat(`karakter rusak pada "${teks}"`)
+
+    // 7: jawaban TIDAK boleh tercetak di luar rumpang (giveaway). Lihat AGENTS §3 #32.
+    if (s.jawaban !== '（なし）' && s.jawaban.length >= 2) {
+      const [kiri, kanan] = s.soal.split('___')
+      for (const bagian of [kanan, kiri]) {
+        if (!bagian) continue
+        let i = bagian.indexOf(s.jawaban)
+        while (i >= 0) {
+          // `です` di dalam `ですか` = bentuk pertanyaan, bukan giveaway
+          if (bagian[i + s.jawaban.length] !== 'か') {
+            giveaway.push(`${s.id} | ${s.soal} → ${s.jawaban}`)
+            break
+          }
+          i = bagian.indexOf(s.jawaban, i + 1)
+        }
+        if (giveaway[giveaway.length - 1]?.startsWith(`${s.id} `)) break
+      }
+    }
   }
 
   // 3: tepat 5 soal per pola
@@ -101,10 +128,14 @@ for (const dir of dirs) {
   totalPola += polaBunpou.size + polaCatatan.size
 }
 
-// ── laporan ───────────────────────────────────────────────────────────
+// 7: giveaway melebihi baseline → masuk daftar masalah
 console.log('validate:bunpou — invariant soal kuis tata bahasa')
 console.log(`  bab ber-soal : ${sudah}/${dirs.length}  (sisanya belum dibuat → dilewati)`)
 console.log(`  pola dicek   : ${totalPola} · soal : ${totalSoal}`)
+console.log(`  kandidat giveaway : ${giveaway.length} (baseline ${BASELINE_GIVEAWAY})`)
+if (giveaway.length > BASELINE_GIVEAWAY) {
+  for (const g of giveaway) masalah.push({ bab: 0, pesan: `giveaway: ${g}` })
+}
 
 if (masalah.length === 0) {
   console.log('  OK — 0 masalah\n')

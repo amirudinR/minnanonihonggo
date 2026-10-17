@@ -5,7 +5,8 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi **„rapikan semua: BUG-4, pengecoh, bilah navigasi"** (§3 #28–#29, §3d) — `matchLevel` diperketat (jawaban salah tak lagi dianggap benar), mode Ahli dapat **2 partikel pengecoh** + **umpan balik per-chip** (hijau/merah + posisi salah), dan app kini punya **bilah navigasi lengket** menggantikan tombol "← Daftar Bab" per halaman. Semua dokumen (`AGENTS.md`, `PLAN.md`, `docs/AI-MAP.md`) disinkronkan.
+> Terakhir diperbarui: sesi **„kuis tata bahasa — 5 soal per pola"** (§2, §3c-2) — **selesai 50 bab / 337 pola / 1.685 soal**; tab **Kuis** di seksi Bunpou & Catatan Tata Bahasa, auto-check, dan opsi **diacak deterministik** (dulu jawaban selalu opsi A). Dijaga `npm run validate:bunpou` + `src/data/bunpouSoal.test.ts`.
+> Sebelumnya: sesi **„rapikan semua: BUG-4, pengecoh, bilah navigasi"** (§3 #28–#29, §3d) — `matchLevel` diperketat (jawaban salah tak lagi dianggap benar), mode Ahli dapat **2 partikel pengecoh** + **umpan balik per-chip** (hijau/merah + posisi salah), dan app kini punya **bilah navigasi lengket** menggantikan tombol "← Daftar Bab" per halaman. Semua dokumen (`AGENTS.md`, `PLAN.md`, `docs/AI-MAP.md`) disinkronkan.
 > Sebelumnya: sesi **„latihan susun mode Ahli + auto-check + panel bacaan + sesi 20 soal"** (§3 #24–#27, §3c) — halaman `/latihan/susun` tidak lagi merender 1.000 soal, chip bisa digeser tanpa hilang, mode Ahli menyusun partikel & akhiran verba, dan tiap kanji punya cara baca (dijaga `validate:susun`).
 > Sebelumnya: sesi **„keterangan partikel dari buku MNN 1 & 2 + refactor modular"** (§3 #20–#23, §3b) — data `partikel` dipecah jadi `src/data/partikel/`, invariant dijaga `validate:partikel`, +4 bab partikel dikoreksi dari buku.
 
@@ -243,6 +244,18 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **Sumber choukai:** `D:\A_bahasa_jepang\MINNA NO NIHONGO\Minna No Nihongo 2\Minna 2 choukai\` (CD1–3). Bab diambil dari nama file (`第NN課`) — **jangan menebak**; file tanpa bab (`01 CD A - 1.mp3`, 256 KB) dilewati. File `._*` = sampah macOS, dibuang. MNN1 **tidak punya** choukai.
 - **Pelajaran umum:** identitas file audio = hash isi, bukan durasi/ukuran. Dan saat menyalin data orang lain, salin **hanya** yang bisa dipetakan pasti.
 
+### #32 — Jawaban soal kuis TERCETAK di kalimat soal (giveaway) 🔴
+- **Gejala:** soal kuis hasil generasi menyalin respons buku, mis. `電話は ___です。……2階です。` → jawabannya (`2階`) tercetak di kalimat yang sama; atau jawaban muncul di klausa lain (`A：この 道で いいでしょうか。B：この 道で ___ はずです。`). Bisa dijawab tanpa mengerti polanya.
+- **Sebab:** banyak `contoh`/drill buku berbentuk "kalimat sumber → kalimat latihan" atau Q&A yang **mengulang** kata; disalin apa adanya.
+- **Fix:** **jawaban tidak boleh tercetak di luar rumpang.** (a) Kalau respons buku memuat jawaban → **pangkas** bagian `……`-nya (arti Indonesia tetap jadi petunjuk). (b) Kalau jawaban ada di klausa lain → **pindahkan rumpangnya** ke kata lain atau ganti kalimat (kosakata bab yang sama). (c) **Wajib** jaga kalimat tetap unik per pola — pangkasan pernah membuat Bab 3 catatan 2 kembar persis dengan 文型 2 (dibetulkan dengan mengganti subjek/kata). Hal serupa terjadi di Bab 8 catatan 2 & 6 vs 文型 1–4 (pola catatan memang mengulang 文型).
+- **Pengecualian yang WAJAR (baseline 8):** drill ubah-kalimat yang memang menampilkan kalimat sumber (Bab 17 c1, Bab 20 c1), Q&A yang bentuk katanya beda (`ですか` vs `です` **bukan** giveaway), 1 false positive (`ます` di dalam `お願いします`).
+- **Dijaga otomatis:** `validate:bunpou` menghitung "kandidat giveaway"; **melebihi baseline 8 → GAGAL**. Skrip analisis (duplikat kalimat, rumpang ambigu) boleh dibuat sementara di `tmp/` — bukan gerbang, hanya alat bantu.
+
+### #33 — Opsi jawaban selalu di posisi A 🔴
+- **Gejala:** seluruh 1.685 soal menaruh `jawaban` di `pilihan[0]`, jadi di UI **jawabannya selalu opsi pertama** → kuis tak bermakna.
+- **Sebab:** data sengaja ditulis "jawaban dulu" supaya mudah diperiksa; UI merender apa adanya.
+- **Fix:** `KuisBunpou` mengacak opsi **saat tampil** via `acakOpsi(id, pilihan)` — FNV-1a 32-bit sebagai benih + **mulberry32**, **deterministik** (id sama → urutan sama; tidak berkedip). Sebaran hasil ≈25/25/24/26% per posisi. **Jangan** hapus pengacakan ini; jangan pula "memperbaiki" data dengan mengacak manual (data tetap jawaban-dulu = mudah di-review). Lihat §3c-2.
+
 ---
 
 ## 3d. Bilah navigasi lengket (shell) + fondasi token — JANGAN dihapus
@@ -325,8 +338,9 @@ Model: `SoalBunpou { id, grup: 'bunpou'|'catatan', no, soal, arti, jawaban, pili
 - **Data**: `src/data/babNN/bunpouSoal.ts` (di-export `index.ts` → registry otomatis). Soal diturunkan dari `contoh`/`artiContoh`/`reibun` bab itu; **pola tidak diubah**. Jawaban `（なし）` = tanpa partikel (mis. 「いつ」 tak pakai に).
 - **UI**: `src/features/bab/KuisBunpou.tsx` + tab **Pola / Kuis — 5 soal/pola** di `PolaSection.tsx` (dipakai dua kali: seksi **Bunpou** `grup='bunpou'`, seksi **Catatan Tata Bahasa** `grup='catatan'`). Opsi memakai kelas `.opsi`/`.kuis__*` yang sudah ada (jangan bikin sistem gaya baru).
 - **Auto-check**: satu opsi diklik → langsung dikoreksi (benar = hijau, salah = merah, kunci = garis putus-putus) + skor `Benar x/5` + tombol **Ulangi**. Tanpa tombol "Cek".
+- **LENGKAP: 50 bab · 337 pola · 1.685 soal** (MNN I bab 1–25 = 880 · MNN II bab 26–50 = 805). Dijaga `src/data/bunpouSoal.test.ts` (snapshot angka) + `npm run validate:bunpou`.
+- **Opsi diacak saat tampil**: `jawaban` di DATA sengaja di posisi pertama (mudah diperiksa), jadi `KuisBunpou` mengacak dengan `acakOpsi(id, pilihan)` — FNV-1a + mulberry32, **deterministik** (id sama → urutan sama, tidak berkedip), sebaran jawaban ≈25% tiap posisi. **Jangan** hapus pengacakan ini (tanpa ini jawaban selalu opsi A).
 - **Progres**: `useNotes.answers`, key `bunpou-{bab}-{grup}-{id}` — **key baru**, key lama tidak diubah. Ditulis hanya dari event handler (bukan `useEffect`) agar tak ada loop render (§3 #1).
-- **Bertahap**: bab yang belum punya `bunpouSoal` tidak menampilkan tab (validator melewatinya & melaporkan jumlah). Status: **bab 1–5 = 180 soal** (36 pola).
 - **Perintah**: `npm run validate:bunpou` (masuk `check`, `check:full`, `guard`) + `src/data/bunpouSoal.test.ts`.
 
 ---
@@ -435,7 +449,7 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | `npm run verify` | **gerbang akhir sekali jalan**: check:full + screenshot desktop/mobile + cek DOM (`Unexpected Application Error` / `Maximum update depth`). Butuh dev server menyala. |
 | `npm run guard` | validate + **validate:partikel** + **validate:bunpou** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
 | `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
-| `npm run validate:bunpou` | jaga INVARIAN soal kuis tata bahasa (`bunpouSoal`): **tepat 5 soal per pola**, `id` unik, `jawaban ∈ pilihan`, 4 opsi tanpa duplikat, rumpang `___`, `grup`/`no` merujuk pola yang ada. Bab yang belum ber-soal dilewati (dilaporkan). Lihat §3c. |
+| `npm run validate:bunpou` | jaga INVARIAN soal kuis tata bahasa (`bunpouSoal`): **tepat 5 soal per pola**, `id` unik, `jawaban ∈ pilihan`, 4 opsi tanpa duplikat, rumpang `___`, `grup`/`no` merujuk pola yang ada, **kandidat giveaway ≤ baseline 8** (jawaban tercetak di soal → §3 #32). Argumen opsional = nomor bab saja (mis. `tsx tools/validate_bunpou.ts 6 7`). Status: **50 bab · 337 pola · 1.685 soal**. Lihat §3c. |
 | `npm run validate:susun` | jaga INVARIAN data susun: gabungan token mode ahli == `jawaban`, bank konsisten, **semua kanji punya bacaan**, struktur item. Lihat §3c. |
 | `npm run test` | tes unit Vitest: `core/*` (normalize, terjemahan, susun, segmentPartikel, baca, manifest) + snapshot data (50 bab, total kosakata/susun) + invariant partikel. Masuk `check:full`. |
 | `npm run gen:meta` | regenerate `src/data/meta.ts` (ringkasan bab untuk Home/TopNav). Tes `registry.test.ts` gagal bila lupa. |

@@ -26,7 +26,7 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b28-3-1', grup: 'bunpou', no: 3, soal: 'ここは 値段も ___、魚も 新しいし、よく 食べに 来ます。', arti: 'Di sini harganya murah, ikan juga segar, maka sering datang untuk makan.', jawaban: '安いし', pilihan: ['安いし', '安い', '安くて', '安いです'] },
   { id: 'b28-3-2', grup: 'bunpou', no: 3, soal: '地下鉄は ___、安いし、地下鉄で 行きましょう。', arti: 'Kereta bawah tanah cepat dan murah, ayo kita pergi dengan kereta bawah tanah.', jawaban: '速いし', pilihan: ['速いし', '速くて', '速い', '速いです'] },
   { id: 'b28-3-3', grup: 'bunpou', no: 3, soal: 'A：どうして 日本の アニメが 好きなんですか。B：話も おもしろいし、音楽も ___から。', arti: 'A：Kenapa suka animasi Jepang? B：Ceritanya menarik, dan musiknya juga bagus.', jawaban: 'すてきです', pilihan: ['すてきです', 'すてきし', 'すてきだし', 'すてきな'] },
-  { id: 'b28-3-4', grup: 'bunpou', no: 3, soal: '田中さんは まじめ___、中国語も 上手だし、それに 経験も あります。', arti: 'Sdr. Tanaka rajin, pandai bahasa Tionghoa, lagi pula berpengalaman.', jawaban: 'だし', pilihan: ['だし', 'し', 'な', 'の'] },
+  { id: 'b28-3-4', grup: 'bunpou', no: 3, soal: '田中さんは まじめ___、中国語も 上手です。', arti: 'Sdr. Tanaka rajin, bahasa Tionghoa juga pandai.', jawaban: 'だし', pilihan: ['だし', 'し', 'な', 'の'] },
   { id: 'b28-3-5', grup: 'bunpou', no: 3, soal: '鈴木さんは ピアノも ___、歌も 歌えるし、ダンスも できます。', arti: 'Sdr. Suzuki bisa bermain piano, bisa bernyanyi, juga bisa berdansa.', jawaban: '弾けるし', pilihan: ['弾けるし', '弾ける', '弾いて', '弾きます'] },
 
   // ── Catatan 1 · Kata Kerja₁（Bentuk ます）ながら Kata Kerja₂ ──────

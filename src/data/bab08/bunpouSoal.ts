@@ -44,10 +44,10 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b8-c1-5', grup: 'catatan', no: 1, soal: '「ハンサム」は ___ 形容詞です。', arti: 'Kata "hansamu" adalah kata sifat な.', jawaban: 'な', pilihan: ['な', 'い', 'の', 'です'] },
 
   // ── Catatan 2 · KB は KSな［な］です / KB は KSい（～い）です ────────
-  { id: 'b8-c2-1', grup: 'catatan', no: 2, soal: 'ワットさんは 親切___。', arti: 'Bapak Watt baik hati.', jawaban: 'です', pilihan: ['です', 'な', 'くです', 'いです'] },
-  { id: 'b8-c2-2', grup: 'catatan', no: 2, soal: '富士山は 高い___。', arti: 'Gunung Fuji tinggi.', jawaban: 'です', pilihan: ['です', 'な', 'くです', 'いです'] },
-  { id: 'b8-c2-3', grup: 'catatan', no: 2, soal: 'この 本は おもしろい___。', arti: 'Buku ini menarik.', jawaban: 'です', pilihan: ['です', 'な', 'くです', 'でした'] },
-  { id: 'b8-c2-4', grup: 'catatan', no: 2, soal: 'あそこは 静か___。', arti: 'Di sana sunyi.', jawaban: 'です', pilihan: ['です', 'な', 'いくです', 'でした'] },
+  { id: 'b8-c2-1', grup: 'catatan', no: 2, soal: 'ここは とても 静か___。', arti: 'Di sini sangat sunyi.', jawaban: 'です', pilihan: ['です', 'な', 'くです', 'いです'] },
+  { id: 'b8-c2-2', grup: 'catatan', no: 2, soal: 'この 町は にぎやか___。', arti: 'Kota ini ramai.', jawaban: 'です', pilihan: ['です', 'な', 'くです', 'いです'] },
+  { id: 'b8-c2-3', grup: 'catatan', no: 2, soal: '日本語は おもしろい___。', arti: 'Bahasa Jepang menarik.', jawaban: 'です', pilihan: ['です', 'な', 'くです', 'でした'] },
+  { id: 'b8-c2-4', grup: 'catatan', no: 2, soal: 'あの 店は 有名___。', arti: 'Toko itu terkenal.', jawaban: 'です', pilihan: ['です', 'な', 'いくです', 'でした'] },
   { id: 'b8-c2-5', grup: 'catatan', no: 2, soal: 'これは とても すてき___ かばんですね。', arti: 'Ini tas yang sangat bagus ya.', jawaban: 'な', pilihan: ['な', 'い', 'の', 'です'] },
 
   // ── Catatan 3 · Negatif Kata Sifatな ───────────────────────────────
@@ -72,10 +72,10 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b8-c5-5', grup: 'catatan', no: 5, soal: 'A：富士山は 高いですか。B：はい、___。', arti: 'A：Apakah Gunung Fuji tinggi? B：Ya, tinggi.', jawaban: '高いです', pilihan: ['高いです', 'そうです', '高くないです', '高いないです'] },
 
   // ── Catatan 6 · KSな な KB / KSい（～い） KB ───────────────────────
-  { id: 'b8-c6-1', grup: 'catatan', no: 6, soal: 'ワットさんは 親切___ 先生です。', arti: 'Bapak Watt adalah guru yang baik hati.', jawaban: 'な', pilihan: ['な', 'い', 'の', 'です'] },
-  { id: 'b8-c6-2', grup: 'catatan', no: 6, soal: '富士山は ___ 山です。', arti: 'Gunung Fuji adalah gunung yang tinggi.', jawaban: '高い', pilihan: ['高い', '高な', '高の', '高く'] },
+  { id: 'b8-c6-1', grup: 'catatan', no: 6, soal: 'ミラーさんは 親切___ 人です。', arti: 'Sdr. Miller orang yang baik hati.', jawaban: 'な', pilihan: ['な', 'い', 'の', 'です'] },
+  { id: 'b8-c6-2', grup: 'catatan', no: 6, soal: '富士山は 有名___ 山です。', arti: 'Gunung Fuji gunung yang terkenal.', jawaban: 'な', pilihan: ['な', 'い', 'の', 'です'] },
   { id: 'b8-c6-3', grup: 'catatan', no: 6, soal: 'きれい___ 花ですね。', arti: 'Bunga yang indah ya.', jawaban: 'な', pilihan: ['な', 'い', 'の', 'です'] },
-  { id: 'b8-c6-4', grup: 'catatan', no: 6, soal: 'あれは ___ うちです。', arti: 'Itu rumah yang besar.', jawaban: '大きい', pilihan: ['大きい', '大きな', '大きの', '大きく'] },
+  { id: 'b8-c6-4', grup: 'catatan', no: 6, soal: 'ここは ___ 公園です。', arti: 'Ini taman yang besar.', jawaban: '大きい', pilihan: ['大きい', '大きな', '大きの', '大きく'] },
   { id: 'b8-c6-5', grup: 'catatan', no: 6, soal: 'これは ___ 映画です。', arti: 'Ini film yang menarik.', jawaban: 'おもしろい', pilihan: ['おもしろい', 'おもしろな', 'おもしろの', 'おもしろく'] },
 
   // ── Catatan 7 · ～が、～ ───────────────────────────────────────────

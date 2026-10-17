@@ -758,3 +758,42 @@ auto-check benar/salah (hijau/merah + kunci garis putus-putus), ganti pola memua
 bab 6 (belum ber-soal) tanpa tab, `overflowX=false` 0 pelanggar, 0 error.
 
 **Menunggu penilaian user sebelum lanjut batch berikutnya (bab 6-10).**
+## 29. Sesi "Kuis Tata Bahasa — selesai 50 bab / 337 pola / 1.685 soal" — 2026-10-17
+
+**Permintaan user:** "lanjut sampai selesai" (lanjutkan batch berikutnya sampai semua bab selesai).
+
+**Cara kerja (batch 5 bab, 9 batch):** tiap batch dikerjakan agent paralel (3 agent sekaligus)
+dengan brief tertulis (`tmp/brief-bunpou.md`) + contoh acuan `src/data/bab01/bunpouSoal.ts`.
+Tiap agent: baca `bunpou.ts` bab-nya → tulis `bunpouSoal.ts` (tepat 5 soal/pola) → daftarkan di
+`index.ts` → jalankan `npx tsx tools/validate_bunpou.ts <bab...>` + `npm run typecheck`.
+**Validator diberi argumen nomor bab** supaya beberapa agent bisa bekerja paralel tanpa saling ganggu.
+
+**Hasil per batch:**
+- bab 6-20 (141 pola → 705 soal), bab 21-35 (101 pola → 505), bab 36-50 (95 pola → 475).
+- Total akhir: **50 bab · 337 pola · 1.685 soal** (MNN I bab 1-25 = 880 · MNN II bab 26-50 = 805).
+- `src/data/bunpouSoal.test.ts` diperbarui: snapshot 337 pola/1.685 soal, 50 bab ber-soal,
+  MNN I 880 / MNN II 805 (80 tes hijau).
+
+**Dua temuan mutu saat pemeriksaan (keduanya diperbaiki + dijaga):**
+1. **Jawaban tercetak di soal (giveaway)** — 36 soal (mis. `電話は ___です。……2階です.`), 27 di
+   antaranya dipangkas (buang respons `……`) & 9 ditulis ulang (rumpang dipindah). Pangkasan
+   membuat Bab 3 catatan 2 kembar persis dengan 文型 2 -> 8 soal Bab 3 ditulis ulang (kalimat unik
+   per pola); Bab 8 catatan 2 & 6 kembar dengan 文型 1-4 -> 7 soal dibedakan. Skor akhir: sisa
+   **7 kandidat giveaway** (drill ubah-kalimat + 1 false positive `ます` di `お願いします`).
+   `validate:bunpou` sekarang **menghitung giveaway & GAGAL bila > baseline 8** (AGENTS §3 #32).
+2. **Opsi jawaban selalu posisi A** — data ditulis "jawaban dulu" (1.685/1.685 di `pilihan[0]`),
+   jadi kuis bisa dijawab selalu A. Fix: `acakOpsi(id, pilihan)` di `KuisBunpou` — FNV-1a +
+   mulberry32, deterministik; sebaran terukur **25,3 / 24,5 / 24,0 / 26,2 %** (AGENTS §3 #33).
+   Data TIDAK diacak manual (tetap jawaban-dulu = mudah di-review).
+
+**Verifikasi:** `validate:bunpou` 337 pola/1.685 soal, giveaway 7 (baseline 8), 0 masalah ·
+`typecheck` bersih · `test` **80 hijau** (11 file) · `guard` 8/8 PASS · `check:full` build OK ·
+CDP 1280px & 390px gelap: tab Kuis di Bunpou & Catatan, chip = jumlah pola (bab 37/49 = 7 chip),
+5 soal × 4 opsi, auto-check hijau/merah + kunci putus-putus, posisi jawaban bervariasi
+(bab 6 = 1/1/2/1/0 · bab 49 = 0/3/3/3/2), `overflowX=false` 0 pelanggar, 0 error boundary.
+
+**Docs:** AGENTS header + §3 #32/#33 + §6b (validate:bunpou: + giveaway & argumen bab) +
+§3c-2 (LENGKAP 50 bab + catatan pengacakan opsi) + §2/§10; PLAN sesi ini.
+
+**Tidak ada perubahan data bab**, tidak ada key localStorage baru (pakai `bunpou-*` yang sudah ada),
+`public/audio` tetap tidak di-commit.

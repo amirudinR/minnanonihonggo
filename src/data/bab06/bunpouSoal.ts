@@ -74,7 +74,7 @@ export const bunpouSoal: SoalBunpou[] = [
   // ── Catatan 6 · ～か ───────────────────────────────────────────────
   { id: 'b6-c6-1', grup: 'catatan', no: 6, soal: 'A：日曜日 京都へ 行きました。B：京都___。いいですね。', arti: 'A：Hari Minggu pergi ke Kyoto. B：Kyoto? Bagus ya.', jawaban: 'ですか', pilihan: ['ですか', 'ですね', 'でした', 'は'] },
   { id: 'b6-c6-2', grup: 'catatan', no: 6, soal: 'A：あした 大阪へ 行きます。B：大阪___。いいですね。', arti: 'A：Besok pergi ke Osaka. B：Osaka? Bagus ya.', jawaban: 'ですか', pilihan: ['ですか', 'ですね', 'でした', 'が'] },
-  { id: 'b6-c6-3', grup: 'catatan', no: 6, soal: 'A：きのう 映画を 見ました。B：映画___。どの 映画ですか。', arti: 'A：Kemarin menonton film. B：Film? Film apa?', jawaban: 'ですか', pilihan: ['ですか', 'ですね', 'でした', 'を'] },
+  { id: 'b6-c6-3', grup: 'catatan', no: 6, soal: 'A：きのう 映画を 見ました。B：映画___。', arti: 'A：Kemarin menonton film. B：Film?', jawaban: 'ですか', pilihan: ['ですか', 'ですね', 'でした', 'を'] },
   { id: 'b6-c6-4', grup: 'catatan', no: 6, soal: 'A：日本の 生活は 楽しいです。B：楽しい___。いいですね。', arti: 'A：Kehidupan di Jepang menyenangkan. B：Menyenangkan? Bagus ya.', jawaban: 'ですか', pilihan: ['ですか', 'ですね', 'でした', 'と'] },
   { id: 'b6-c6-5', grup: 'catatan', no: 6, soal: 'A：あの 人は ミラーさんです。B：ミラーさん___。', arti: 'A：Beliau Sdr. Miller. B：Sdr. Miller?', jawaban: 'ですか', pilihan: ['ですか', 'ですね', 'でした', 'に'] },
 ]

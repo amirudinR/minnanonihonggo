@@ -9,14 +9,14 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b13-1-1', grup: 'bunpou', no: 1, soal: 'わたしは 友達___ 欲しいです。', arti: 'Saya ingin punya teman.', jawaban: 'が', pilihan: ['が', 'を', 'は', 'に'] },
   { id: 'b13-1-2', grup: 'bunpou', no: 1, soal: '今 何___ いちばん 欲しいですか。', arti: 'Sekarang apa yang paling Anda inginkan?', jawaban: 'が', pilihan: ['が', 'を', 'は', 'も'] },
   { id: 'b13-1-3', grup: 'bunpou', no: 1, soal: 'わたしは 友達が ___。', arti: 'Saya ingin punya teman (bentuk positif).', jawaban: '欲しいです', pilihan: ['欲しいです', '欲しくないです', '欲しいでした', '欲しです'] },
-  { id: 'b13-1-4', grup: 'bunpou', no: 1, soal: '今 何が いちばん ___ですか。……車が 欲しいです。', arti: 'Sekarang apa yang paling Anda inginkan?', jawaban: '欲しい', pilihan: ['欲しい', '欲しく', '欲し', '欲しいの'] },
+  { id: 'b13-1-4', grup: 'bunpou', no: 1, soal: '今 何が いちばん ___ですか。', arti: 'Sekarang apa yang paling Anda inginkan?', jawaban: '欲しい', pilihan: ['欲しい', '欲しく', '欲し', '欲しいの'] },
   { id: 'b13-1-5', grup: 'bunpou', no: 1, soal: '今 何が いちばん 欲しいですか。……___ 欲しいです。', arti: 'Sekarang apa yang paling Anda inginkan? ……Saya ingin mobil.', jawaban: '車が', pilihan: ['車が', '車を', '車は', '車に'] },
 
   // ── 文型 2 · Kata Kerja たいです ────────────────────────────────────
   { id: 'b13-2-1', grup: 'bunpou', no: 2, soal: 'わたしは 沖縄へ 行き___です。', arti: 'Saya ingin pergi ke Okinawa.', jawaban: 'たい', pilihan: ['たい', 'たく', 'たかった', 'ましょう'] },
   { id: 'b13-2-2', grup: 'bunpou', no: 2, soal: '神戸で 何を 買い___か。', arti: 'Anda ingin membeli apa di Kobe?', jawaban: 'たいです', pilihan: ['たいです', 'ます', 'ました', 'たくないです'] },
   { id: 'b13-2-3', grup: 'bunpou', no: 2, soal: 'きょうは 疲れましたから、何も ___。', arti: 'Karena hari ini lelah, tidak ingin melakukan apa-apa.', jawaban: 'したくないです', pilihan: ['したくないです', 'したいです', 'します', 'しました'] },
-  { id: 'b13-2-4', grup: 'bunpou', no: 2, soal: '夏休みに どこへ ___ですか。……沖縄へ 行きたいです。', arti: 'Pada liburan musim panas ingin pergi ke mana? ……Ingin pergi ke Okinawa.', jawaban: '行きたい', pilihan: ['行きたい', '行きたく', '行き', '行きます'] },
+  { id: 'b13-2-4', grup: 'bunpou', no: 2, soal: '夏休みに どこへ ___ですか。', arti: 'Pada liburan musim panas ingin pergi ke mana? ……Ingin pergi ke Okinawa.', jawaban: '行きたい', pilihan: ['行きたい', '行きたく', '行き', '行きます'] },
   { id: 'b13-2-5', grup: 'bunpou', no: 2, soal: '神戸で 靴を ___です。', arti: 'Saya ingin membeli sepatu di Kobe.', jawaban: '買いたい', pilihan: ['買いたい', '買いたく', '買い', '買います'] },
 
   // ── 文型 3 · Kata Benda(tempat) へ Kata Kerja / Kata Benda(kegiatan) に 行きます ──

@@ -11,7 +11,7 @@ export const bunpouSoal: SoalBunpou[] = [
   // ── 文型 1 · ミラーさんは 漢字を 読む ことが できます ───────────────
   { id: 'b18-1-1', grup: 'bunpou', no: 1, soal: 'ミラーさんは 漢字を 読む こと___ できます。', arti: 'Sdr. Miller bisa membaca Kanji.', jawaban: 'が', pilihan: ['が', 'を', 'は', 'に'] },
   { id: 'b18-1-2', grup: 'bunpou', no: 1, soal: 'ミラーさんは 漢字を___ ことが できます。', arti: 'Sdr. Miller bisa membaca Kanji.', jawaban: '読む', pilihan: ['読む', '読んで', '読んだ', '読み'] },
-  { id: 'b18-1-3', grup: 'bunpou', no: 1, soal: '車の 運転が___か。……はい、できます。', arti: 'Apakah bisa menyetir mobil? ……Ya, bisa.', jawaban: 'できます', pilihan: ['できます', 'できて', 'できる', 'できました'] },
+  { id: 'b18-1-3', grup: 'bunpou', no: 1, soal: '車の 運転が___か。', arti: 'Apakah bisa menyetir mobil? ……Ya, bisa.', jawaban: 'できます', pilihan: ['できます', 'できて', 'できる', 'できました'] },
   { id: 'b18-1-4', grup: 'bunpou', no: 1, soal: 'マリアさんは 自転車に___ ことが できますか。', arti: 'Apakah Sdr. Maria bisa bersepeda?', jawaban: '乗る', pilihan: ['乗る', '乗って', '乗った', '乗り'] },
   { id: 'b18-1-5', grup: 'bunpou', no: 1, soal: 'マリアさんは 自転車に 乗る ことが できますか。……いいえ、___。', arti: 'Apakah Sdr. Maria bisa bersepeda? ……Tidak, tidak bisa.', jawaban: 'できません', pilihan: ['できません', 'できます', 'ありません', 'できました'] },
 

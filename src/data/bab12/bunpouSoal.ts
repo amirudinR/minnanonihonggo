@@ -17,7 +17,7 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b12-2-2', grup: 'bunpou', no: 2, soal: 'この 車は あの 車より ___です。', arti: 'Mobil ini lebih besar (daripada mobil itu).', jawaban: '大きい', pilihan: ['大きい', '大きく', '大きかった', '大きいの'] },
   { id: 'b12-2-3', grup: 'bunpou', no: 2, soal: '東京は ニューヨークより 人が 多いですか。……はい、___ 多いです。', arti: 'Apakah Tokyo lebih banyak penduduknya daripada New York? ……Ya, jauh lebih banyak.', jawaban: 'ずっと', pilihan: ['ずっと', 'ちょっと', 'あまり', 'だいたい'] },
   { id: 'b12-2-4', grup: 'bunpou', no: 2, soal: '秋は 夏___ すずしいです。', arti: 'Musim gugur lebih sejuk daripada musim panas.', jawaban: 'より', pilihan: ['より', 'ほど', 'まで', 'くらい'] },
-  { id: 'b12-2-5', grup: 'bunpou', no: 2, soal: '東京は ニューヨークより 人が ___ですか。……はい、ずっと 多いです。', arti: 'Apakah Tokyo lebih banyak penduduknya daripada New York?', jawaban: '多い', pilihan: ['多い', '多く', '多かった', '多いの'] },
+  { id: 'b12-2-5', grup: 'bunpou', no: 2, soal: '東京は ニューヨークより 人が ___ですか。', arti: 'Apakah Tokyo lebih banyak penduduknya daripada New York?', jawaban: '多い', pilihan: ['多い', '多く', '多かった', '多いの'] },
 
   // ── 文型 3 · Kata Benda1 と Kata Benda2 と どちらが Kata Sifat ですか ──
   { id: 'b12-3-1', grup: 'bunpou', no: 3, soal: 'サッカーと 野球と ___が おもしろいですか。', arti: 'Sepak bola dan bisbol, yang mana yang menarik?', jawaban: 'どちら', pilihan: ['どちら', 'どれ', 'どの', 'なに'] },
@@ -27,9 +27,9 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b12-3-5', grup: 'bunpou', no: 3, soal: 'サッカーの ___が おもしろいです。', arti: 'Sepak bola yang lebih menarik.', jawaban: 'ほう', pilihan: ['ほう', 'と', 'の', 'が'] },
 
   // ── 文型 4 · Kata Benda1[の中]で … が いちばん Kata Sifat ですか ────
-  { id: 'b12-4-1', grup: 'bunpou', no: 4, soal: '日本料理の中で 何が ___ おいしいですか。……てんぷらが いちばん おいしいです。', arti: 'Masakan Jepang, yang mana yang paling enak? ……Tempura yang paling enak.', jawaban: 'いちばん', pilihan: ['いちばん', 'だいたい', 'あまり', 'ちょっと'] },
+  { id: 'b12-4-1', grup: 'bunpou', no: 4, soal: '日本料理の中で 何が ___ おいしいですか。', arti: 'Masakan Jepang, yang mana yang paling enak? ……Tempura yang paling enak.', jawaban: 'いちばん', pilihan: ['いちばん', 'だいたい', 'あまり', 'ちょっと'] },
   { id: 'b12-4-2', grup: 'bunpou', no: 4, soal: '日本料理の中で ___ いちばん おいしいですか。……てんぷらが いちばん おいしいです。', arti: 'Di antara masakan Jepang, apa yang paling enak? ……Tempura yang paling enak.', jawaban: '何が', pilihan: ['何が', 'どこが', 'だれが', 'いつが'] },
-  { id: 'b12-4-3', grup: 'bunpou', no: 4, soal: '日本料理の中で 何が いちばん ___ですか。……てんぷらが いちばん おいしいです。', arti: '……Tempura yang paling enak.', jawaban: 'おいしい', pilihan: ['おいしい', 'おいしく', 'おいしかった', 'おいしいの'] },
+  { id: 'b12-4-3', grup: 'bunpou', no: 4, soal: '日本料理の中で 何が いちばん ___ですか。', arti: 'Masakan Jepang, yang mana yang paling enak? ……Tempura yang paling enak.', jawaban: 'おいしい', pilihan: ['おいしい', 'おいしく', 'おいしかった', 'おいしいの'] },
   { id: 'b12-4-4', grup: 'bunpou', no: 4, soal: '世界で ___が いちばん 寒いですか。……ロシアです。', arti: 'Di dunia, mana yang paling dingin? ……Rusia.', jawaban: 'どこ', pilihan: ['どこ', 'なに', 'だれ', 'いつ'] },
   { id: 'b12-4-5', grup: 'bunpou', no: 4, soal: '１年の中で ___が いちばん 好きですか。……春が いちばん 好きです。', arti: 'Dalam satu tahun, apa yang paling Anda suka? ……Musim semi.', jawaban: 'いつ', pilihan: ['いつ', 'なに', 'どこ', 'だれ'] },
 ]

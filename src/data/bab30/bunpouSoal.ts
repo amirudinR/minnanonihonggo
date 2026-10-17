@@ -30,11 +30,11 @@ export const bunpouSoal: SoalBunpou[] = [
   { id: 'b30-c1-5', grup: 'catatan', no: 1, soal: 'A：バスは 来ましたか。B：いいえ、まだ ___。', arti: 'A：Bus sudah datang? B：Tidak, belum datang.', jawaban: '来て いません', pilihan: ['来て いません', '来て います', '来ません', '来ました'] },
 
   // ── Catatan 2 · とか ────────────────────────────────────────────
-  { id: 'b30-c2-1', grup: 'catatan', no: 2, soal: 'A：どんな スポーツを して いますか。B：そうですね。テニス___ 水泳とか……。', arti: 'A：Berolahraga apa saja? B：Ya... Tenis, atau berenang…', jawaban: 'とか', pilihan: ['とか', 'や', 'と', 'か'] },
+  { id: 'b30-c2-1', grup: 'catatan', no: 2, soal: 'A：どんな スポーツを して いますか。B：そうですね。テニス___ 水泳などです。', arti: 'A：Berolahraga apa saja? B：Ya... tenis, berenang, dan lain-lain.', jawaban: 'とか', pilihan: ['とか', 'や', 'と', 'か'] },
   { id: 'b30-c2-2', grup: 'catatan', no: 2, soal: '週末は 映画を ___ 買い物を します。', arti: 'Akhir pekan saya menonton film atau berbelanja.', jawaban: '見るとか', pilihan: ['見るとか', '見てとか', '見ますとか', '見たとか'] },
-  { id: 'b30-c2-3', grup: 'catatan', no: 2, soal: '日本では すし___ てんぷらとかが 人気が あります。', arti: 'Di Jepang, sushi atau tempura populer.', jawaban: 'とか', pilihan: ['とか', 'や', 'と', 'か'] },
-  { id: 'b30-c2-4', grup: 'catatan', no: 2, soal: 'A：休みの 日は 何を しますか。B：そうですね。音楽を 聞く___、本を 読むとか……。', arti: 'A：Hari libur melakukan apa? B：Ya, mendengarkan musik, membaca buku…', jawaban: 'とか', pilihan: ['とか', 'たり', 'や', 'か'] },
-  { id: 'b30-c2-5', grup: 'catatan', no: 2, soal: 'かばんの 中には ノート___ ペンとかが あります。', arti: 'Di dalam tas ada buku catatan atau pulpen.', jawaban: 'とか', pilihan: ['とか', 'や', 'と', 'か'] },
+  { id: 'b30-c2-3', grup: 'catatan', no: 2, soal: '日本では すし___ てんぷらが 人気が あります。', arti: 'Di Jepang, sushi dan tempura populer.', jawaban: 'とか', pilihan: ['とか', 'や', 'と', 'か'] },
+  { id: 'b30-c2-4', grup: 'catatan', no: 2, soal: 'A：休みの 日は 何を しますか。B：音楽を 聞く___、映画を 見ます。', arti: 'A：Hari libur melakukan apa? B：Mendengarkan musik, menonton film.', jawaban: 'とか', pilihan: ['とか', 'たり', 'や', 'か'] },
+  { id: 'b30-c2-5', grup: 'catatan', no: 2, soal: 'かばんの 中には ノート___ ペンが あります。', arti: 'Di dalam tas ada buku catatan dan pulpen.', jawaban: 'とか', pilihan: ['とか', 'や', 'と', 'か'] },
 
   // ── Catatan 3 · Partikel + も ──────────────────────────────────
   { id: 'b30-c3-1', grup: 'catatan', no: 3, soal: 'ほか___ も いろいろ あります。', arti: 'Selain itu masih ada macam-macam.', jawaban: 'に', pilihan: ['に', 'を', 'が', 'と'] },
