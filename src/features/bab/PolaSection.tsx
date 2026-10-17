@@ -1,5 +1,7 @@
-import type { Bunpou } from '../../types/bab'
+import { useState } from 'react'
+import type { Bunpou, SoalBunpou } from '../../types/bab'
 import { Section } from './Section'
+import { KuisBunpou } from './KuisBunpou'
 
 /**
  * Seksi pola tata bahasa.
@@ -11,16 +13,55 @@ export function PolaSection({
   title,
   items,
   variant,
+  babNo,
+  soal,
   defaultOpen = false,
 }: {
   id: string
   title: string
   items: Bunpou[]
   variant: 'bunpou' | 'catatan'
+  babNo: number
+  soal?: SoalBunpou[]
   defaultOpen?: boolean
 }) {
+  const [mode, setMode] = useState<'pola' | 'kuis'>('pola')
+  const adaKuis = !!soal && soal.length > 0
+
   return (
     <Section id={id} title={title} defaultOpen={defaultOpen}>
+      {adaKuis && (
+        <div className="seg kuis-bunpou__seg" role="group" aria-label={`Tampilan ${title}`}>
+          <button
+            type="button"
+            className={`seg__item ${mode === 'pola' ? 'seg__item--aktif' : ''}`}
+            aria-pressed={mode === 'pola'}
+            onClick={() => setMode('pola')}
+          >
+            Pola
+          </button>
+          <button
+            type="button"
+            className={`seg__item ${mode === 'kuis' ? 'seg__item--aktif' : ''}`}
+            aria-pressed={mode === 'kuis'}
+            onClick={() => setMode('kuis')}
+          >
+            Kuis — 5 soal/pola
+          </button>
+        </div>
+      )}
+
+      {adaKuis && mode === 'kuis' && (
+        <KuisBunpou
+          babNo={babNo}
+          grup={variant === 'catatan' ? 'catatan' : 'bunpou'}
+          items={items}
+          soal={soal as SoalBunpou[]}
+        />
+      )}
+
+      {mode === 'pola' && (
+      <>
       {items.map((b) => (
         <div key={b.no} className="mb-3">
           <h3 className="font-semibold">
@@ -52,6 +93,8 @@ export function PolaSection({
               ))}
         </div>
       ))}
+      </>
+      )}
     </Section>
   )
 }

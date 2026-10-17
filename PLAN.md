@@ -728,3 +728,33 @@ fallback diuji nyata (file di-rename sementara → pesan muncul, lalu dikembalik
 
 **CATATAN:** working tree saat itu juga memuat kerja agent paralel (code-split data bab, §3 #30) —
 ikut terverifikasi hijau (guard/tests/build) dan disebut di pesan commit.
+
+## 28. Sesi "Kuis Tata Bahasa — 5 soal per pola" (batch 1: bab 1-5) — 2026-10-17
+
+**Permintaan user:** tiap bab punya beberapa bunpou; buat 5 soal untuk SETIAP pola,
+dan tulis total keseluruhan pola semua bab. Keputusan user: cakupan = 文型 + Catatan
+Tata Bahasa, bentuk = pilihan ganda, tempat = tab Kuis di seksi Bunpou, mulai batch 1.
+
+**Hitungan (dari data, bukan perkiraan):** 176 pola 文型 + 161 catatan = **337 pola**
+(bab 1-50) -> 5 soal/pola = **1.685 soal**. Sebaran pola/bab: min 2, maks 15 (bab 8).
+
+**Batch 1 selesai (bab 1-5):** 36 pola -> **180 soal**.
+- `src/types/bab.ts`: + `SoalBunpou` + field opsional `Bab.bunpouSoal`.
+- `src/data/bab01..05/bunpouSoal.ts` (baru) + `index.ts` masing-masing.
+- `src/features/bab/KuisBunpou.tsx` (baru) + tab `Pola / Kuis — 5 soal/pola` di `PolaSection.tsx`
+  (dipakai seksi Bunpou `grup=bunpou` & Catatan Tata Bahasa `grup=catatan`).
+- `BabDetailPage` kirim `babNo` + slice soal; `features/bab/index.ts` export baru.
+- `tools/validate_bunpou.ts` + script `validate:bunpou` (masuk check, check:full, guard).
+- `src/data/bunpouSoal.test.ts` (+3 tes) - `70-kuis.css` blok `.kuis-bunpou__*`.
+- Docs: AGENTS §2 (aturan data), §3c-2 (detail, jangan diregresi), §6b, §10.
+
+**Sumber soal:** `contoh`/`artiContoh`/`reibun` bab itu + kosakata bab yang sama; pola tidak
+diubah. Jawaban "（なし）" dipakai bila pola memang tanpa partikel (mis. 「いつ」 tak pakai に).
+
+**Verifikasi:** validate:bunpou 36 pola/180 soal 0 masalah (validator sempat menangkap 5 soal
+"cara baca" tanpa rumpang `___` -> dibetulkan) · typecheck bersih · test 79 hijau (11 file) ·
+guard 8/8 PASS termasuk step baru · CDP 1280px & 390px: tab Kuis muncul, 5 soal/pola, 4 opsi,
+auto-check benar/salah (hijau/merah + kunci garis putus-putus), ganti pola memuat 5 soal baru,
+bab 6 (belum ber-soal) tanpa tab, `overflowX=false` 0 pelanggar, 0 error.
+
+**Menunggu penilaian user sebelum lanjut batch berikutnya (bab 6-10).**

@@ -164,11 +164,26 @@ export default function BabDetailPage() {
         )}
 
         {bab.bunpou.length > 0 && (
-          <PolaSection id="bunpou" title="Bunpou" items={bab.bunpou} variant="bunpou" defaultOpen />
+          <PolaSection
+            id="bunpou"
+            title="Bunpou"
+            items={bab.bunpou}
+            variant="bunpou"
+            babNo={num}
+            soal={bab.bunpouSoal?.filter((s) => s.grup === 'bunpou')}
+            defaultOpen
+          />
         )}
 
         {bab.catatanTataBahasa && bab.catatanTataBahasa.length > 0 && (
-          <PolaSection id="catatan" title="Catatan Tata Bahasa" items={bab.catatanTataBahasa} variant="catatan" />
+          <PolaSection
+            id="catatan"
+            title="Catatan Tata Bahasa"
+            items={bab.catatanTataBahasa}
+            variant="catatan"
+            babNo={num}
+            soal={bab.bunpouSoal?.filter((s) => s.grup === 'catatan')}
+          />
         )}
 
         {bab.reibun.length > 0 && <ReibunSection items={bab.reibun} num={num} />}

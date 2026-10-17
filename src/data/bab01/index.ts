@@ -7,6 +7,7 @@ import { renshuuA, renshuuB, renshuuC } from './renshuu'
 import { mondai } from './mondai'
 import { konteks } from './konteks'
 import { susun } from './susun'
+import { bunpouSoal } from './bunpouSoal'
 
 const bab01: Bab = {
   no: 1,
@@ -23,6 +24,7 @@ const bab01: Bab = {
   konteks,
   bunsho: [],
   susun,
+  bunpouSoal,
 }
 
 export default bab01

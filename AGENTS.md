@@ -56,6 +56,7 @@ npm run add:bab N  # scaffold bab baru
 - **Offset halaman PDF: `idx = halaman cetak + 21`.** Bab 1 = cetak 6–13 = idx 27–34.
 - **Romaji TIDAK dicetak di buku.** Kolom romaji default tersembunyi; kalau diisi, itu *transliterasi app*, jangan anggap data buku.
 - `bunpou` = pola 文型 buku (umumnya 4). Catatan tata bahasa (mis. `の`, `～さん`) masuk `catatanTataBahasa` **(penomoran mulai dari 1, TERPISAH dari bunpou)**.
+- **Soal kuis tata bahasa (`bunpouSoal`)**: **tepat 5 soal per pola** (文型 & Catatan Tata Bahasa), pilihan ganda. Soal diturunkan dari `contoh`/`artiContoh` + kosakata bab itu — **pola tidak diubah** (jangan hapus sebagai "karangan"; lihat §3c). Rumpang `___`, `pilihan` 4 opsi tanpa duplikat, `jawaban ∈ pilihan`, `grup`/`no` merujuk pola sumber. Jawaban `（なし）` = tanpa partikel (mis. 「いつ」 tak pakai に). Dijaga `npm run validate:bunpou`.
 - `kaiwa.dialog[].arti` **wajib** diisi dari PDF terjemahan Indonesia (1:1, bukan karangan).
 - **Pola kalimat (`bunpou`)**: penjelasan `pola`/`contoh`/`arti` WAJIB diambil dari PDF Indonesia, section **"Terjemahan Pola Kalimat"** (pola Indonesia paling jelas di situ). Jangan mengandalkan terjemahan karangan dari buku JP.
 - Audio: **1 kaiwa per bab (selalu tepat 1)**; mondai **bervariasi 2–4** (Bab 4 = 4). **JANGAN hardcode mondai1..3** — pakai `src/core/audio/manifest.ts`.
@@ -316,6 +317,20 @@ Model: satu soal = `SusunItem { id, arti, kata[], jawaban, fokus?, penjelasan? }
 
 ---
 
+## 3c-2. Kuis Tata Bahasa (5 soal per pola) — JANGAN di-regresi
+
+Model: `SoalBunpou { id, grup: 'bunpou'|'catatan', no, soal, arti, jawaban, pilihan[] }`.
+**Tepat 5 soal per pola** — pola = `bunpou[]` (文型) + `catatanTataBahasa[]`, dirujuk lewat `grup` + `no`.
+
+- **Data**: `src/data/babNN/bunpouSoal.ts` (di-export `index.ts` → registry otomatis). Soal diturunkan dari `contoh`/`artiContoh`/`reibun` bab itu; **pola tidak diubah**. Jawaban `（なし）` = tanpa partikel (mis. 「いつ」 tak pakai に).
+- **UI**: `src/features/bab/KuisBunpou.tsx` + tab **Pola / Kuis — 5 soal/pola** di `PolaSection.tsx` (dipakai dua kali: seksi **Bunpou** `grup='bunpou'`, seksi **Catatan Tata Bahasa** `grup='catatan'`). Opsi memakai kelas `.opsi`/`.kuis__*` yang sudah ada (jangan bikin sistem gaya baru).
+- **Auto-check**: satu opsi diklik → langsung dikoreksi (benar = hijau, salah = merah, kunci = garis putus-putus) + skor `Benar x/5` + tombol **Ulangi**. Tanpa tombol "Cek".
+- **Progres**: `useNotes.answers`, key `bunpou-{bab}-{grup}-{id}` — **key baru**, key lama tidak diubah. Ditulis hanya dari event handler (bukan `useEffect`) agar tak ada loop render (§3 #1).
+- **Bertahap**: bab yang belum punya `bunpouSoal` tidak menampilkan tab (validator melewatinya & melaporkan jumlah). Status: **bab 1–5 = 180 soal** (36 pola).
+- **Perintah**: `npm run validate:bunpou` (masuk `check`, `check:full`, `guard`) + `src/data/bunpouSoal.test.ts`.
+
+---
+
 ## 4. FAKTA TERVERIFIKASI — JANGAN "DIPERBAIKI" (sudah benar!)
 
 | Item | Sering salah diklaim | **Yang BENAR** |
@@ -418,8 +433,9 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | Perintah | Fungsi |
 |---|---|
 | `npm run verify` | **gerbang akhir sekali jalan**: check:full + screenshot desktop/mobile + cek DOM (`Unexpected Application Error` / `Maximum update depth`). Butuh dev server menyala. |
-| `npm run guard` | validate + **validate:partikel** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
+| `npm run guard` | validate + **validate:partikel** + **validate:bunpou** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
 | `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
+| `npm run validate:bunpou` | jaga INVARIAN soal kuis tata bahasa (`bunpouSoal`): **tepat 5 soal per pola**, `id` unik, `jawaban ∈ pilihan`, 4 opsi tanpa duplikat, rumpang `___`, `grup`/`no` merujuk pola yang ada. Bab yang belum ber-soal dilewati (dilaporkan). Lihat §3c. |
 | `npm run validate:susun` | jaga INVARIAN data susun: gabungan token mode ahli == `jawaban`, bank konsisten, **semua kanji punya bacaan**, struktur item. Lihat §3c. |
 | `npm run test` | tes unit Vitest: `core/*` (normalize, terjemahan, susun, segmentPartikel, baca, manifest) + snapshot data (50 bab, total kosakata/susun) + invariant partikel. Masuk `check:full`. |
 | `npm run gen:meta` | regenerate `src/data/meta.ts` (ringkasan bab untuk Home/TopNav). Tes `registry.test.ts` gagal bila lupa. |
@@ -509,6 +525,7 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 | data partikel & soal ujian | `src/data/partikel/`, `src/data/partikel-soal.ts` |
 | halaman partikel | `src/pages/PartikelPage.tsx` + `src/features/partikel/` |
 | halaman susun campuran | `src/pages/SusunCampuranPage.tsx` + `src/features/susun/` |
+| soal kuis tata bahasa (5/pola) | `src/data/babNN/bunpouSoal.ts` + `src/features/bab/KuisBunpou.tsx` + `PolaSection.tsx` (tab Pola/Kuis) |
 | tema terang/gelap | `src/store/useTheme.ts` + `index.html` (anti-FOUC) |
 | tes | `src/**/*.test.ts` (`npm run test`) |
 

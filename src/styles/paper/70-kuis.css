@@ -38,3 +38,44 @@
 .kuis__hasil { margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-card); font-size: 14px; font-weight: 600; }
 .kuis__hasil--ok { background: rgb(var(--k-rgb-ok) / 0.12); color: var(--k-verdict-ok-deep); }
 .kuis__hasil--no { background: rgb(var(--k-rgb-accent) / 0.12); color: var(--color-accent-deep); }
+
+/* ============ Kuis Bunpou (per pola) ============ */
+.kuis-bunpou__seg { margin: 2px 0 10px; }
+.kuis-bunpou__pola {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 2px 0 10px;
+}
+.kuis-bunpou__chip {
+  max-width: 100%;
+  min-height: 34px;
+  padding: 4px 10px;
+  text-align: left;
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kuis-bunpou__judul {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--color-ink);
+}
+.kuis-bunpou__arti {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-ink-soft);
+}
+.kuis__verdict {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.kuis__verdict--ok { color: var(--k-verdict-ok-deep); }
+.kuis__verdict--no { color: var(--k-verdict-no-deep); }
+@media (max-width: 640px) {
+  .kuis__opsi { grid-template-columns: 1fr; }
+  .kuis-bunpou__chip { white-space: normal; }
+}

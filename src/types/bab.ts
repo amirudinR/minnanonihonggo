@@ -102,6 +102,29 @@ export interface SusunItem {
   penjelasan?: string
 }
 
+/**
+ * Soal kuis tata bahasa (pilihan ganda) — 5 soal untuk SETIAP pola.
+ *
+ * Sumber: diturunkan dari `contoh`/`artiContoh` pola bersangkutan + kosakata bab
+ * yang sama (pola tidak diubah). Lihat aturan di AGENTS.md §2.
+ */
+export interface SoalBunpou {
+  /** unik dalam satu bab, mis. "b1-1-2" */
+  id: string
+  /** kelompok pola sumber: 文型 (`bunpou`) atau Catatan Tata Bahasa (`catatanTataBahasa`) */
+  grup: 'bunpou' | 'catatan'
+  /** merujuk `no` pola di grup tersebut */
+  no: number
+  /** kalimat rumpang — WAJIB memuat "___" */
+  soal: string
+  /** terjemahan/petunjuk Indonesia */
+  arti: string
+  /** jawaban benar — WAJIB ada di `pilihan`. "（なし）" = tanpa partikel/akhiran */
+  jawaban: string
+  /** 4 opsi jawaban (termasuk `jawaban`), tanpa duplikat */
+  pilihan: string[]
+}
+
 export interface Bab {
   no: number
   topik: string
@@ -119,4 +142,6 @@ export interface Bab {
   konteks?: Konteks[]
   /** latihan menyusun kalimat (opsional → bab lama tetap valid) */
   susun?: SusunItem[]
+  /** soal kuis per pola bunpou/catatan (opsional → bab lama tetap valid) */
+  bunpouSoal?: SoalBunpou[]
 }
