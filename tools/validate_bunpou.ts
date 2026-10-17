@@ -20,10 +20,19 @@ import type { Bab, SoalBunpou } from '../src/types/bab'
 const here = dirname(fileURLToPath(import.meta.url))
 const dataDir = join(here, '..', 'src', 'data')
 
+// Argumen opsional = daftar nomor bab yang dicek saja, mis. `validate_bunpou.ts 6 7 8`
+// (dipakai saat mengerjakan beberapa bab secara paralel).
+const hanya = process.argv
+  .slice(2)
+  .map((a) => Number.parseInt(a, 10))
+  .filter((n) => Number.isInteger(n) && n > 0)
+const banking = (nama: string) => Number.parseInt(nama.replace(/\D/g, ''), 10)
+
 const dirs = readdirSync(dataDir, { withFileTypes: true })
   .filter((d) => d.isDirectory() && /^bab\d+$/.test(d.name))
   .map((d) => d.name)
   .filter((d) => existsSync(join(dataDir, d, 'index.ts')))
+  .filter((d) => hanya.length === 0 || hanya.includes(banking(d)))
   .sort()
 
 const JML_PER_POLA = 5
