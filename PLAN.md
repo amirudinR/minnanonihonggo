@@ -584,6 +584,26 @@ Home                → vw 320/390: bersih ✅
 
 **Belum dikerjakan (sisa Sprint 1):** kalibrasi kontras token & audit dark mode, komponen bersama `.card/.btn/.seg/.pill` (masih Tailwind + `.chip`/`.button` lama), tipografi serif-judul/Inter-body/Caveat-aksen belum seragam.
 
+---
+
+## 24. Sesi "mudah dikembangkan & diperbaiki" — 2026-10-17
+
+**Tujuan:** kurangi rasa sakit saat mengembangkan/memperbaiki (permintaan user), 6 fase.
+
+**Fase 0 — amankan & rapikan.** README → Bab 1–50 + tabel perintah; pindahkan `session-*.md` (635 KB) + `tmp_out*.txt` ke `docs/arsip/`; hapus dead code `src/lib/scoring.ts` (`hitungSkor`) + 6 folder kosong. Commit `3fd0e0d`.
+
+**Fase 1 — pecah `BabDetailPage`.** 963 → **168 baris**; 10 komponen + 14 seksi pindah ke `src/features/bab/`. Nol perubahan perilaku. Commit `7079b77`.
+
+**Fase 2 — pecah `paper.css`.** 1331 baris → entry `@import` + **16 modul** di `src/styles/paper/` (urutan = cascade). `guard.ts` diperbarui memindai `paper.css + paper/*` (uji negatif lolos). **CSS hasil build byte-for-byte IDENTIK** (SHA256 sama). Commit `0f286c8`.
+
+**Fase 3 — Vitest.** devDependency **`vitest`** (disetujui user; dicatat AGENTS §1.2 + allowlist guard). **66 tes / 8 file**: `core/*` (normalize — kasus BUG-4 dikunci, terjemahan, susun, segmentPartikel, baca, audio/manifest) + snapshot data (50 bab, 2149 kosakata, 1000 soal susun) + invariant partikel. `check:full` menjalankan test; `map.ts` mengabaikan `*.test.ts`. Commit `cfcd09a`.
+
+**Fase 4 — satu bahasa visual.** `PemilihBab` (partikel) → `.seg`/`.seg__item` (konsisten Home/Susun/BabDetail) + scoped override mobile; hapus CSS `.flash__seg` yang sudah dead code. Commit `9be4b90`.
+
+**Fase 5 — peta "ubah X → sentuh Y".** Bagian §10 di `AGENTS.md` (tabel modul penting + prinsip pemeliharaan). Commit menyusul.
+
+**Catatan:** sebagian Fase 4 sudah dikerjakan sesi paralel (commit `be55211`, migrasi `.card`/`.seg` + token). Verifikasi: `check:full` (validate 0/0, 66 tes, build) · `guard` 7/7 · CDP mobile 360/390 `overflowX=false`.
+
 
 ## 24. Sesi "Fondasi token: kontras, elevasi, komponen bersama" — 2026-10-17
 

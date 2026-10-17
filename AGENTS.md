@@ -444,3 +444,33 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 - **Verifikasi mobile WAJIB pakai CDP device emulation** (§3 #18), bukan `--window-size`. Cek port dulu (§3 #19).
 - GitHub `main` berisi: cb5789e (initial), 7f708b3 (AGENTS.md + polish mobile), 962b555 (Bab 2), a7b95d3 (motion.css).
 - **Latihan susun dirombak** (lihat §3c): sesi satu-soal-per-layar (20 soal), pemilih bab, mode Dasar/Ahli, **auto-check**, panel keterangan bacaan. Key localStorage lama dipertahankan; mode ahli memakai key `…-ahli` terpisah. **Jangan** kembalikan render 1.000 soal sekaligus, jangan hapus auto-check/panel bacaan, dan jangan pecah kanji tanpa bacaan (dijaga `npm run validate:susun`).
+
+---
+
+## 10. Peta cepat — "mau mengubah X → sentuh Y"
+
+> Supaya tak perlu menelusuri seluruh repo. Detail modul: `npm run map`.
+
+| Mau mengubah… | Sentuh file/folder |
+|---|---|
+| isi materi 1 bab (kosakata/bunpou/reibun/kaiwa/renshuu/mondai/susun) | `src/data/babNN/*.ts` (+ `index.ts`) |
+| menambah bab baru | `npm run add:bab NN` → isi; registry otomatis (`import.meta.glob`) |
+| logika benar/salah jawaban | `src/core/text/normalize.ts` |
+| koreksi terjemahan (soft-match) | `src/core/text/terjemahan.ts` |
+| latihan menyusun (bank/koreksi/pengecoh) | `src/core/text/susun.ts` |
+| pemecahan partikel mode Ahli | `src/core/text/segmentPartikel.ts` |
+| bacaan kanji (panel keterangan) | `src/core/text/baca.ts` + `src/data/kamus/override.ts` |
+| validasi data bab | `src/core/validation/schema.ts` + `tools/validate*.ts` |
+| jumlah track audio | `src/core/audio/manifest.ts` |
+| halaman detail bab (seksi/urutan) | `src/pages/BabDetailPage.tsx` + `src/features/bab/` |
+| komponen/atom UI bersama (Section, AudioBar, Ruby, …) | `src/features/bab/` |
+| gaya visual (warna/token/komponen) | `src/styles/tokens.css` + `src/styles/paper/*.css` |
+| animasi | `src/styles/motion.css` (satu tempat) |
+| navigasi atas | `src/components/TopNav.tsx` |
+| data partikel & soal ujian | `src/data/partikel/`, `src/data/partikel-soal.ts` |
+| halaman partikel | `src/pages/PartikelPage.tsx` + `src/features/partikel/` |
+| halaman susun campuran | `src/pages/SusunCampuranPage.tsx` + `src/features/susun/` |
+| tema terang/gelap | `src/store/useTheme.ts` + `index.html` (anti-FOUC) |
+| tes | `src/**/*.test.ts` (`npm run test`) |
+
+**Prinsip pemeliharaan:** file < ~200 baris, satu komponen/fungsi per file, vertical slice di `src/features/`; `src/core/*` murni (tanpa React) agar mudah diuji. `paper.css` = entry `@import` dan **urutan impor = cascade** (jangan diacak tanpa bukti CSS build identik). Menambah dependensi = **tanya dulu** (yang sudah disetujui: `tsx`, `vitest`).
