@@ -71,7 +71,17 @@
 .susun__ket { font-size: 12px; color: var(--color-ink-soft); margin-top: 2px; }
 
 /* ---- Susun: toolbar, pemilih bab, sesi, panel keterangan ---- */
-.susun-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 14px 0 10px; }
+.susun-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  margin: 14px 0 10px;
+  padding: 10px;
+  border: 1px solid var(--k-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--k-surface-2);
+}
 .susun__badge {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--color-paper-light); background: var(--color-accent);
@@ -126,7 +136,13 @@
 }
 .babbar__n { font-size: 10px; opacity: 0.75; }
 
-.sesi { margin-bottom: 12px; }
+.sesi {
+  margin: 18px 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--k-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--k-surface-2);
+}
 .sesi__bar { height: 8px; border-radius: 999px; background: rgb(var(--k-rgb-ink) / 0.12); overflow: hidden; }
 .sesi__isi { display: block; height: 100%; background: var(--color-accent); }
 .sesi__info {

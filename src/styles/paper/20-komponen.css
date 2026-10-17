@@ -10,6 +10,17 @@
 .card--2 { background: var(--k-surface-2); box-shadow: var(--shadow-soft); }
 .card--3 { background: var(--k-surface-3); box-shadow: none; }
 
+/* Surface hierarchy for long learning pages. */
+.section > summary {
+  border-bottom: 1px solid var(--k-border-soft);
+}
+.section[open] > summary {
+  background: linear-gradient(90deg, rgb(var(--k-rgb-accent) / 0.08), transparent 70%);
+}
+.section > div {
+  border-radius: var(--radius-md);
+}
+
 /* Segmented control (pilihan tunggal: mode/jumlah/fase). */
 .seg {
   display: inline-flex;
@@ -73,6 +84,10 @@ body {
   box-shadow: var(--shadow-paper);
   padding: 26px 28px 30px 56px;
   overflow: hidden;
+}
+
+.book > * {
+  min-width: 0;
 }
 
 /* lubang kertas kiri */

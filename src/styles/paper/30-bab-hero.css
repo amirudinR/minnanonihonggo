@@ -9,6 +9,7 @@
   background: linear-gradient(135deg, rgb(var(--k-rgb-accent) / 0.12), rgb(var(--k-rgb-accent) / 0.02));
   border: 1px solid rgb(var(--k-rgb-accent) / 0.25);
   position: relative;
+  box-shadow: var(--shadow-card);
 }
 .bab-hero__no {
   font-family: var(--font-hand);
@@ -43,7 +44,19 @@
   margin-top: 2px;
 }
 .bab-hero__stamp { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
-.bab-context { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 10px 2px 4px; color: var(--color-ink-soft); font-size: 12px; }
+.bab-context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin: 10px 2px 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--k-border-soft);
+  border-radius: var(--radius-md);
+  background: var(--k-surface-2);
+  color: var(--color-ink-soft);
+  font-size: 12px;
+}
 .bab-context span { display: inline-flex; align-items: baseline; gap: 4px; }
 .bab-context strong { color: var(--color-ink); font-family: var(--font-display); font-size: 18px; font-weight: 600; }
 .stamp {

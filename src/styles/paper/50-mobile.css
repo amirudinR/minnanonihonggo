@@ -1,5 +1,6 @@
 /* ============ Mobile (<= 640px) ============ */
 @media (max-width: 640px) {
+  html, body { max-width: 100%; overflow-x: hidden; }
   .app { padding: 10px 12px 48px !important; }
   .book { padding: 16px 12px 20px 34px; max-width: 100%; }
   .book::after { left: 26px; }
@@ -14,6 +15,7 @@
   .stat-strip__item > span:last-child { margin-left: 4px; }
   .continue-card { align-items: flex-start; flex-direction: column; }
   .continue-card .button { width: 100%; }
+  .continue-card h2 { font-size: 21px; }
   .section-heading { align-items: flex-start; flex-direction: column; gap: 2px; }
 
   /* hero lebih ringkas */
@@ -33,6 +35,10 @@
   /* Komponen bersama juga melebar penuh di mobile */
   .seg { width: 100%; }
   .seg__item { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
+  .partikel-tab, .susun-tab { overflow-x: auto; justify-content: flex-start; }
+  .partikel-tab .seg__item, .susun-tab .seg__item { flex: 0 0 auto; white-space: nowrap; }
+  .partikel-tools, .susun-tools { align-items: stretch; }
+  .partikel-filter__label { min-width: 0; width: 100%; }
 
   /* Home: search full-width, chips wrap below */
   .home-search { flex-basis: 100%; }
@@ -81,4 +87,6 @@
   ol { padding-left: 18px; }
   .susun { padding: 10px 10px; }
   .susun__jawab { min-height: 48px; }
+  .susun__chip { min-height: 44px; }
+  .sesi__nav > * { flex: 1 1 140px; }
 }
