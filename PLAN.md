@@ -690,3 +690,33 @@ Diukur lewat CDP: h1/hero = serif (`--font-display`), h2/section = Kalam (`--fon
 
 **Verifikasi:** `check:full` (validate 0/0 · 74 tes · build) · `guard` **8/8** · CDP 390 px: `overflowX=false` & tanpa error di `/`, `/bab/34`, `/latihan/susun`, `/partikel`, `/bab/999`. Commit `c6fdf01` (ikut memuat WIP sesi paralel yang tersambung agar pohon konsisten). Pelajaran dicatat di `AGENTS.md` §3 #30.
 
+
+
+## 27. Sesi "Audio Choukai 聴解 MNN II + latihan Mendengarkan" — 2026-10-17
+
+**Temuan sumber audio (diverifikasi, bukan tebakan).** Folder
+`D:\A_bahasa_jepang\MINNA NO NIHONGO` dibandingkan dengan `public/audio` pakai **MD5 payload**:
+- `CD Minna No Nihongo 1` (87) + `CD Minna No Nihongo 2` (75) = **162/162 IDENTIK byte**
+  dengan `public/audio` → app sudah punya **kaiwa + mondai lengkap**.
+- Durasikan **menipu**: pencocokan durasi sempat memberi pasangan ngawur (`003 ≈ bab06_mondai1`).
+  Pelajaran → AGENTS §3 #31.
+- **Choukai (聴解) ADA**, hanya MNN II: `Minna 2 choukai\3E MNN II Choukai CD1-3`.
+  Bab dari nama file (`第NN課`), pasti. 1 file tanpa bab dilewati, `._*` dibuang. MNN1 tidak punya choukai.
+
+**Dikerjakan:**
+1. Salin **107 track choukai** → `public/audio/babNN_choukaiM.mp3` (280 MB, lokal; tetap gitignored).
+2. `manifest.ts`: `CHOUKAI_COUNT` (26-50, total 107), `BabAudio.choukai[]`, `adaChoukai(bab)`.
+3. UI: `features/bab/ChoukaiSection.tsx` (seksi Choukai + nomor track + AudioBar) untuk Bab 26-50; masuk TOC.
+4. `features/susun/DengarkanLatihan.tsx`: tab **Mendengarkan** di `/latihan/susun` — 219 track
+   (112 mondai + 107 choukai), filter Semua/Mondai/Choukai, pemilih bab, deep-link `?t=dengar`.
+5. `AudioBar`: `preload="none"` → **`metadata`** + status Memuat + **fallback "Audio belum tersedia"**
+   (menyebut nama file) untuk kasus deploy/clone tanpa `public/audio`.
+6. `audit_kelengkapan.ts` ikut menghitung choukai; `manifest.test.ts` +3 (total 74 tes).
+
+**Verifikasi:** `audit` **269 mp3 / manifest 269, 0 hilang, 0 tak dirujuk** · `test` 74 hijau ·
+`typecheck` bersih · `guard` 8/8 PASS · `check:full` build OK · CDP 390px mobile gelap + 1280px:
+7 rute `overflowX=false`, 0 pelanggar, 0 error; Bab 26 = 4 track choukai (HTTP 200); Bab 1/25 = tanpa choukai;
+fallback diuji nyata (file di-rename sementara → pesan muncul, lalu dikembalikan).
+
+**CATATAN:** working tree saat itu juga memuat kerja agent paralel (code-split data bab, §3 #30) —
+ikut terverifikasi hijau (guard/tests/build) dan disebut di pesan commit.

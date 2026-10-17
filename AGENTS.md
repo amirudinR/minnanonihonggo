@@ -235,6 +235,13 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **Hasil terukur:** bundel awal **108 kB** (dari 524 kB) · `/bab/34` **193 kB** (dari 524 kB) · `/partikel` **131 kB**.
 - **Pelajaran umum:** untuk data besar, `eager` membuat *semua* modulnya statis-terjangkau → sekali ada satu importer statis, code-splitting mati. Verifikasi dengan hitung byte nyata (`Performance.getEntriesByType('resource')`), jangan menebak.
 
+### #31 — Identifikasi audio pakai DURASI = menipu 🔴
+- **Gejala:** bandingkan 87 mp3 kandidat vs `public/audio` pakai durasi → "87/87 cocok (±1 dtk)", tapi pasangannya ngawur (`minna_shokyu_1_003 ≈ bab06_mondai1`, padahal tetangganya `002 ≈ bab01_mondai1`). Nyaris menyimpulkan "duplikat, aman dipasang".
+- **Sebab:** banyak track punya durasi nyaris sama → pencocokan terdekat selalu "menemukan" pasangan. Durasi **bukan** identitas.
+- **Fix/bukti:** pakai **MD5 payload** (byte setelah ID3v2). Hasil: `CD Minna No Nihongo 1` (87 file) & `CD Minna No Nihongo 2` (75 file) = **162/162 IDENTIK byte** dengan `public/audio` → app memang sudah punya kaiwa+mondai lengkap. Durasi hanya untuk sanity-check.
+- **Sumber choukai:** `D:\A_bahasa_jepang\MINNA NO NIHONGO\Minna No Nihongo 2\Minna 2 choukai\` (CD1–3). Bab diambil dari nama file (`第NN課`) — **jangan menebak**; file tanpa bab (`01 CD A - 1.mp3`, 256 KB) dilewati. File `._*` = sampah macOS, dibuang. MNN1 **tidak punya** choukai.
+- **Pelajaran umum:** identitas file audio = hash isi, bukan durasi/ukuran. Dan saat menyalin data orang lain, salin **hanya** yang bisa dipetakan pasti.
+
 ---
 
 ## 3d. Bilah navigasi lengket (shell) + fondasi token — JANGAN dihapus
@@ -363,7 +370,20 @@ tools/                    # extract_bab.py (OCR), validate.ts
 1:3 2:3 3:2 4:4 5:3 6:2 7:3 8:3 9:2 10:3 11:3 12:2 13:2 14:3 15:2
 16:3 17:2 18:2 19:2 20:2 21:2 22:2 23:3 24:2 25:2
 ```
-Setiap bab: **1 kaiwa**. Nama file: `babNN_kaiwa.mp3`, `babNN_mondaiN.mp3`.
+Setiap bab: **1 kaiwa**. Nama file: `babNN_kaiwa.mp3`, `babNN_mondaiN.mp3`, `babNN_choukaiN.mp3`.
+
+**Choukai (聴解)** — dari buku terpisah「聴解タスク25」, **hanya MNN II (Bab 26–50)**:
+`CHOUKAI_COUNT` di manifest (terverifikasi dari 3 CD fisik `MNN II Choukai CD1–3`):
+```
+26:4 27:4 28:4 29:6 30:4 31:4 32:4 33:4 34:4 35:5
+36:5 37:4 38:5 39:4 40:4 41:4 42:3 43:4 44:6 45:4
+46:4 47:4 48:4 49:5 50:4   → total 107 track
+```
+Bab 1–25 (MNN1) **tidak punya choukai** (tidak ada audio di sumber). `adaChoukai(bab)`
++ `getAudio(bab).choukai[]`. UI: seksi **Choukai (聴解)** di halaman bab
+(`features/bab/ChoukaiSection.tsx`) + filter Choukai di tab **Mendengarkan**
+(`/latihan/susun?t=dengar`). Teks tugas TIDAK ditulis di data (bukunya bukan
+Honsatsu) — audio saja + arahan "buka buku Choukai".
 
 ---
 
