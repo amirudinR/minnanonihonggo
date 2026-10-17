@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { partikel, KELOMPOK, type Partikel } from '../data/partikel'
 import { soalPartikel } from '../data/partikel-soal'
 import { KartuPartikel, PemilihBab, TabelRingkas, UjianPartikel } from '../features/partikel'
@@ -64,9 +63,6 @@ export default function PartikelPage() {
     <div className="app mx-auto max-w-6xl p-4 md:p-8 lg:p-10">
       <main className="book">
         <span className="page-curl" aria-hidden />
-        <nav aria-label="Navigasi" className="text-sm">
-          <Link to="/" className="hover:text-ink">← Daftar Bab</Link>
-        </nav>
 
         <header className="bab-hero">
           <span className="bab-hero__no">助</span>

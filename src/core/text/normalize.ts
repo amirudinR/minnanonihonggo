@@ -24,15 +24,47 @@ export function tokens(s: string): string[] {
 
 export type MatchLevel = 'tepat' | 'dekat' | 'belum'
 
+/** Partikel dan akhiran gramatikal boleh "hilang" tanpa mengubah benar/salah. */
+const BOLEH_BEDA = new Set([
+  // partikel
+  'は', 'が', 'を', 'に', 'へ', 'で', 'と', 'も', 'か', 'の', 'や', 'ね', 'よ',
+  // akhiran gramatikal
+  'です', 'ます', 'ました', 'ません', 'ませんでした', 'でした', 'だ', 'だった',
+  'ましょう', 'ませんか', 'ましょうか', 'でしょう', 'じゃ', 'では',
+])
+
+/** Ubah string panjang jadi string pendek + buang akhiran yang berulang. */
+function buangAkhiran(panjang: string, pendek: string): string | null {
+  let a = panjang
+  let b = pendek
+  // syarat awal: yang panjang diawali yang pendek
+  if (!a.startsWith(b)) return null
+  let ekor = ''
+  // buang akhiran berlapis (mis. "がくせいです" → "がくせい" → "がくせ")
+  while (a.length > b.length) {
+    let potong = false
+    for (const s of BOLEH_BEDA) {
+      if (a.endsWith(s) && a.length - s.length >= b.length) {
+        ekor = s + ekor
+        a = a.slice(0, -s.length)
+        potong = true
+        break
+      }
+    }
+    if (!potong) return null
+  }
+  return a === b ? ekor : null
+}
+
 /**
  * Bandingkan jawaban user vs kunci buku.
- * - 'tepat' : identik (setelah normalisasi) atau user menjawab seluruh kunci.
- * - 'dekat' : user menjawab salah satu bagian benar (multi-blank), atau
- *             kemiripan token tinggi (>= 0.75).
- * - 'belum' : tidak cocok.
+ * - 'tepat' : identik, atau selisihnya HANYA partikel/akhiran gramatikal.
+ * - 'dekat' : user menjawab sebagian benar (multi-blank), kemiripan token tinggi.
+ * - 'belum' : tidak cocok (termasuk beda kata kerja: `いきます` vs `きます`).
  *
- * `e.includes(u)` semantik lama dipertahankan (user boleh mengisi sebagian
- * blank) TAPI dengan ambang minimum panjang agar 1 karakter tidak lolos.
+ * Sejak BUG-4 diperketat: `u.includes(e)` TIDAK lagi otomatis 'tepat'. Dulu
+ * `いきます` dianggap benar untuk `きます` (kata kerja salah lolos). Sekarang
+ * selisih harus partikel/akhiran (`は`/`が`/`か`/`です`/`ます` …).
  */
 export function matchLevel(user: string, expected: string): MatchLevel {
   const u = canonical(user)
@@ -41,8 +73,11 @@ export function matchLevel(user: string, expected: string): MatchLevel {
 
   if (u === e) return 'tepat'
 
-  // user menjawab superset dari kunci (menulis lebih lengkap)
-  if (u.length >= 4 && (u.includes(e) || e.includes(u))) return 'tepat'
+  // Selisih murni partikel/akhiran (mis. user tulis "がくせい" untuk "がくせいです")
+  if (u.length >= 3 && e.length >= 3) {
+    const [panjang, pendek] = u.length >= e.length ? [u, e] : [e, u]
+    if (buangAkhiran(panjang, pendek) !== null) return 'tepat'
+  }
 
   // kecocokan sebagian untuk jawaban multi-bagian: bandingkan token
   const tu = tokens(user)

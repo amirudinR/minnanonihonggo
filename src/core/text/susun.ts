@@ -145,3 +145,48 @@ export function sudahBenarAhli(
     ) === 'tepat'
   )
 }
+
+/* =================== PENGECOH (mode Ahli) =================== */
+
+/**
+ * Pengecoh = partikel yang SERING tertukar + yang belum muncul di soal ini.
+ * Dipilih dari daftar tetap (tanpa data baru) lalu diacak deterministik, jadi
+ * bank tetap stabil per item → index jawaban tersimpan tetap valid.
+ */
+const PENGECOH_PARTIKEL = [
+  'は', 'が', 'を', 'に', 'へ', 'で', 'と', 'も', 'か', 'の', 'や', 'から',
+  'まで', 'より', 'だけ', 'しか', 'など', 'ね', 'よ', 'ので', 'のに', 'ても',
+]
+
+/** Berapa pengecoh yang ditambahkan (mode ahli). */
+export const JUMLAH_PENGECOH = 2
+
+/**
+ * Bank mode ahli + pengecoh partikel. Pengecoh TIDAK boleh sama dengan token
+ * mana pun di soal ini (agar selalu salah), dan tidak boleh duplikat.
+ * Deterministik → token pengecoh selalu sama untuk item yang sama.
+ */
+export function bankAhliDenganPengecoh(
+  item: SusunItem,
+  opsi?: OpsiSegmentasi,
+  jumlah = JUMLAH_PENGECOH,
+): string[] {
+  const token = tokenAhli(item, opsi)
+  const dipakai = new Set(token.map((t) => canonical(t)))
+  const kandidat = acak(PENGECOH_PARTIKEL, hash(item.id + '|pengecoh|' + item.jawaban)).filter(
+    (p) => !dipakai.has(canonical(p)),
+  )
+  const pengecoh: string[] = []
+  for (const p of kandidat) {
+    if (pengecoh.length >= jumlah) break
+    if (pengecoh.some((x) => canonical(x) === canonical(p))) continue
+    pengecoh.push(p)
+  }
+  const lengkap = [...token, ...pengecoh]
+  return acak(lengkap, hash(item.id + '|ahli-pengecoh|' + item.jawaban))
+}
+
+/** Token yang HARUS dipakai user (tanpa pengecoh) — untuk auto-check. */
+export function tokenWajib(item: SusunItem, opsi?: OpsiSegmentasi): string[] {
+  return tokenAhli(item, opsi)
+}

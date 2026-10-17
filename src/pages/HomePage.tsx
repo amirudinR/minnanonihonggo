@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProgress } from '../store/useProgress'
 import { useTheme } from '../store/useTheme'
-import { ThemeToggle } from '../features/theme/ThemeToggle'
 import { babs, getBab } from '../data'
 import { partikel } from '../data/partikel'
 import { soalPartikel } from '../data/partikel-soal'
@@ -44,9 +43,6 @@ export default function HomePage() {
         <a className="skip-link" href="#daftar-bab">Lewati ke daftar bab</a>
 
         <header className="cover">
-          <div className="cover__toolbar">
-            <ThemeToggle />
-          </div>
           <div className="cover__eyebrow">
             <span className="cover__label">みんなの日本語</span>
             <span className="cover__edition">Edisi belajar mandiri · Offline</span>

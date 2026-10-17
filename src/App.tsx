@@ -10,6 +10,7 @@ import BabDetailPage from './pages/BabDetailPage'
 import SusunCampuranPage from './pages/SusunCampuranPage'
 import PartikelPage from './pages/PartikelPage'
 import NotFoundPage from './pages/NotFoundPage'
+import { TopNav } from './components/TopNav'
 
 function ScrollTop() {
   const { pathname } = useLocation()
@@ -22,6 +23,7 @@ function ScrollTop() {
 function RootLayout() {
   return (
     <>
+      <TopNav />
       <ScrollTop />
       <Outlet />
     </>

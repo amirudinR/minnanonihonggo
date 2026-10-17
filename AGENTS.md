@@ -5,7 +5,8 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi **„latihan susun mode Ahli + auto-check + panel bacaan + sesi 20 soal"** (§3 #24–#27, §3c) — halaman `/latihan/susun` tidak lagi merender 1.000 soal, chip bisa digeser tanpa hilang, mode Ahli menyusun partikel & akhiran verba, dan tiap kanji punya cara baca (dijaga `validate:susun`).
+> Terakhir diperbarui: sesi **„rapikan semua: BUG-4, pengecoh, bilah navigasi"** (§3 #28–#29, §3d) — `matchLevel` diperketat (jawaban salah tak lagi dianggap benar), mode Ahli dapat **2 partikel pengecoh** + **umpan balik per-chip** (hijau/merah + posisi salah), dan app kini punya **bilah navigasi lengket** menggantikan tombol "← Daftar Bab" per halaman. Semua dokumen (`AGENTS.md`, `PLAN.md`, `docs/AI-MAP.md`) disinkronkan.
+> Sebelumnya: sesi **„latihan susun mode Ahli + auto-check + panel bacaan + sesi 20 soal"** (§3 #24–#27, §3c) — halaman `/latihan/susun` tidak lagi merender 1.000 soal, chip bisa digeser tanpa hilang, mode Ahli menyusun partikel & akhiran verba, dan tiap kanji punya cara baca (dijaga `validate:susun`).
 > Sebelumnya: sesi **„keterangan partikel dari buku MNN 1 & 2 + refactor modular"** (§3 #20–#23, §3b) — data `partikel` dipecah jadi `src/data/partikel/`, invariant dijaga `validate:partikel`, +4 bab partikel dikoreksi dari buku.
 
 ---
@@ -208,6 +209,25 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **Gejala:** 8 entri `jenis: 'mendengarkan'` (bab02 no 2–3, bab04 no 2–4, bab05 no 2–3, bab06 no 2) tanpa `instruksi`.
 - **Fix:** isi `instruksi` (kalimat tugas dalam bahasa Indonesia, **tanpa** mengarang isi audio) + invariant baru di `schema.ts`: `jenis === 'mendengarkan'` ⇒ wajib `kunciTersedia: false` **dan** `instruksi` non-kosong (sekarang ERROR, bukan warning).
 
+### #28 — `matchLevel` longgar: jawaban SALAH dianggap "tepat" 🔴
+- **Gejala:** `いきます` dianggap benar untuk `きます` (kata kerja salah lolos); `アメリカ` benar untuk `アメリカ人`; `ミラー` benar untuk `ミラーさん`.
+- **Sebab:** `normalize.ts` — cabang `u.includes(e) || e.includes(u)` menerima subset apa pun.
+- **Fix:** substring TIDAK lagi otomatis 'tepat'. Selisih harus **murni partikel/akhiran gramatikal** (`buangAkhiran()` dengan himpunan `BOLEH_BEDA` = partikel + `です/ます/か/…`). Kata kerja/imbuhan kata lain → **belum**. Kasus uji dikunci di `tools/validate_susun.ts` (8 kasus) — **jangan longgarkan kembali**.
+- **Catatan:** `countCorrect`/`scoring` ikut memakai ini → skor lama bisa turun. Itu memang benar (dulu menaikkan skor palsu). Jangan "perbaiki" turunnya skor.
+
+### #29 — Jawaban BENAR tidak terdeteksi saat ada pengecoh 🔴
+- **Gejala:** mode Ahli + pengecoh → auto-check baru jalan setelah SEMUA chip (termasuk pengecoh) terpasang, padahal pengecoh tak perlu dipakai.
+- **Fix:** auto-check = "semua token WAJIB terpasang" (`wajibTerpakai === jawaban.length`), bukan "bank habis". Benar/salah dinilai dari token wajib (`benarDari()`), pengecoh netral (kelas `--pengecoh`).
+
+---
+
+## 3d. Bilah navigasi lengket (shell) — JANGAN dihapus
+
+- `src/components/TopNav.tsx` dipasang di `RootLayout` (`src/App.tsx`), di atas semua rute: brand + tautan **Beranda / Bab / Susun / Partikel** + progres ringkas (`%`, `tabular-nums`) + `ThemeToggle`.
+- Menggantikan pola "**← Daftar Bab**" yang dulu diulang manual di tiap halaman (`BabDetailPage`, `PartikelPage`, `SusunCampuranPage`) — **dan** `ThemeToggle` ganda (dulu: nav + toolbar BabDetail + cover Home). Tema sekarang **satu titik** di nav.
+- Gaya `.topnav*` di `paper.css` (token-only, **tanpa `transition`**). Di ≤640px: sembunyikan subjudul brand + bar progres, tautan tetap utuh → **tidak** overflow (diuji 390px, 0 pelanggar).
+- Jangan kembali ke pola "← Daftar Bab" per halaman; cukup tambah tautan di `TopNav` bila ada halaman baru.
+
 ---
 
 ## 3b. Detail implementasi halaman Partikel (JANGAN di-regresi)
@@ -259,6 +279,8 @@ Model: satu soal = `SusunItem { id, arti, kata[], jawaban, fokus?, penjelasan? }
 - **Auto-check** (`autoCheck` default ON): begitu semua chip terpakai, koreksi jalan sendiri (verdict muncul tanpa menekan "Cek"). Tombol "Cek" tetap ada untuk a11y. Panel **Keterangan** muncul otomatis saat benar (atau saat "Lihat kunci").
 - **Panel Keterangan** (`features/susun/KeteranganBacaan.tsx`): kalimat kanji + **furigana** (`<ruby>`), **cara baca hiragana penuh**, daftar **kanji** (kanji + baca + arti), daftar **katakana** (+ arti), dan `penjelasan` pola.
 - **Mode Ahli** (`segmentPartikel.ts`): unit `kata` dipecah jadi partikel + akhiran verba (`これは 本です` → `これ|は|本|です`). Prinsip **KONSERVATIF: kalau ragu JANGAN pecah** — hasil lebih kasar boleh, salah pecah = bug. Akhiran kata sifat (`い`/`く`) **sengaja dimatikan** (pernah salah: `がくせいじゃ` → `がくせ + い + じゃ`). Daftar larangan ada di `JANGAN_PECAH` (mis. `あした`, `どうして`, `また`, `はい`, `いい`, `よく`, `だいたい`, `しばらく`, `どのくらい`).
+- **Pengecoh (mode Ahli)**: `bankAhliDenganPengecoh()` menambah **2 partikel pengecoh** (dari `PENGECOH_PARTIKEL`, dijamin tidak sama dengan token mana pun) ke bank, lalu diacak deterministik. User **tidak wajib** memakai pengecoh. Kasus uji: 1.000 soal × 2 = **2.000 pengecoh**, dijaga `validate:susun`.
+- **Umpan balik per-chip**: setelah dikoreksi, chip token wajib diwarnai hijau (`--ok`) / merah bergaris bawah (`--salah`), **posisi salah pertama** diberi outline (`--tunjuk`) + verdict menyebut "kata ke-N masih salah". Pengecoh netral (`--pengecoh`, garis putus-putus). Jangan hapus kelas-kelas ini.
 - **Kamus bacaan** (`src/data/kamus/`): `bangun.ts` (`bangunKamus`/`bangunKataDikenal`/`bangunArti`, **impor relatif** agar jalan di tsx) + `override.ts` (entri manual: nama diri/tempat + kanji yang tak memberi bacaan lewat kosakata). Bacaan diambil dengan **penjajaran okurigana** (`行きます`+`いきます` → `行`→`い`), bukan memotong kanji mentah.
   - Batas diketahui: bacaan **tanpa konteks** — kanji ber-*on/kun* ganda bisa salah (mis. `汚れ` → `きたなれ`, seharusnya `よごれ`). Tambah entri di `override.ts` bila menemukan yang salah; jangan ganti arsitektur.
 - **Validator `npm run validate:susun`** (masuk `check`/`check:full`/`guard`): (1) `canonical(tokenAhli.join('')) === canonical(jawaban)`, (2) bank ahli memuat token yang sama, (3) **setiap kanji di `jawaban` WAJIB punya bacaan**, (4) struktur item. Saat ini: **1.000 soal · 7.112 token ahli · 955 kamus · 0 error**.

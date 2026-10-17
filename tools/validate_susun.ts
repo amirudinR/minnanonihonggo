@@ -12,9 +12,9 @@ import { readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import type { Bab, SusunItem } from '../src/types/bab'
-import { canonical } from '../src/core/text/normalize'
+import { canonical, matchLevel } from '../src/core/text/normalize'
 import { segmentAhli } from '../src/core/text/segmentPartikel'
-import { acak, urutanBenar } from '../src/core/text/susun'
+import { acak, bankAhliDenganPengecoh, tokenAhli, urutanBenar } from '../src/core/text/susun'
 import { kanjiTanpaBacaan } from '../src/core/text/baca'
 import { bangunKamus, bangunKataDikenal } from '../src/data/kamus/bangun'
 
@@ -47,6 +47,7 @@ async function jalankan() {
   const dikenal = bangunKataDikenal(daftarBab)
 
   let totalToken = 0
+  let totalPengecoh = 0
   for (const { bab, item } of baris) {
     const tag = `bab${bab} ${item.id}`
 
@@ -70,15 +71,49 @@ async function jalankan() {
     }
     totalToken += token.length
 
+    // Pengecoh (mode Ahli): harus ada, tidak boleh sama dengan token mana pun,
+    // dan tidak boleh duplikat → kalau salah, soal jadi mustahil/ambigu.
+    const bankPengecoh = bankAhliDenganPengecoh(item, { kataDikenal: dikenal })
+    const tokenDiset = new Set(token.map((t) => canonical(t)))
+    const pengecoh = bankPengecoh.filter((t) => !tokenDiset.has(canonical(t)))
+    if (pengecoh.length === 0) {
+      errors.push(`${tag}: mode ahli tanpa pengecoh`)
+    }
+    if (pengecoh.length !== new Set(pengecoh.map((t) => canonical(t))).size) {
+      errors.push(`${tag}: pengecoh duplikat → ${pengecoh.join(' ')}`)
+    }
+    if (bankPengecoh.length !== token.length + pengecoh.length) {
+      errors.push(`${tag}: bank pengecoh tidak memuat token + pengecoh`)
+    }
+    totalPengecoh += pengecoh.length
+
     const kurang = kanjiTanpaBacaan(item.jawaban, kamus)
     if (kurang.length > 0) {
       errors.push(`${tag}: kanji tanpa bacaan → ${kurang.join(' ')}`)
     }
   }
 
+  // ---- Kasus uji BUG-4 (matchLevel): jawaban SALAH tidak boleh dianggap benar.
+  // Dulu `いきます` dianggap 'tepat' untuk `きます` (kata kerja salah lolos).
+  const kasusBug4: [user: string, expected: string, harap: string][] = [
+    ['いきます', 'きます', 'belum'],
+    ['アメリカ', 'アメリカ人', 'belum'],
+    ['ミラー', 'ミラーさん', 'belum'],
+    ['たべます', 'のみます', 'belum'],
+    ['がくせい', 'がくせいです', 'tepat'],
+    ['がっこうに', 'がっこう', 'tepat'],
+    ['いきますか', 'いきます', 'tepat'],
+    ['本です', '本です', 'tepat'],
+  ]
+  for (const [u, e, harap] of kasusBug4) {
+    const hasil = matchLevel(u, e)
+    if (hasil !== harap) errors.push(`BUG-4: ${u} vs ${e} => ${hasil} (harap ${harap})`)
+  }
+
   console.log(`Bab diperiksa      : ${dirs.length}`)
   console.log(`Soal susun         : ${baris.length}`)
   console.log(`Token mode ahli    : ${totalToken}`)
+  console.log(`Pengecoh (mode ahli): ${totalPengecoh}`)
   console.log(`Kamus kanji→kana   : ${kamus.size}`)
   console.log(`Kata dikenal       : ${dikenal.size}`)
 

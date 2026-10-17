@@ -8,7 +8,6 @@ import { matchLevel, countCorrect, adaJawaban } from '../core/text/normalize'
 import { nilaiTerjemahan } from '../core/text/terjemahan'
 import { Flashcard } from '../features/flashcard/Flashcard'
 import { Kuis } from '../features/kuis/Kuis'
-import { ThemeToggle } from '../features/theme/ThemeToggle'
 import { MenyusunLatihan } from '../features/susun'
 
 export default function BabDetailPage() {
@@ -87,12 +86,6 @@ export default function BabDetailPage() {
     <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
       <main className="book">
         <span className="page-curl" aria-hidden />
-        <nav aria-label="Navigasi bab" className="text-sm">
-          <Link to="/" className="hover:text-ink">
-            ← Daftar Bab
-          </Link>
-        </nav>
-
         <header className="bab-hero">
           <span className="bab-hero__no">{num}</span>
           <div className="bab-hero__body">
@@ -141,7 +134,6 @@ export default function BabDetailPage() {
             />
             Romaji
           </label>
-          <ThemeToggle />
         </div>
 
         {/* TOC */}

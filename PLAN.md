@@ -558,3 +558,28 @@ Home                → vw 320/390: bersih ✅
 **Verifikasi:** `validate` 50 bab 0 error/0 warning · `validate:susun` 0 error · `typecheck` bersih · `check:full` build OK · `guard` 7/7 PASS · CDP: BUG-1, BUG-2, auto-check, mobile 390 px (0 pelanggar overflow). Screenshot: `tmp/mobile-susun-ahli.png`, `tmp/desktop-susun-ahli.png`.
 
 **Catatan & batas diketahui:** bacaan kanji **tanpa konteks** — kanji ber-on/kun ganda bisa salah (mis. 汚れ → きたなれ); tambahkan entri di override.ts bila ketemu. Desain masih memakai identitas kertas; modernisasi token/shell belum dikerjakan (masih rencana).
+
+
+## 23. Sesi "Rapikan semua: BUG-4, pengecoh, bilah navigasi" — 2026-10-17
+
+**Permintaan user:** "baiki semua ya bro" (cepat) atas temuan cek-permintaan: BUG-4, pengecoh + umpan balik per-chip, modernisasi desain, + rapikan (map & verify).
+
+**1. BUG-4 — `matchLevel` longgar (jawaban SALAH dianggap "tepat")**
+- Sebelum: `いきます` dianggap benar untuk `きます`; `アメリカ` benar untuk `アメリカ人`; `ミラー` benar untuk `ミラーさん`.
+- Penyebab: cabang `u.includes(e) || e.includes(u)` menerima subset apa pun.
+- Fix: substring tak lagi otomatis "tepat". Selisih harus **murni partikel/akhiran** (`buangAkhiran()` + himpunan `BOLEH_BEDA`). 14/14 kasus uji lulus; 8 di antaranya dikunci permanen di `tools/validate_susun.ts`.
+- Dampak sadar: skor latihan lama bisa **turun** — itu benar, dulu menaikkan skor palsu.
+
+**2. Pengecoh + umpan balik per-chip (mode Ahli)**
+- `bankAhliDenganPengecoh()`: +2 partikel pengecoh (dijamin tidak sama dengan token), acak deterministik. 1.000 soal → **2.000 pengecoh**, dijaga validator.
+- Umpan balik: chip wajib hijau/merah (+ garis bawah), **posisi salah pertama** diberi outline, verdict "kata ke-N masih salah". Pengecoh netral (garis putus-putus).
+- Fix bug ikutan: auto-check dulu menunggu **bank habis** → jawaban BENAR tak terdeteksi. Sekarang = "semua token WAJIB terpasang".
+
+**3. Modernisasi shell (identitas kertas dipertahankan)**
+- `src/components/TopNav.tsx` + `.topnav*` (`paper.css`): bilah **lengket** — brand, tautan Beranda/Bab/Susun/Partikel, progres ringkas %, toggle tema (satu titik).
+- Menghapus pola "← Daftar Bab" berulang di 3 halaman + `ThemeToggle` ganda (nav + toolbar Bab + cover Home).
+
+**Verifikasi:** `validate` 50 bab 0/0 · `validate:susun` 0 error (1.000 soal, 7.296 token, 2.000 pengecoh) · `typecheck` bersih · `guard` 7/7 PASS · `check:full` build OK · `map` → 33 modul / 51 edge.
+**CDP:** 7 rute × {390px mobile, 1280px desktop}: `overflowX=false`, **0 pelanggar**, 0 error boundary; `/partikel` tetap utuh (77 blok). Skenario benar → "Benar! ✓" + keterangan otomatis; skenario salah → chip merah + "kata ke-1 masih salah".
+
+**Belum dikerjakan (sisa Sprint 1):** kalibrasi kontras token & audit dark mode, komponen bersama `.card/.btn/.seg/.pill` (masih Tailwind + `.chip`/`.button` lama), tipografi serif-judul/Inter-body/Caveat-aksen belum seragam.

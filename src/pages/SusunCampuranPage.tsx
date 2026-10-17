@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { babs } from '../data'
 import type { SusunItem } from '../types/bab'
 import { useNotes } from '../store/useNotes'
@@ -96,11 +96,6 @@ export default function SusunCampuranPage() {
     <div className="app mx-auto max-w-5xl p-4 md:p-8 lg:p-10">
       <main className="book">
         <span className="page-curl" aria-hidden />
-        <nav aria-label="Navigasi" className="text-sm">
-          <Link to="/" className="hover:text-ink">
-            ← Daftar Bab
-          </Link>
-        </nav>
 
         <header className="bab-hero">
           <span className="bab-hero__no">✎</span>

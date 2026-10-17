@@ -7,12 +7,15 @@
 
 | File | Baris | Deskripsi |
 |---|---|---|
-| `src/App.tsx` | 48 | exports: App |
+| `src/App.tsx` | 50 | exports: App |
+| `src/components/TopNav.tsx` | 65 | Bilah navigasi utama (lengket di atas). Menggantikan pola "← Daftar Bab" |
 | `src/core/audio/manifest.ts` | 52 | Cek konsistensi: jumlah mondai di data bab harus cocok dengan manifest |
-| `src/core/text/normalize.ts` | 79 | Bandingkan jawaban user vs kunci buku |
-| `src/core/text/susun.ts` | 112 | Logika murni latihan menyusun kalimat (tanpa React) |
+| `src/core/text/baca.ts` | 120 | Baca kanji → kana (untuk panel "Keterangan" latihan susun) |
+| `src/core/text/normalize.ts` | 114 | Partikel dan akhiran gramatikal boleh "hilang" tanpa mengubah benar/salah |
+| `src/core/text/segmentPartikel.ts` | 126 | Segmentasi unit `susun` jadi token halus untuk MODE AHLI |
+| `src/core/text/susun.ts` | 193 | Logika murni latihan menyusun kalimat (tanpa React) |
 | `src/core/text/terjemahan.ts` | 56 | Bandingkan terjemahan user vs terjemahan buku memakai Jaccard + cakupan kata kunci |
-| `src/core/validation/schema.ts` | 188 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
+| `src/core/validation/schema.ts` | 197 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
 | `src/features/flashcard/Flashcard.tsx` | 197 | Baca set tersimpan dari localStorage (JSON) |
 | `src/features/kuis/Kuis.tsx` | 159 | Bangun soal pilihan ganda: "Apa arti <kana>?" dengan 3 pengecoh |
 | `src/features/partikel/index.ts` | 5 | — |
@@ -20,17 +23,19 @@
 | `src/features/partikel/PemilihBab.tsx` | 39 | Baris tombol pemilih bab. Berlaku untuk mode daftar (filter) & ujian (cakupan soal) |
 | `src/features/partikel/TabelRingkas.tsx` | 41 | Rangkuman singkat: arti (fungsi) tiap partikel dalam tabel padat |
 | `src/features/partikel/UjianPartikel.tsx` | 176 | Kunci localStorage untuk jawaban ujian partikel (per id soal) |
-| `src/features/susun/index.ts` | 3 | — |
-| `src/features/susun/MenyusunLatihan.tsx` | 74 | Latihan menyusun kalimat untuk satu bab |
-| `src/features/susun/SoalMenyusun.tsx` | 179 | urutan index bank yang dipilih user (boleh kosong) |
+| `src/features/susun/index.ts` | 7 | — |
+| `src/features/susun/KeteranganBacaan.tsx` | 83 | Panel keterangan setelah kalimat selesai/benar: |
+| `src/features/susun/MenyusunLatihan.tsx` | 111 | Latihan menyusun kalimat untuk satu bab |
+| `src/features/susun/PemilihBabSusun.tsx` | 50 | Pilihan bab untuk latihan susun: Semua · MNN I · MNN II · 1–50 |
+| `src/features/susun/SoalMenyusun.tsx` | 310 | Auto-check: begitu semua chip terpasang, langsung dikoreksi |
 | `src/features/theme/ThemeToggle.tsx` | 47 | Tombol tema: klik = balik terang <-> gelap (mode manual) |
 | `src/lib/scoring.ts` | 5 | exports: hitungSkor |
 | `src/main.tsx` | 11 | — |
-| `src/pages/BabDetailPage.tsx` | 969 | Navigasi bab dengan arrow key (←/→) |
-| `src/pages/HomePage.tsx` | 206 | exports: HomePage |
+| `src/pages/BabDetailPage.tsx` | 964 | Navigasi bab dengan arrow key (←/→) — HANYA saat tab Daftar aktif. |
+| `src/pages/HomePage.tsx` | 202 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
-| `src/pages/PartikelPage.tsx` | 191 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
-| `src/pages/SusunCampuranPage.tsx` | 133 | exports: SusunCampuranPage |
+| `src/pages/PartikelPage.tsx` | 187 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
+| `src/pages/SusunCampuranPage.tsx` | 242 | exports: SusunCampuranPage |
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
 | `src/store/useTheme.ts` | 91 | Tema sistem saat ini (fallback 'light' bila tak didukung) |
@@ -39,12 +44,16 @@
 ## 2. Peta dependensi (impor antar modul src)
 
 ```
+src/App.tsx → src/components/TopNav.tsx
 src/App.tsx → src/pages/BabDetailPage.tsx
 src/App.tsx → src/pages/HomePage.tsx
 src/App.tsx → src/pages/NotFoundPage.tsx
 src/App.tsx → src/pages/PartikelPage.tsx
 src/App.tsx → src/pages/SusunCampuranPage.tsx
+src/components/TopNav.tsx → src/features/theme/ThemeToggle.tsx
+src/components/TopNav.tsx → src/store/useProgress.ts
 src/core/text/susun.ts → src/core/text/normalize.ts
+src/core/text/susun.ts → src/core/text/segmentPartikel.ts
 src/core/text/susun.ts → src/types/bab.ts
 src/core/validation/schema.ts → src/core/audio/manifest.ts
 src/core/validation/schema.ts → src/core/text/normalize.ts
@@ -55,13 +64,19 @@ src/features/partikel/index.ts → src/features/partikel/KartuPartikel.tsx
 src/features/partikel/index.ts → src/features/partikel/PemilihBab.tsx
 src/features/partikel/index.ts → src/features/partikel/TabelRingkas.tsx
 src/features/partikel/index.ts → src/features/partikel/UjianPartikel.tsx
+src/features/susun/KeteranganBacaan.tsx → src/core/text/baca.ts
+src/features/susun/KeteranganBacaan.tsx → src/types/bab.ts
 src/features/susun/MenyusunLatihan.tsx → src/core/text/susun.ts
-src/features/susun/MenyusunLatihan.tsx → src/features/susun/SoalMenyusun.tsx
+src/features/susun/MenyusunLatihan.tsx → src/features/susun/index.ts
 src/features/susun/MenyusunLatihan.tsx → src/store/useNotes.ts
 src/features/susun/MenyusunLatihan.tsx → src/types/bab.ts
+src/features/susun/SoalMenyusun.tsx → src/core/text/normalize.ts
 src/features/susun/SoalMenyusun.tsx → src/core/text/susun.ts
+src/features/susun/SoalMenyusun.tsx → src/features/susun/KeteranganBacaan.tsx
 src/features/susun/SoalMenyusun.tsx → src/types/bab.ts
+src/features/susun/index.ts → src/features/susun/KeteranganBacaan.tsx
 src/features/susun/index.ts → src/features/susun/MenyusunLatihan.tsx
+src/features/susun/index.ts → src/features/susun/PemilihBabSusun.tsx
 src/features/susun/index.ts → src/features/susun/SoalMenyusun.tsx
 src/features/theme/ThemeToggle.tsx → src/store/useTheme.ts
 src/main.tsx → src/App.tsx
@@ -70,11 +85,9 @@ src/pages/BabDetailPage.tsx → src/core/text/terjemahan.ts
 src/pages/BabDetailPage.tsx → src/features/flashcard/Flashcard.tsx
 src/pages/BabDetailPage.tsx → src/features/kuis/Kuis.tsx
 src/pages/BabDetailPage.tsx → src/features/susun/index.ts
-src/pages/BabDetailPage.tsx → src/features/theme/ThemeToggle.tsx
 src/pages/BabDetailPage.tsx → src/store/useNotes.ts
 src/pages/BabDetailPage.tsx → src/store/useProgress.ts
 src/pages/BabDetailPage.tsx → src/types/bab.ts
-src/pages/HomePage.tsx → src/features/theme/ThemeToggle.tsx
 src/pages/HomePage.tsx → src/store/useProgress.ts
 src/pages/HomePage.tsx → src/store/useTheme.ts
 src/pages/PartikelPage.tsx → src/features/partikel/index.ts
