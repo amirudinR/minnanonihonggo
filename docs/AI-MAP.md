@@ -257,7 +257,8 @@ bab | kos  bun  cat  rei  kai  rA  rB  rC  mon  bunS  kon
 | Perintah | Fungsi |
 |---|---|
 | `npm run check` | validate + typecheck (loop cepat) |
-| `npm run check:full` | validate + typecheck + build (gerbang selesai) |
+| `npm run check:full` | validate + typecheck + test + build (gerbang selesai) |
+| `npm run test` | tes unit Vitest (core/* + snapshot data) |
 | `npm run verify` | check:full + screenshot desktop/mobile + cek error boundary |
 | `npm run map` | regenarate file ini |
 | `npm run find <kata>` | cari di kode/data/docs, output terkelompok |

@@ -32,6 +32,7 @@ npm run dev      # buka http://localhost:5173
 | `npm run validate` | Validasi konsistensi data 50 bab (struktur, audio, furigana) |
 | `npm run validate:partikel` | Invariant data partikel (bab ⇄ perBab, 100 soal) |
 | `npm run validate:susun` | Invariant data susun (token mode ahli, bacaan kanji) |
+| `npm run test` | Tes unit Vitest (core/* + snapshot data) |
 | `npm run audit` | Audit kelengkapan data bab |
 | `npm run check` | validate (+partikel+susun) + typecheck — loop cepat, tanpa build |
 | `npm run check:full` | check + build — gerbang "selesai" |

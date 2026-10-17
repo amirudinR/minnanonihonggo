@@ -22,6 +22,7 @@ npm run dev        # port 5173
 npm run typecheck  # tsc --noEmit
 npm run build      # typecheck + vite build
 npm run validate   # validasi data bab (tsx tools/validate.ts)
+npm run test       # tes unit Vitest (core/* + snapshot data) — cepat, tanpa build
 npm run validate:susun # invariant data susun + kamus bacaan kanji
 npm run audit      # audit kelengkapan data bab
 npm run check      # validate (+partikel+susun) + typecheck (loop cepat, TANPA build)
@@ -38,7 +39,7 @@ npm run add:bab N  # scaffold bab baru
 ## 1. ATURAN KERAS (jangan dilanggar)
 
 1. **Jangan gitignore `public/audio` dihapus.** Audio (164 MB, hak cipta) sengaja TIDAK di-commit. Jangan `git add -f` audio, jangan push mp3.
-2. **Jangan menambah dependensi UI** (tanpa izin). Tema dibuat dengan CSS murni + token. `tsx` hanya untuk tooling validasi (devDependency).
+2. **Jangan menambah dependensi UI** (tanpa izin). Tema dibuat dengan CSS murni + token. `tsx` hanya untuk tooling validasi (devDependency). **`vitest` disetujui** sebagai devDependency untuk tes (jangan tambah runner lain tanpa izin).
 3. **Tailwind v4 CSS-first** — TIDAK ADA `tailwind.config.js` / `postcss.config.js`. Token di `src/styles/tokens.css` (`@theme`). Jangan membuat file config Tailwind.
 4. **Jangan "memperbaiki" fakta yang sudah diverifikasi** di §4 dan `docs/BAB-TEMPLATE.md` §5. Agent sebelumnya sudah beberapa kali salah dan "membetulkan" data yang sebenarnya benar.
 5. **Setiap `setState` ke store Zustand harus idempoten** (lihat §3 kesalahan #1). Ini pernah menyebabkan *infinite render loop* yang mematikan halaman.
@@ -370,6 +371,7 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 - [ ] `npm run typecheck` ✅
 - [ ] `npm run build` ✅
 - [ ] `npm run validate` ✅ (0 error)
+- [ ] `npm run test` ✅ (Vitest hijau)
 - [ ] Tidak ada error boundary / loop di render nyata
 - [ ] Screenshot desktop **dan** mobile diperiksa untuk perubahan UI
 - [ ] Tidak menyentuh fakta terverifikasi §4
@@ -384,6 +386,7 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | `npm run guard` | validate + **validate:partikel** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, karakter `\ufffd` di data, audio ter-track git). |
 | `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
 | `npm run validate:susun` | jaga INVARIAN data susun: gabungan token mode ahli == `jawaban`, bank konsisten, **semua kanji punya bacaan**, struktur item. Lihat §3c. |
+| `npm run test` | tes unit Vitest: `core/*` (normalize, terjemahan, susun, segmentPartikel, baca, manifest) + snapshot data (50 bab, total kosakata/susun) + invariant partikel. Masuk `check:full`. |
 | `npm run map` | regenerate `docs/AI-MAP.md`: daftar modul + peta dependensi + ringkasan 50 bab. |
 | `npm run find <kata>` | cari di KODE / DATA / TOOLS / DOKUMEN, output `file:baris`. Bisa multi-kata (AND). |
 | `npm run add:bab <N>` | scaffold `src/data/babNN/` (8 file berisi checklist). Registry otomatis. |

@@ -26,6 +26,7 @@ const DEP_DEV = [
   'tsx',
   'typescript',
   'vite',
+  'vitest',
 ]
 
 let gagal = 0

@@ -58,7 +58,7 @@ function collect(dir: string): Modul[] {
       out.push(...collect(full))
       continue
     }
-    if (!/\.tsx?$/.test(ent.name) || ent.name.endsWith('.d.ts')) continue
+    if (!/\.tsx?$/.test(ent.name) || ent.name.endsWith('.d.ts') || ent.name.endsWith('.test.ts')) continue
     const txt = readFileSync(full, 'utf8')
     const imports: string[] = []
     const re = /from\s+'([^']+)'/g
@@ -160,7 +160,8 @@ ${tabel.join('\n')}
 | Perintah | Fungsi |
 |---|---|
 | \`npm run check\` | validate + typecheck (loop cepat) |
-| \`npm run check:full\` | validate + typecheck + build (gerbang selesai) |
+| \`npm run check:full\` | validate + typecheck + test + build (gerbang selesai) |
+| \`npm run test\` | tes unit Vitest (core/* + snapshot data) |
 | \`npm run verify\` | check:full + screenshot desktop/mobile + cek error boundary |
 | \`npm run map\` | regenarate file ini |
 | \`npm run find <kata>\` | cari di kode/data/docs, output terkelompok |
