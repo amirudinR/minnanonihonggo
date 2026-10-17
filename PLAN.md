@@ -874,3 +874,22 @@ ber-`arti`, tak ada error boundary.
 **Tahan-regresi:** aturan baru di `tools/guard.ts` — „kontainer halaman full-bleed (tanpa `max-w-*` di pembungkus `.app`)". Diuji negatif: menyisipkan `max-w-6xl` sementara → **FAIL**; file dipulihkan dari backup `tmp/backup-lebar/` (bukan `git checkout`) dan diverifikasi identik.
 
 **Docs:** AGENTS header + §9 (keputusan kontainer) + §3d (nav full-bleed) + §6b (daftar aturan guard); PLAN sesi ini.
+
+---
+
+## 32. Sesi "Deploy Vercel — rewrite SPA (deep-link 404)" — 2026-10-17
+
+**Pemicu:** user bertanya „aman ya?" → verifikasi ulang memunculkan temuan deploy yang belum pernah diperiksa.
+
+**Penelusuran:**
+- URL yang user sebut (`minnanonihongo.vercel.app`, satu-g) → **404 `DEPLOYMENT_NOT_FOUND`** di *semua* path (proyeknya sudah tidak ada).
+- Ditemukan app live di **`minnanonihonggo.vercel.app`** (dobel-g = nama repo). Diukur: **sudah versi terbaru** — konten 1920/1905 (full-bleed §31 ter-deploy), nav Partikel, tab Kuis, 50 kartu bab, dan `arti` bab 48 (`Bulan depan, tanggal berapa`) terbaca. Vercel memang auto-deploy dari `main`.
+- **BUG NYATA:** app pakai `createBrowserRouter` (history mode) tapi repo **tidak punya `vercel.json`** → membuka/menyegarkan rute langsung dari address bar (`/latihan/susun`, `/bab/48`) dibalas **404 oleh Vercel** (navigasi klik di dalam app normal, jadi mudah lolos dari pengujian). Ini persis URL yang user pakai.
+- Catatan metodologi: pengukuran awal via CDP ke URL itu memberi hasil menyesatkan („konten 1920" padahal itu `<main>` halaman 404 Vercel). Pelajaran: **cek `document.title`/penanda app sebelum mengukur**, dan deep-link yang 404 tidak boleh dianggap „halaman app".
+
+**Perbaikan:**
+- Tambah `vercel.json`: rewrite rute **tanpa ekstensi** → `/index.html`; `/assets/`, `/fonts/`, `/audio/`, `favicon.svg` **dikecualikan eksplisit** (aman apa pun urutan filesystem-vs-rewrite di Vercel).
+- Aturan baru `tools/guard.ts` #8: `vercel.json` wajib ada + memuat rewrite ke `/index.html`.
+- AGENTS §7 (deploy + peringatan URL satu-g) & §6b (daftar aturan guard).
+
+**Verifikasi:** lihat hasil di pesan akhir sesi ini (uji langsung ke `minnanonihonggo.vercel.app` setelah auto-deploy: deep-link HTTP 200 + app benar-benar ter-render, aset & favicon tetap 200).

@@ -5,7 +5,8 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi **„full-bleed"** (§9, §3d) — batas lebar konten **dihapus**: semua halaman (Home, Bab, Susun, Partikel, NotFound) + bilah nav kini **mengisi lebar layar**, sisa hanya padding. Dijaga aturan baru `npm run guard` („kontainer halaman full-bleed"). Diuji CDP 2560/1920/1440/1024/768/430/390 → tak ada scroll horizontal.
+> Terakhir diperbarui: sesi **„deploy Vercel — rewrite SPA"** (§7) — ditemukan app live di **`minnanonihonggo.vercel.app`** (dobel-g); URL satu-g sudah mati. Bug nyata: **buka/refresh deep-link** (mis. `/latihan/susun`) dibalas **404 oleh Vercel** karena `createBrowserRouter` + tidak ada aturan rewrite. Ditambah **`vercel.json`** (rewrite rute tanpa ekstensi → `index.html`, aset dikecualikan) + aturan `npm run guard`.
+> Sebelumnya: sesi **„full-bleed"** (§9, §3d) — batas lebar konten **dihapus**: semua halaman (Home, Bab, Susun, Partikel, NotFound) + bilah nav kini **mengisi lebar layar**, sisa hanya padding. Dijaga aturan baru `npm run guard` („kontainer halaman full-bleed"). Diuji CDP 2560/1920/1440/1024/768/430/390 → tak ada scroll horizontal.
 > Sebelumnya: sesi **„audit mendalam — bug data"** (§3 #34) — 9 entri `bunpou[]` bab 18/22/25 yang `pola`-nya berisi **terjemahan Indonesia** (penjelasan kosong) kini memakai pola + penjelasan asli buku; `kaiwa` bab 48 baris 6/7/8 yang **`arti`-nya kosong** + baris 10/11 **salah tempel** sudah diisi terjemahan setia (komentar `CATATAN EDISI`). `schema.ts` kini **ERROR** bila `penjelasan`/`kaiwa.arti` kosong (sebelumnya lolos).
 > Sebelumnya: sesi **„kuis tata bahasa — 5 soal per pola"** (§2, §3c-2) — **selesai 50 bab / 337 pola / 1.685 soal**; tab **Kuis** di seksi Bunpou & Catatan Tata Bahasa, auto-check, dan opsi **diacak deterministik** (dulu jawaban selalu opsi A). Dijaga `npm run validate:bunpou` + `src/data/bunpouSoal.test.ts`.
 > Sebelumnya: sesi **„rapikan semua: BUG-4, pengecoh, bilah navigasi"** (§3 #28–#29, §3d) — `matchLevel` diperketat (jawaban salah tak lagi dianggap benar), mode Ahli dapat **2 partikel pengecoh** + **umpan balik per-chip** (hijau/merah + posisi salah), dan app kini punya **bilah navigasi lengket** menggantikan tombol "← Daftar Bab" per halaman. Semua dokumen (`AGENTS.md`, `PLAN.md`, `docs/AI-MAP.md`) disinkronkan.
@@ -456,7 +457,7 @@ Nyalakan ulang: `Start-Process npm.cmd -ArgumentList "run","dev" -WorkingDirecto
 | Perintah | Fungsi |
 |---|---|
 | `npm run verify` | **gerbang akhir sekali jalan**: check:full + screenshot desktop/mobile + cek DOM (`Unexpected Application Error` / `Maximum update depth`). Butuh dev server menyala. |
-| `npm run guard` | validate + **validate:partikel** + **validate:bunpou** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, impor `data/all` dari kode app, **kontainer halaman full-bleed / tanpa `max-w-*` di `.app`**, karakter `\ufffd` di data, audio ter-track git). |
+| `npm run guard` | validate + **validate:partikel** + **validate:bunpou** + audit kelengkapan + **cek aturan keras** (dependensi baru, hex hardcode di paper.css, `transition:` di paper.css, `TOTAL = 25`, impor `data/all` dari kode app, **kontainer halaman full-bleed / tanpa `max-w-*` di `.app`**, karakter `\ufffd` di data, audio ter-track git, **rewrite SPA `vercel.json` (deep-link tidak 404)**). |
 | `npm run validate:partikel` | jaga INVARIAN data `/partikel`: `bab[]` ⇄ `perBab[]` (dua arah, terurut, tanpa duplikat), isi tidak kosong, bab 1..50, + kualitas 100 soal (id unik, `jawaban ∈ pilihan`, ada `___`, bab soal punya partikel). Lihat §3b & §3 #20/#21. |
 | `npm run validate:bunpou` | jaga INVARIAN soal kuis tata bahasa (`bunpouSoal`): **tepat 5 soal per pola**, `id` unik, `jawaban ∈ pilihan`, 4 opsi tanpa duplikat, rumpang `___`, `grup`/`no` merujuk pola yang ada, **kandidat giveaway ≤ baseline 8** (jawaban tercetak di soal → §3 #32). Argumen opsional = nomor bab saja (mis. `tsx tools/validate_bunpou.ts 6 7`). Status: **50 bab · 337 pola · 1.685 soal**. Lihat §3c. |
 | `npm run validate:susun` | jaga INVARIAN data susun: gabungan token mode ahli == `jawaban`, bank konsisten, **semua kanji punya bacaan**, struktur item. Lihat §3c. |
@@ -488,6 +489,8 @@ Perintah Chrome headless seperti §6 di atas tetap valid. `tools/screenshot.mjs`
 - `.gitignore` mengecualikan: `node_modules/`, `dist/`, `tmp/`, `.ruff_cache/`, `tmp_ocr.png`, **`public/audio/`**.
 - Commit: pesan ringkas berisi *apa* + *mengapa*. Jangan commit `.env`, kunci, atau audio.
 - Jangan force-push ke `main` tanpa izin eksplisit.
+- **Deploy: Vercel otomatis dari `main`** → **`https://minnanonihonggo.vercel.app`** (dobel-g, sama dengan nama repo). URL `minnanonihongo` (satu-g) **404 / proyeknya sudah tidak ada** — jangan dipakai.
+- **`vercel.json` WAJIB ada** dan memuat rewrite SPA (semua rute tanpa ekstensi → `/index.html`, kecuali `/assets/`, `/fonts/`, `/audio/`, `favicon.svg`). App memakai `createBrowserRouter` (history mode): tanpa rewrite, membuka/menyegarkan `/latihan/susun` dari address bar dibalas **404 oleh Vercel**. Dijaga `npm run guard` (aturan „rewrite SPA") — jangan hapus file itu.
 
 ---
 

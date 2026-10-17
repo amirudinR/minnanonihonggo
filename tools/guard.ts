@@ -137,6 +137,30 @@ lapor(rusak.length === 0, 'tidak ada karakter rusak \ufffd di data', rusak.slice
 const tracked = runSilent('git ls-files public/audio')
 lapor(tracked.trim() === '', 'public/audio tidak di-commit ke git', tracked.split('\n').filter(Boolean).slice(0, 5))
 
+// 8. Deploy Vercel WAJIB punya rewrite SPA. App memakai `createBrowserRouter`
+//    (history mode): tanpa rewrite, membuka /latihan/susun langsung dari address
+//    bar (atau refresh) dibalas 404 oleh Vercel — bukan oleh app.
+const pVercel = join(root, 'vercel.json')
+let vercelOk = false
+let vercelAlasan = 'vercel.json tidak ada'
+if (existsSync(pVercel)) {
+  try {
+    const cfg = JSON.parse(readFileSync(pVercel, 'utf8')) as {
+      rewrites?: { source?: string; destination?: string }[]
+    }
+    const rw = cfg.rewrites?.find((r) => r.destination === '/index.html')
+    vercelOk = Boolean(rw)
+    vercelAlasan = rw ? '' : 'tidak ada rewrite ke /index.html'
+  } catch {
+    vercelAlasan = 'vercel.json bukan JSON yang sah'
+  }
+}
+lapor(
+  vercelOk,
+  'vercel.json memuat rewrite SPA (deep-link/refresh tidak 404)',
+  vercelAlasan ? [vercelAlasan] : [],
+)
+
 function runSilent(cmd: string): string {
   try {
     return execSync(cmd, { cwd: root, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] })
