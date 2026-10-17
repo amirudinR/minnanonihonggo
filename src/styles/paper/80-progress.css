@@ -1,0 +1,23 @@
+/* ============ Progress per-bagian ============ */
+.bagian { list-style: none; padding: 0; margin: 6px 0 4px; display: grid; gap: 6px; }
+.bagian__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.14);
+  background: rgb(var(--k-rgb-surface) / 0.35);
+  font-size: 13.5px;
+  cursor: pointer;
+
+}
+.bagian__item:hover { background: rgb(var(--k-rgb-accent) / 0.07); }
+.bagian__item input { accent-color: var(--color-accent); width: 16px; height: 16px; }
+.bagian__item--selesai { background: rgb(var(--k-rgb-ok) / 0.1); border-color: rgb(var(--k-rgb-ok) / 0.3); }
+.bagian__item--selesai span { text-decoration: line-through; color: var(--color-ink-soft); }
+
+@media (max-width: 640px) {
+  .kuis__opsi { grid-template-columns: 1fr; }
+  .flash__aksi .chip { flex: 1 1 calc(50% - 4px); }
+}

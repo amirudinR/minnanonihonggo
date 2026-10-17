@@ -1,0 +1,89 @@
+/* ============ Mobile (<= 640px) ============ */
+@media (max-width: 640px) {
+  .app { padding: 10px 12px 48px !important; }
+  .book { padding: 16px 12px 20px 34px; max-width: 100%; }
+  .book::after { left: 26px; }
+  .book::before { left: 3px; width: 10px; background-size: 10px 32px; }
+  .cover__eyebrow { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .cover__title { font-size: 20px; line-height: 1.2; white-space: normal; overflow-wrap: break-word; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .stat-strip { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+  .stat-strip__item + .stat-strip__item { border-top: 0; border-left: 1px solid rgb(var(--k-rgb-ink) / 0.12); }
+  .stat-strip__item { display: block; }
+  .stat-strip__item strong, .stat-strip__item > span:last-child { display: inline-block; margin-top: 7px; }
+  .stat-strip__item > span:last-child { margin-left: 4px; }
+  .continue-card { align-items: flex-start; flex-direction: column; }
+  .continue-card .button { width: 100%; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 2px; }
+
+  /* hero lebih ringkas */
+  .bab-hero { flex-wrap: wrap; gap: 10px; padding: 12px; }
+  .bab-hero__no { min-width: 46px; height: 46px; font-size: 32px; border-radius: 11px; }
+  .bab-hero__title { font-size: 20px; }
+  .bab-hero__stamp { flex-direction: row; gap: 6px; align-items: center; width: 100%; }
+
+  .toolbar { gap: 8px; margin-top: 8px; padding: 7px 0; font-size: 12px; }
+  .toolbar__title { width: 100%; }
+
+  /* TOC bisa di-scroll horizontal */
+  .toc { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; margin-top: 10px; padding: 6px; scroll-padding-inline: 6px; mask-image: linear-gradient(to right, black 92%, transparent); -webkit-mask-image: linear-gradient(to right, black 92%, transparent); }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc a { flex: 0 0 auto; }
+
+  .flash__seg { width: 100%; }
+  .flash__seg .chip { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
+
+  /* Komponen bersama juga melebar penuh di mobile */
+  .seg { width: 100%; }
+  .seg__item { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
+
+  /* Home: search full-width, chips wrap below */
+  .home-search { flex-basis: 100%; }
+  .home-filter .flash__seg { flex-basis: 100%; flex-wrap: wrap; width: 100%; }
+  .home-filter .flash__seg .chip { flex: 0 1 auto; }
+  .home-filter .seg { flex-basis: 100%; flex-wrap: wrap; width: 100%; }
+  .home-filter .seg__item { flex: 0 1 auto; }
+
+  /* tabel kosakata jadi kartu bertumpuk */
+  table.vokab { table-layout: auto; }
+  table.vokab thead { display: none; }
+  table.vokab, table.vokab tbody, table.vokab tr, table.vokab td { display: block; width: auto; }
+  table.vokab th:nth-child(n), table.vokab td:nth-child(n),
+  table.vokab td:first-child, table.vokab td:last-child { width: auto; }
+  table.vokab tr {
+    border: 1px solid rgb(var(--k-rgb-ink) / 0.14);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    padding: 6px 5px;
+    background: rgb(var(--k-rgb-surface) / 0.4);
+  }
+  table.vokab tbody tr:nth-child(even) { background: rgb(var(--k-rgb-surface) / 0.4); }
+  table.vokab td {
+    border: none;
+    display: grid;
+    grid-template-columns: 50px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px;
+    padding: 3px 7px;
+  }
+  table.vokab td::before {
+    content: attr(data-label);
+    grid-column: 1;
+    font-family: var(--font-sans);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+    padding-top: 4px;
+  }
+  table.vokab td:first-child { font-size: 18px; }
+  table.vokab td[data-label="Arti"] { display: block; }
+  table.vokab td[data-label="Arti"]::before { display: block; margin-bottom: 2px; }
+
+  /* section & koreksi */
+  .section > summary { font-size: 17px; padding: 8px 6px; }
+  .koreksi { padding: 12px; }
+  ol { padding-left: 18px; }
+  .susun { padding: 10px 10px; }
+  .susun__jawab { min-height: 48px; }
+}

@@ -1,0 +1,21 @@
+/* ============ Chip generik ============ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.22);
+  background: rgb(var(--k-rgb-surface) / 0.5);
+  color: var(--color-ink-soft);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+
+  box-shadow: none;
+}
+.chip:hover { background: rgb(var(--k-rgb-accent) / 0.1); border-color: rgb(var(--k-rgb-accent) / 0.35); color: var(--color-ink); transform: none; }
+.chip--aktif { background: var(--color-accent); border-color: var(--color-accent); color: var(--color-paper-light); }
+.chip--hafal { color: var(--k-verdict-ok); border-color: rgb(var(--k-rgb-ok) / 0.35); }
+.chip--ulangi { color: var(--color-accent); border-color: rgb(var(--k-rgb-accent) / 0.35); }

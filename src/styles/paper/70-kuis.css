@@ -1,0 +1,40 @@
+/* ============ Kuis ============ */
+.kuis { margin-top: 4px; }
+.kuis__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.kuis__skor { margin: 0; font-size: 14px; color: var(--color-ink-soft); }
+.kuis__skor strong { color: var(--color-ink); font-size: 18px; }
+.kuis__list { list-style: none; padding: 0; margin: 0; }
+.kuis__item { padding: 12px 0; border-top: 1px solid rgb(var(--k-rgb-ink) / 0.1); }
+.kuis__q { display: flex; align-items: baseline; gap: 10px; margin: 0 0 8px; font-size: 17px; font-weight: 600; }
+.kuis__no {
+  flex-shrink: 0;
+  width: 24px; height: 24px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: rgb(var(--k-rgb-accent) / 0.14);
+  color: var(--color-accent);
+  font-size: 12px;
+}
+.kuis__opsi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.opsi {
+  text-align: left;
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.2);
+  background: rgb(var(--k-rgb-surface) / 0.45);
+  color: var(--color-ink);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  box-shadow: none;
+
+}
+.opsi:hover:not(:disabled) { background: rgb(var(--k-rgb-accent) / 0.09); border-color: rgb(var(--k-rgb-accent) / 0.3); transform: none; }
+.opsi:disabled { cursor: default; }
+.opsi--benar { background: rgb(var(--k-rgb-ok) / 0.16); border-color: var(--k-verdict-ok); color: var(--k-verdict-ok-deep); font-weight: 600; }
+.opsi--salah { background: rgb(var(--k-rgb-no) / 0.12); border-color: var(--k-verdict-no); color: var(--k-verdict-no-deep); }
+.opsi--kunci { border-color: rgb(var(--k-rgb-ok) / 0.5); border-style: dashed; }
+.kuis__hasil { margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-card); font-size: 14px; font-weight: 600; }
+.kuis__hasil--ok { background: rgb(var(--k-rgb-ok) / 0.12); color: var(--k-verdict-ok-deep); }
+.kuis__hasil--no { background: rgb(var(--k-rgb-accent) / 0.12); color: var(--color-accent-deep); }

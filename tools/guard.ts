@@ -49,22 +49,36 @@ lapor(
   'tidak ada tailwind.config.js / postcss.config.js (Tailwind v4 CSS-first)',
 )
 
-// 3. paper.css: warna harus berupa token (AGENTS §9)
-const paper = readFileSync(join(root, 'src', 'styles', 'paper.css'), 'utf8')
-const hex = [...paper.matchAll(/[#][0-9a-fA-F]{3,8}\b/g)].map(
-  (m) => `paper.css: hex ${m[0]}`,
-)
-const rgba = [...paper.matchAll(/rgba?\(([^)]*)\)/g)]
-  .filter((m) => {
-    const isi = m[1].replace(/\s/g, '')
-    // boleh: netral hitam alpha rendah (shadow) + token kanal RGB tema
-    return !(isi.startsWith('0,0,0,0.0') || isi.startsWith('0,0,0,0.1') || isi.startsWith('0,0,0,0.12') || isi.startsWith('0,0,0,0.15') || isi.startsWith('0,0,0,0.2') || isi.startsWith('var(--k-rgb-'))
-  })
-  .map((m) => `paper.css: rgba(${m[1]})`)
-lapor(hex.length + rgba.length === 0, 'paper.css hanya memakai token (bukan hex/rgba hardcode)', [...hex.slice(0, 6), ...rgba.slice(0, 6)])
+// 3/4. Tema kertas: paper.css (entry) + seluruh modul src/styles/paper/*.
+// Warna harus token (AGENTS §9) dan tidak boleh ada `transition` (dipindah ke motion.css).
+const berkasPaper: { nama: string; isi: string }[] = [
+  { nama: 'paper.css', isi: readFileSync(join(root, 'src', 'styles', 'paper.css'), 'utf8') },
+]
+const dirPaper = join(root, 'src', 'styles', 'paper')
+if (existsSync(dirPaper)) {
+  for (const f of readdirSync(dirPaper).filter((f) => f.endsWith('.css')).sort()) {
+    berkasPaper.push({ nama: `paper/${f}`, isi: readFileSync(join(dirPaper, f), 'utf8') })
+  }
+}
 
-// 4. paper.css tidak boleh berisi transition (dipindah ke motion.css, AGENTS §9)
-lapor(!/transition\s*:/.test(paper), 'paper.css tidak memuat transition (sudah di motion.css)')
+const hex: string[] = []
+const rgba: string[] = []
+for (const { nama, isi } of berkasPaper) {
+  for (const m of isi.matchAll(/[#][0-9a-fA-F]{3,8}\b/g)) hex.push(`${nama}: hex ${m[0]}`)
+  for (const m of isi.matchAll(/rgba?\(([^)]*)\)/g)) {
+    const isi2 = m[1].replace(/\s/g, '')
+    // boleh: netral hitam alpha rendah (shadow) + token kanal RGB tema
+    const boleh =
+      isi2.startsWith('0,0,0,0.0') || isi2.startsWith('0,0,0,0.1') || isi2.startsWith('0,0,0,0.12') ||
+      isi2.startsWith('0,0,0,0.15') || isi2.startsWith('0,0,0,0.2') || isi2.startsWith('var(--k-rgb-')
+    if (!boleh) rgba.push(`${nama}: rgba(${m[1]})`)
+  }
+}
+lapor(hex.length + rgba.length === 0, 'paper.css (+paper/*) hanya memakai token (bukan hex/rgba hardcode)', [...hex.slice(0, 6), ...rgba.slice(0, 6)])
+
+// 4. tidak boleh ada transition di tema kertas (AGENTS §9)
+const transisi = berkasPaper.filter((b) => /transition\s*:/.test(b.isi)).map((b) => b.nama)
+lapor(transisi.length === 0, 'paper.css (+paper/*) tidak memuat transition (sudah di motion.css)', transisi)
 
 // 5. HomePage: jumlah bab harus dinamis dari registry (AGENTS §9)
 const home = readFileSync(join(root, 'src', 'pages', 'HomePage.tsx'), 'utf8')

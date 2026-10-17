@@ -1,0 +1,12 @@
+/* ============ Terjemahan (koreksi arti) ============ */
+.terj { margin-top: 6px; }
+.terj__row { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 9px 0; border-bottom: 1px dashed rgb(var(--k-rgb-ink) / 0.14); }
+.terj__jp { font-size: 15px; }
+.terj__kuci { font-size: 12.5px; font-style: italic; color: var(--color-ink-soft); }
+.terj__input { min-height: 44px; }
+.terj__res { font-size: 12.5px; }
+.terj__res--tepat { color: var(--k-verdict-ok); }
+.terj__res--dekat { color: var(--k-accent-warn); }
+.terj__res--belum { color: var(--k-verdict-no); }
+.terj__bar { height: 7px; border-radius: 999px; background: rgb(var(--k-rgb-ink) / 0.12); overflow: hidden; margin: 8px 0 4px; }
+.terj__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--k-info), var(--k-info-soft)); }

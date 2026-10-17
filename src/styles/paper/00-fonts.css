@@ -1,0 +1,33 @@
+/* ============ Fonts (self-hosted, offline) ============ */
+/* Inter & Caveat = variable fonts (satu file melayani semua weight).
+   Kalam = static (400 & 700 terpisah). File duplikat 500/600/700 tidak dipakai. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/Inter-400.woff2") format("woff2-variations"),
+       url("/fonts/Inter-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Kalam";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Kalam-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Kalam";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Kalam-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/Caveat-600.woff2") format("woff2-variations"),
+       url("/fonts/Caveat-600.woff2") format("woff2");
+}

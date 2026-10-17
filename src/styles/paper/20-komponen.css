@@ -1,0 +1,293 @@
+/* ============ Komponen bersama (satu bahasa visual) ============ */
+/* Kartu permukaan 3 tingkat; dipakai lintas halaman agar konsisten. */
+.card {
+  background: var(--k-surface-1);
+  border: 1px solid var(--k-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+}
+.card--2 { background: var(--k-surface-2); box-shadow: var(--shadow-soft); }
+.card--3 { background: var(--k-surface-3); box-shadow: none; }
+
+/* Segmented control (pilihan tunggal: mode/jumlah/fase). */
+.seg {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  background: var(--k-surface-2);
+  border: 1px solid var(--k-border-soft);
+  border-radius: var(--radius-pill);
+  flex-wrap: wrap;
+}
+.seg__item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--color-ink-soft);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.seg__item:hover { color: var(--color-ink); }
+.seg__item--aktif {
+  background: var(--color-accent);
+  color: var(--color-paper-light);
+}
+.seg__item--aktif:hover { color: var(--color-paper-light); }
+.seg__item:disabled { opacity: 0.45; cursor: default; }
+
+/* Fokus terlihat konsisten di seluruh app. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--k-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(circle at 50% -10%, var(--k-hi) 0%, transparent 55%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-blend-mode: multiply;
+  background-attachment: fixed;
+}
+
+/* kartu kertas utama */
+.book {
+  position: relative;
+  background-color: var(--color-paper-light);
+  background-image: repeating-linear-gradient(transparent, transparent 35px, rgb(var(--k-rgb-base) / 0.06) 35px, rgb(var(--k-rgb-base) / 0.06) 36px);
+  background-attachment: local;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.16);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-paper);
+  padding: 26px 28px 30px 56px;
+  overflow: hidden;
+}
+
+/* lubang kertas kiri */
+.book::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  left: 12px;
+  width: 12px;
+  background-image: radial-gradient(circle, var(--color-paper) 5px, transparent 5.5px);
+  background-size: 12px 36px;
+  background-repeat: repeat-y;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* garis margin merah */
+.book::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 38px;
+  width: 1px;
+  background: var(--color-margin-red);
+  pointer-events: none;
+}
+
+/* tipografi
+   Aturan bahasa visual (jangan diacak-acak):
+   - Judul halaman/hero  → var(--font-display) = serif (Iowan/Palatino/Georgia)
+   - Judul section & angka → var(--font-title) = Kalam (handwriting)
+   - Nomor bab + isian latihan → var(--font-hand) = Caveat (aksen tulis tangan)
+   - Semua teks isi/UI    → var(--font-sans) = Inter (+ fallback JP)
+   Caveat/Kalam HANYA aksen — jangan untuk teks isi (hurufnya kurang tajam di
+   ukuran kecil). Terukur lewat CDP: h1=serif, h2/nomor=Caveat/Kalam, body=Inter. */
+h1, h2, h3 {
+  font-family: var(--font-title);
+  letter-spacing: 0.005em;
+  line-height: 1.2;
+  font-weight: 700;
+}
+h1, h2 { text-wrap: balance; }
+h1 { font-size: clamp(24px, 4.5vw, 32px); }
+h2 { font-size: clamp(19px, 3.5vw, 23px); }
+h3 { font-size: 17px; }
+
+/* angka besar pada hero & nomor bab pakai Caveat agar lebih ekspresif */
+.bab-hero__no,
+.bab-item__no {
+  font-family: var(--font-hand);
+  font-weight: 600;
+}
+
+/* teks Jepang dan arti */
+.jp, [lang="ja"] {
+  font-size: 1.05em;
+  letter-spacing: 0.02em;
+  line-break: strict;
+  word-break: normal;
+}
+.arti {
+  font-style: normal;
+  color: var(--color-ink-soft);
+  font-size: 0.92em;
+}
+ruby rt {
+  font-size: 0.62em;
+  color: var(--color-ink-soft);
+  font-weight: 400;
+  user-select: none;
+}
+
+/* section sebagai kartu */
+.section {
+  border-radius: var(--radius-card);
+  padding: 4px 2px;
+  scroll-margin-top: 76px;
+}
+.section > summary {
+  font-family: var(--font-title); font-weight: 700;
+  font-size: clamp(18px, 3.5vw, 21px);
+  padding: 8px 10px;
+  border-radius: 8px;
+
+  list-style: none;
+}
+.section > summary::-webkit-details-marker { display: none; }
+.section > summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 8px;
+
+  color: var(--color-accent);
+}
+.section[open] > summary::before { transform: rotate(90deg); }
+.section > summary:hover { background: rgb(var(--k-rgb-accent) / 0.08); }
+
+/* tabel */
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; vertical-align: top; padding: 6px 10px; line-height: 1.6; }
+thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-paper-light);
+  border-bottom: 2px solid rgb(var(--k-rgb-ink) / 0.25);
+  font-family: var(--font-sans);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-soft);
+}
+tbody tr:nth-child(even) { background: rgb(var(--k-rgb-ink) / 0.035); }
+tbody tr { border-bottom: 1px solid rgb(var(--k-rgb-ink) / 0.1); }
+
+/* tombol */
+button {
+  font: inherit;
+  min-height: 44px;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.28);
+  border-radius: 8px;
+  padding: 10px 18px;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  cursor: pointer;
+
+  box-shadow: var(--shadow-soft);
+}
+button:hover { background: var(--k-hi-2); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+button:active { transform: translateY(1px); }
+button:focus-visible,
+a:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* link */
+a { color: var(--color-accent); text-underline-offset: 3px; }
+
+/* dekorasi */
+.tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 104px;
+  height: 24px;
+  background: rgb(var(--k-rgb-base) / 0.75);
+  border-left: 1px dashed rgba(0, 0, 0, 0.06);
+  border-right: 1px dashed rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+}
+.page-curl {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 22px 22px;
+  border-color: transparent transparent rgba(0, 0, 0, 0.07) transparent;
+  pointer-events: none;
+}
+
+/* chip TOC */
+.toc {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 8px;
+  border: 1px solid rgb(var(--k-rgb-ink) / 0.14);
+  border-radius: var(--radius-card);
+  background: rgb(var(--k-rgb-surface) / 0.92);
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-soft);
+}
+.toc a {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--color-ink-soft);
+  border: 1px solid transparent;
+
+}
+.toc a:hover {
+  background: rgb(var(--k-rgb-accent) / 0.1);
+  border-color: rgb(var(--k-rgb-accent) / 0.3);
+  color: var(--color-ink);
+}
+
+/* teks soal multi-baris */
+.whitespace-pre-wrap { white-space: pre-wrap; }
+
+/* responsif */
+@media (max-width: 640px) {
+  .book {
+    padding: 20px 16px 24px 46px;
+    border-radius: 8px;
+  }
+  .book::after { left: 34px; }
+  .book::before { left: 6px; width: 10px; background-size: 10px 32px; }
+  thead th { position: static; }
+  .toc { overflow-x: auto; flex-wrap: nowrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+ * { animation: none !important; }
+}

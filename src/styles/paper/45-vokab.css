@@ -1,0 +1,33 @@
+/* ============ Tabel kosakata ============ */
+.sr-caption {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+table.vokab { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+table.vokab thead th {
+  position: static;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  padding: 6px 10px;
+  border-bottom: 2px solid rgb(var(--k-rgb-ink) / 0.22);
+}
+table.vokab tbody td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgb(var(--k-rgb-ink) / 0.09);
+  vertical-align: top;
+  text-align: left;
+}
+table.vokab th:nth-child(1), table.vokab td:nth-child(1) { width: 30%; }
+table.vokab th:nth-child(2), table.vokab td:nth-child(2) { width: 24%; }
+table.vokab td:last-child { width: auto; }
+table.vokab td:first-child { font-weight: 600; }
+table.vokab .kanji { font-size: 1.06em; }
+table.vokab .romaji { color: var(--color-ink-soft); font-style: italic; }
+table.vokab .kosong { color: rgb(var(--k-rgb-ink) / 0.25); }
+table.vokab tbody tr:nth-child(even) { background: rgb(var(--k-rgb-ink) / 0.03); }
+table.vokab tbody tr:hover { background: rgb(var(--k-rgb-accent) / 0.06); }
+table.vokab tbody tr:nth-child(10n+11) td { border-top: 2px solid rgb(var(--k-rgb-ink) / 0.18); }
