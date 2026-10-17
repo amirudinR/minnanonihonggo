@@ -39,7 +39,7 @@ export const bunpou: Bunpou[] = [
 export const catatanTataBahasa: Bunpou[] = [
   {
     no: 1,
-    pola: '何の／だれあ',
+    pola: '何の／だれの',
     penjelasan:
       'Kata tanya 何 untuk benda (apa), だれ untuk orang (siapa). だれの menunjukkan kepunyaan (milik siapa).',
     contoh: ['それは 何ですか。……カメラです。', 'あの 人は だれですか。……ミラーさんです。'],

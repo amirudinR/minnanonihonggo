@@ -3,22 +3,22 @@ import type { Bunpou } from '@/types/bab'
 export const bunpou: Bunpou[] = [
   {
     no: 1,
-    pola: 'Apakah Sdr. Miller bisa membaca Kanji?',
-    penjelasan: '',
+    pola: 'Kata Benda / Kata Kerja Bentuk Kamus こと が できます',
+    penjelasan: 'できます adalah Kata Kerja yang menunjukkan hal yang dapat dilakukan atas kemampuan yang dimiliki orang itu, atau aksi yang memungkinkan dengan kondisi itu. Objek untuk できます ditunjuk dengan が, dan isi kemampuan atau kemungkinan ditunjuk dengan Kata Benda atau Kata Kerja Bentuk Kamus こと.\n\n1) Untuk Kata Benda\nDipakai Kata Benda yang bersifat aksi (うんてん, かいもの, スキー, ダンス). Kemudian digunakan juga Kata Benda seperti にほんご, atau ピアノ yang menunjukkan ketrampilan.\n\n2) Untuk Kata Kerja\nJika mengatakan dapat melakukan suatu perbuatan, maka bentuk frase Kata Benda dengan membubuhkan こと pada Kata Kerja Bentuk Kamus, kemudian dilanjutkan dengan が できます di belakangnya.',
     contoh: ['ミラーさんは 漢字を 読む ことが できます。'],
     artiContoh: ['Apakah Sdr. Miller bisa membaca Kanji?']
   },
   {
     no: 2,
-    pola: 'Hobi saya adalah menonton film.',
-    penjelasan: '',
+    pola: 'わたしの 趣味は Kata Benda / Kata Kerja Bentuk Kamus こと です',
+    penjelasan: 'Jika memakai Kata Kerja Bentuk Kamus こと maka dapat menujukkan isi hobi lebih konkret.',
     contoh: ['わたしの 趣味は 映画を 見る ことです。'],
     artiContoh: ['Hobi saya adalah menonton film.']
   },
   {
     no: 3,
-    pola: 'Sebelum tidur, menulis catatan harian.',
-    penjelasan: '',
+    pola: 'Kata Kerja1 Bentuk Kamus / Kata Benda の / Kata Keterangan Bilangan (jangka waktu) まえに、Kata Kerja2',
+    penjelasan: '1) Untuk Kata Kerja\nMenyatakan bahwa sebelum Kata Kerja1, terjadi Kata Kerja2. Perlu hati-hati bahwa jika waktu kalimat (waktu Kata Kerja2) menunjukkan waktu lampau atau juga menunjukkan waktu non lampau, maka Kata Kerja1 selalu berbentuk Bentuk Kamus.\n\n2) Untuk Kata Benda\nDi belakang Kata Benda membubuhkan の. Menggunakan Kata Benda yang bersifat aksi.\n\n3) Untuk Kata Keterangan Bilangan (jangka waktu)\nPerlu hati-hati bahwa di belakang Kata Keterangan Bilangan (jangka waktu) tidak membubuhkan の.',
     contoh: ['寝る まえに、日記を 書きます。'],
     artiContoh: ['Sebelum tidur, menulis catatan harian.']
   }

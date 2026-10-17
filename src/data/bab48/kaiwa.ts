@@ -4,10 +4,11 @@ import type { Kaiwa } from '@/types/bab'
 // Teks dialogue (13 baris) diverifikasi visual dari p_205.jpg.
 // arti: PDF Indonesia "Pelajaran 48 · Percakapan" (idx 163 / cetak 142).
 //
-// CATATAN: edisi Indonesia mengompres 13 baris JP menjadi 11 baris dan
-// menggeser urutannya, jadi `arti` dipasang hanya pada baris JP yang punya
-// padanan jelas. Baris JP 6, 7, dan 8 tidak ada padanan Indonesia — `arti`
-// sengaja dikosongkan (terjemahan tidak boleh dikarang).
+// CATATAN EDISI: edisi Indonesia mengompres 13 baris JP menjadi 11 baris dan
+// menggeser urutannya. Baris JP 6, 7, 8 TIDAK ada padanannya di edisi Indonesia,
+// dan baris 10 & 11 padanannya bergeser — untuk baris-baris itu `arti` ditulis
+// sebagai TERJEMAHAN SETIA dari kalimat Jepangnya (AGENTS §3 #14: jangan
+// mengarang isi buku, tetapi jangan biarkan kolom arti kosong/salah tempel).
 export const kaiwa: Kaiwa = {
   judul: '休ませていただけませんか',
   audio: '/audio/bab48_kaiwa.mp3',
@@ -56,11 +57,13 @@ export const kaiwa: Kaiwa = {
       no: 6,
       pembicara: '中村課長',
       teks: 'そうですか。',
+      arti: 'O, begitu.',
     },
     {
       no: 7,
       pembicara: 'ミラー',
       teks: 'それで ちょっと 国へ 帰らせていただきたいんですが……。',
+      arti: 'Jadi, saya ingin minta izin pulang ke negara saya sebentar…',
       furigana: [
         { base: '国', ruby: 'くに' },
         { base: '帰', ruby: 'かえ' },
@@ -70,6 +73,7 @@ export const kaiwa: Kaiwa = {
       no: 8,
       pembicara: '中村課長',
       teks: '来月の いつですか。',
+      arti: 'Bulan depan, tanggal berapa?',
       furigana: [{ base: '来月', ruby: 'らいげつ' }],
     },
     {
@@ -88,7 +92,7 @@ export const kaiwa: Kaiwa = {
       no: 10,
       pembicara: '中村課長',
       teks: 'えーと、来月 20日に 営業会議が ありますね。それまでに 帰れますか。',
-      arti: 'O, begitu. E..., bulan depan pada tanggal 20 akan diadakan rapat perdagangan, apakah bisa kembali sebelumnya, ya?',
+      arti: 'E..., bulan depan tanggal 20 ada rapat penjualan. Apakah bisa kembali sebelum itu?',
       furigana: [
         { base: '来月', ruby: 'らいげつ' },
         { base: '日', ruby: 'にち' },
@@ -100,7 +104,7 @@ export const kaiwa: Kaiwa = {
       no: 11,
       pembicara: 'ミラー',
       teks: '結婚式は 15日なので、終わったら、すぐ 帰って 来ます。',
-      arti: 'Ya.',
+      arti: 'Karena pesta pernikahannya tanggal 15, kalau sudah selesai, saya langsung pulang.',
       furigana: [
         { base: '結婚式', ruby: 'けっこんしき' },
         { base: '日', ruby: 'にち' },

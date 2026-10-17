@@ -16,7 +16,7 @@ export const bunpou: Bunpou[] = [
     penjelasan:
       'Dengan memakai pola ini dapat dinyatakan tempat (atau telepon) berada.',
     contoh: ['電話は あそこです。'],
-    artiContoh: ['Lift di sana.'],
+    artiContoh: ['Telepon di sana.'],
   },
 ]
 

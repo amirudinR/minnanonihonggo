@@ -63,11 +63,13 @@ if (!bab.no) errors.push('bab.no kosong')
       errors.push(`bunpou ${b.no}: contoh (${b.contoh.length}) != artiContoh (${b.artiContoh.length})`)
     }
     if (!b.pola?.trim()) errors.push(`bunpou #${i + 1} tanpa pola`)
+    if (!b.penjelasan?.trim()) errors.push(`bunpou ${b.no}: penjelasan KOSONG (opsi: pola salah isi?)`)
   })
   ;(bab.catatanTataBahasa ?? []).forEach((b) => {
     if (b.contoh.length !== b.artiContoh.length) {
       errors.push(`catatan #${b.no}: contoh != artiContoh`)
     }
+    if (!b.penjelasan?.trim()) errors.push(`catatan ${b.no}: penjelasan KOSONG`)
   })
 
   // Furigana: komponen Ruby (BabDetailPage) memakai `teks.split(base)`, jadi
@@ -118,6 +120,7 @@ const cekFurigana = (
       if (adaKanji && (!d.furigana || d.furigana.length === 0)) {
         warnings.push(`kaiwa baris ${d.no} mengandung kanji tanpa furigana`)
       }
+      if (!d.arti?.trim()) errors.push(`kaiwa baris ${d.no}: arti KOSONG (AGENTS §2: wajib, 1:1 dari PDF Indonesia)`)
       cekFurigana(`kaiwa baris ${d.no}`, d.teks, d.furigana, d.pembicara)
     })
   } else {

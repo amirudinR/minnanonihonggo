@@ -5,7 +5,8 @@
 > Tujuan: agent baru **tidak mengulang kesalahan yang sama**.
 > Pelengkap: `PLAN.md` (rencana & keputusan), `docs/BAB-TEMPLATE.md` (checklist per bab), `README.md` (cara jalan).
 >
-> Terakhir diperbarui: sesi **„kuis tata bahasa — 5 soal per pola"** (§2, §3c-2) — **selesai 50 bab / 337 pola / 1.685 soal**; tab **Kuis** di seksi Bunpou & Catatan Tata Bahasa, auto-check, dan opsi **diacak deterministik** (dulu jawaban selalu opsi A). Dijaga `npm run validate:bunpou` + `src/data/bunpouSoal.test.ts`.
+> Terakhir diperbarui: sesi **„audit mendalam — bug data"** (§3 #34) — ditemukan & dibetulkan: 9 entri `bunpou[]` bab 18/22/25 yang `pola`-nya berisi **terjemahan Indonesia** (penjelasan kosong) kini memakai pola + penjelasan asli buku; `kaiwa` bab 48 baris 6/7/8 yang **`arti`-nya kosong** + baris 10/11 **salah tempel** sudah diisi terjemahan setia (komentar `CATATAN EDISI`). `schema.ts` kini **ERROR** bila `penjelasan`/`kaiwa.arti` kosong (sebelumnya lolos).
+> Sebelumnya: sesi **„kuis tata bahasa — 5 soal per pola"** (§2, §3c-2) — **selesai 50 bab / 337 pola / 1.685 soal**; tab **Kuis** di seksi Bunpou & Catatan Tata Bahasa, auto-check, dan opsi **diacak deterministik** (dulu jawaban selalu opsi A). Dijaga `npm run validate:bunpou` + `src/data/bunpouSoal.test.ts`.
 > Sebelumnya: sesi **„rapikan semua: BUG-4, pengecoh, bilah navigasi"** (§3 #28–#29, §3d) — `matchLevel` diperketat (jawaban salah tak lagi dianggap benar), mode Ahli dapat **2 partikel pengecoh** + **umpan balik per-chip** (hijau/merah + posisi salah), dan app kini punya **bilah navigasi lengket** menggantikan tombol "← Daftar Bab" per halaman. Semua dokumen (`AGENTS.md`, `PLAN.md`, `docs/AI-MAP.md`) disinkronkan.
 > Sebelumnya: sesi **„latihan susun mode Ahli + auto-check + panel bacaan + sesi 20 soal"** (§3 #24–#27, §3c) — halaman `/latihan/susun` tidak lagi merender 1.000 soal, chip bisa digeser tanpa hilang, mode Ahli menyusun partikel & akhiran verba, dan tiap kanji punya cara baca (dijaga `validate:susun`).
 > Sebelumnya: sesi **„keterangan partikel dari buku MNN 1 & 2 + refactor modular"** (§3 #20–#23, §3b) — data `partikel` dipecah jadi `src/data/partikel/`, invariant dijaga `validate:partikel`, +4 bab partikel dikoreksi dari buku.
@@ -255,6 +256,13 @@ python -c "import io,sys; sys.stdout.reconfigure(encoding='utf-8'); print(io.ope
 - **Gejala:** seluruh 1.685 soal menaruh `jawaban` di `pilihan[0]`, jadi di UI **jawabannya selalu opsi pertama** → kuis tak bermakna.
 - **Sebab:** data sengaja ditulis "jawaban dulu" supaya mudah diperiksa; UI merender apa adanya.
 - **Fix:** `KuisBunpou` mengacak opsi **saat tampil** via `acakOpsi(id, pilihan)` — FNV-1a 32-bit sebagai benih + **mulberry32**, **deterministik** (id sama → urutan sama; tidak berkedip). Sebaran hasil ≈25/25/24/26% per posisi. **Jangan** hapus pengacakan ini; jangan pula "memperbaiki" data dengan mengacak manual (data tetap jawaban-dulu = mudah di-review). Lihat §3c-2.
+
+### #34 — `bunpou[].pola` diisi TERJEMAHAN + `kaiwa.arti` kosong/bergeser 🔴
+- **Gejala 1 (bab 18/22/25):** tab Pola menampilkan `1. Apakah Sdr. Miller bisa membaca Kanji?` sebagai **pola** (dengan `lang="ja"`!), dan penjelasannya kosong. Ternyata `bunpou[].pola` diisi kalimat dari section **"II. Terjemahan — Pola Kalimat"** PDF Indonesia, `penjelasan: ''`.
+- **Fix 1:** `pola` + `penjelasan` diambil dari entri `catatanTataBahasa[]` bab yang sama (section "IV. Keterangan Tata Bahasa", sudah ditranskripsi) — **tanpa mengarang**. Peta: bab18 文型1→cat2, 2→cat3, 3→cat4 · bab22 1/2/3→cat1, 4→cat2 · bab25 1→cat2, 2→cat3. Hasil: **0 penjelasan kosong** dari 337 pola.
+- **Gejala 2 (bab 48):** `kaiwa.dialog` baris 6/7/8 **tanpa `arti`**, dan `arti` baris 10/11 **salah tempel** (efek edisi Indonesia yang mengompres 13 baris → 11 baris + menggeser urutan; "O, begitu." milik baris 6 nyangkut di baris 10).
+- **Fix 2:** isi/benahi `arti` sebagai **terjemahan setia dari kalimat Jepang** untuk baris yang tak punya padanan Indonesia, dengan komentar `CATATAN EDISI` di header (aturan §3 #14).
+- **Akar masalah:** `schema.ts` dulu **tidak** memeriksa `bunpou[].penjelasan`, `catatan[].penjelasan`, dan `kaiwa.dialog[].arti`. Sekarang ketiganya **ERROR** (jangan dilonggarkan) — regresi ini tak bisa lolos lagi.
 
 ---
 

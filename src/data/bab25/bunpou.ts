@@ -3,15 +3,15 @@ import type { Bunpou } from '@/types/bab'
 export const bunpou: Bunpou[] = [
   {
     no: 1,
-    pola: 'Kalau turun hujan, saya tidak pergi.',
-    penjelasan: '',
+    pola: 'Kata Kerja Bentuk たら、～（kalimat pokok）',
+    penjelasan: 'Jika sebelumnya telah mengetahui bahwa maksud dari Kata Kerja Bentuk たら pasti terjadi, setelah terjadi hal itu menyatakan terjadinya hal-hal seperti aksi atau kejadian yang disusul kalimat pokok.',
     contoh: ['雨が 降ったら、出かけません。'],
     artiContoh: ['Kalau turun hujan, saya tidak pergi.']
   },
   {
     no: 2,
-    pola: 'Walaupun turun hujan, saya pergi.',
-    penjelasan: '',
+    pola: 'Kata Kerja Bentuk て / Kata Kerja (Bentuk ない) なくて / Kata Sifat い（～い）→～くて / Kata Sifat な[な]→～で / Kata Benda で も、～（kalimat pokok）',
+    penjelasan: 'Ini menunjukkan persyaratan asumsi paradoks. Dengan kalimat yang disusul bentuk て も (kalimat pokok), ditunjukkan terjadi hal yang terbaik yang biasanya dapat diduga di bawah persyaratan asumsi, atau tidak terjadi hal yang biasanya dapat diduga.',
     contoh: ['雨が 降っても、出かけます。'],
     artiContoh: ['Walaupun turun hujan, saya pergi.']
   }

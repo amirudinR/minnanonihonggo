@@ -15,7 +15,7 @@
 | `src/core/text/segmentPartikel.ts` | 126 | Segmentasi unit `susun` jadi token halus untuk MODE AHLI |
 | `src/core/text/susun.ts` | 193 | Logika murni latihan menyusun kalimat (tanpa React) |
 | `src/core/text/terjemahan.ts` | 56 | Bandingkan terjemahan user vs terjemahan buku memakai Jaccard + cakupan kata kunci |
-| `src/core/validation/schema.ts` | 197 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
+| `src/core/validation/schema.ts` | 200 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
 | `src/features/bab/AudioBar.tsx` | 77 | Pemutar audio Kaiwa/Mondai dengan tombol Ulang (loop) + pengatur kecepatan |
 | `src/features/bab/BabHero.tsx` | 22 | Header bab: nomor, label, topik, judul kaiwa (JP), + stempel selesai/skor |
 | `src/features/bab/BabToc.tsx` | 25 | Daftar isi bab (anchor). Membuka `<details>` tujuan bila masih tertutup |
@@ -23,14 +23,15 @@
 | `src/features/bab/BunshoSection.tsx` | 18 | Seksi Bunsho (bacaan) — judul opsional + teks + terjemahan opsional |
 | `src/features/bab/ChoukaiSection.tsx` | 34 | Seksi Choukai (聴解) — track dari buku terpisah「聴解タスク25」(MNN II) |
 | `src/features/bab/CoretanSection.tsx` | 26 | Seksi Coretan & Catatan pribadi per bab (textarea) |
-| `src/features/bab/index.ts` | 31 | Primitif |
+| `src/features/bab/index.ts` | 32 | Primitif |
 | `src/features/bab/KaiwaSection.tsx` | 36 | Seksi Kaiwa: audio + dialog (furigana) + latihan terjemahan |
 | `src/features/bab/KonteksSection.tsx` | 18 | Seksi Konteks Latihan B (teks pendukung renshuuB) |
 | `src/features/bab/KoreksiPanel.tsx` | 81 | Ringkasan koreksi satu bab (skor latihan A/B/C/Mondai) + kualitas terjemahan |
 | `src/features/bab/KosakataSection.tsx` | 118 | Seksi Kosakata dengan 3 tab (Daftar / Flashcard / Kuis) |
+| `src/features/bab/KuisBunpou.tsx` | 150 | Kelas opsi memakai sistem `.opsi` yang sudah ada (70-kuis.css) |
 | `src/features/bab/LatihanList.tsx` | 114 | Daftar latihan Renshuu (A/B/C): textarea jawaban per butir + verdict otomatis |
 | `src/features/bab/MondaiSection.tsx` | 25 | Seksi Mondai: daftar butir soal interaktif |
-| `src/features/bab/PolaSection.tsx` | 58 | Seksi pola tata bahasa |
+| `src/features/bab/PolaSection.tsx` | 101 | Seksi pola tata bahasa |
 | `src/features/bab/RangkumanSection.tsx` | 11 | Seksi Rangkuman (bila buku memang punya) |
 | `src/features/bab/ReibunSection.tsx` | 20 | Seksi Contoh Kalimat (Reibun) — latihan terjemahan soft-match |
 | `src/features/bab/RenshuuSection.tsx` | 25 | Seksi latihan Renshuu (A / B / C) |
@@ -57,7 +58,7 @@
 | `src/features/susun/SoalMenyusun.tsx` | 310 | Auto-check: begitu semua chip terpasang, langsung dikoreksi |
 | `src/features/theme/ThemeToggle.tsx` | 47 | Tombol tema: klik = balik terang <-> gelap (mode manual) |
 | `src/main.tsx` | 11 | — |
-| `src/pages/BabDetailPage.tsx` | 227 | Bab dimuat DINAMIS (code-split per bab) — lihat src/data/load.ts. |
+| `src/pages/BabDetailPage.tsx` | 242 | Bab dimuat DINAMIS (code-split per bab) — lihat src/data/load.ts. |
 | `src/pages/HomePage.tsx` | 202 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
 | `src/pages/PartikelPage.tsx` | 187 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
@@ -65,7 +66,7 @@
 | `src/store/useNotes.ts` | 24 | exports: useNotes |
 | `src/store/useProgress.ts` | 68 | bagian yang ditandai selesai user, mis. ['kosakata','bunpou','renshuuA'] |
 | `src/store/useTheme.ts` | 91 | Tema sistem saat ini (fallback 'light' bila tak didukung) |
-| `src/types/bab.ts` | 123 | Latihan menyusun kalimat (sentence building) — fokus pola bunpou bab |
+| `src/types/bab.ts` | 148 | Latihan menyusun kalimat (sentence building) — fokus pola bunpou bab |
 
 ## 2. Peta dependensi (impor antar modul src)
 
@@ -110,12 +111,15 @@ src/features/bab/KosakataSection.tsx → src/features/bab/Section.tsx
 src/features/bab/KosakataSection.tsx → src/features/flashcard/Flashcard.tsx
 src/features/bab/KosakataSection.tsx → src/features/kuis/Kuis.tsx
 src/features/bab/KosakataSection.tsx → src/types/bab.ts
+src/features/bab/KuisBunpou.tsx → src/store/useNotes.ts
+src/features/bab/KuisBunpou.tsx → src/types/bab.ts
 src/features/bab/LatihanList.tsx → src/core/text/normalize.ts
 src/features/bab/LatihanList.tsx → src/features/bab/TextWithNewlines.tsx
 src/features/bab/LatihanList.tsx → src/store/useNotes.ts
 src/features/bab/MondaiSection.tsx → src/features/bab/Section.tsx
 src/features/bab/MondaiSection.tsx → src/features/bab/SoalInteraktif.tsx
 src/features/bab/MondaiSection.tsx → src/types/bab.ts
+src/features/bab/PolaSection.tsx → src/features/bab/KuisBunpou.tsx
 src/features/bab/PolaSection.tsx → src/features/bab/Section.tsx
 src/features/bab/PolaSection.tsx → src/types/bab.ts
 src/features/bab/RangkumanSection.tsx → src/features/bab/Section.tsx
@@ -146,6 +150,7 @@ src/features/bab/index.ts → src/features/bab/KaiwaSection.tsx
 src/features/bab/index.ts → src/features/bab/KonteksSection.tsx
 src/features/bab/index.ts → src/features/bab/KoreksiPanel.tsx
 src/features/bab/index.ts → src/features/bab/KosakataSection.tsx
+src/features/bab/index.ts → src/features/bab/KuisBunpou.tsx
 src/features/bab/index.ts → src/features/bab/LatihanList.tsx
 src/features/bab/index.ts → src/features/bab/MondaiSection.tsx
 src/features/bab/index.ts → src/features/bab/PolaSection.tsx

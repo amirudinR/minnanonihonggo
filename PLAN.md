@@ -797,3 +797,52 @@ CDP 1280px & 390px gelap: tab Kuis di Bunpou & Catatan, chip = jumlah pola (bab 
 
 **Tidak ada perubahan data bab**, tidak ada key localStorage baru (pakai `bunpou-*` yang sudah ada),
 `public/audio` tetap tidak di-commit.
+
+---
+
+## 30. Sesi "Audit mendalam — bug data yang lolos validator" — 2026-10-17
+
+**Pemicu:** permintaan user „cek mendalam cari bug lain dan baiki".
+
+**Cara:** dibuat scanner sementara `tmp/audit-mendalam.ts` (Node+tsx) yang menyisir invariant
+yang **tidak** dicakup `npm run validate` — penomoran pola/dialog/renshuu/mondai, field wajib
+yang belum dicek, anomali teks (tanda baca dobel, spasi ujung), token Latin tak dikenal,
+penomoran bab vs folder, keberadaan berkas audio, dan duplikat arti. (Skrip ada di `tmp/`,
+gitignored — bukan gerbang.)
+
+**Temuan nyata (2 kelas, sudah dibetulkan):**
+
+1. **bab 18/22/25 — 9 entri `bunpou[]` salah model** 🔴
+   - `pola` diisi **terjemahan Indonesia** dari section "II. Terjemahan — Pola Kalimat"
+     PDF Indonesia, `penjelasan: ''`. Akibatnya tab Pola menampilkan
+     „1. Apakah Sdr. Miller bisa membaca Kanji?" sebagai **pola** (`lang="ja"`), penjelasan kosong.
+   - Fix tanpa mengarang: `pola` + `penjelasan` diambil dari `catatanTataBahasa[]` bab yang sama
+     (section "IV. Keterangan Tata Bahasa", sudah ditranskripsi). Peta: bab18 1→cat2, 2→cat3,
+     3→cat4 · bab22 1/2/3→cat1, 4→cat2 · bab25 1→cat2, 2→cat3.
+   - Verifikasi halaman sumber: PDF Indonesia **tanpa text layer** (204 hlm), jadi dibaca visual
+     lewat `tmp/render_hal.py` (dpi 200) — Pelajaran 18 "IV. Keterangan Tata Bahasa" = idx 136.
+
+2. **bab 48 — `kaiwa.dialog` baris 6/7/8 `arti` KOSONG + baris 10/11 salah tempel** 🔴
+   - Efek edisi Indonesia mengompres 13 baris JP → 11 baris & menggeser urutan;
+     „O, begitu." (milik baris 6) nyangkut di `arti` baris 10, dan baris 11 ber-`arti` „Ya.".
+   - Fix: isi/benahi sebagai **terjemahan setia dari kalimat Jepang** + komentar `CATATAN EDISI`
+     di header (aturan §3 #14). Hasil: 13 baris punya arti, tak ada yang kosong.
+
+3. **Typo data lama (disetujui user):** bab02 catatan 1 `pola: '何の／だれあ'` → `'何の／だれの'`;
+   bab03 文型 2 `artiContoh: ['Lift di sana.']` → `'Telepon di sana.'` (contoh-nya `電話は あそこです。`).
+
+**Tahan-regresi:** `src/core/validation/schema.ts` kini **ERROR** bila `bunpou[].penjelasan`,
+`catatanTataBahasa[].penjelasan`, atau `kaiwa.dialog[].arti` kosong (sebelumnya lolos tanpa cek).
+Diuji negatif: mengosongkan satu `arti` bab48 → validate melaporkan 1 error.
+
+**Temuan yang dinyatakan SAH (bukan bug):** 97 WARN sisa = „token Latin tak dikenal" (teks Inggris
+yang memang dikutip buku — `「Thank you」`, `「Goodbye」` — dan instruksi Indonesia di `bunpouSoal`);
+11 INFO duplikat arti = kalimat buku yang sama muncul di `bunpou` dan `kaiwa`/`susun`.
+Nomor folder vs `bab.no` 50/50 cocok; 269 berkas audio lengkap.
+
+**Verifikasi:** `validate` 0 error/0 warning · `check:full` (validate+partikel+susun+bunpou+typecheck+
+test+build) hijau · `test` **80 hijau** · `guard` 8/8 PASS · audit mendalam **ERROR 0** ·
+CDP (port 5199): bab 18/22/25 tab Pola menampilkan pola + penjelasan benar, bab 48 kaiwa 13 baris
+ber-`arti`, tak ada error boundary.
+
+**Docs:** AGENTS header + §3 #34; PLAN sesi ini.
