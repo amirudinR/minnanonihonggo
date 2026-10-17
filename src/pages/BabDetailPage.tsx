@@ -1,14 +1,27 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getBab } from '../data'
 import { useProgress } from '../store/useProgress'
 import { useNotes } from '../store/useNotes'
-import type { Bab, Furigana } from '../types/bab'
-import { matchLevel, countCorrect, adaJawaban } from '../core/text/normalize'
-import { nilaiTerjemahan } from '../core/text/terjemahan'
-import { Flashcard } from '../features/flashcard/Flashcard'
-import { Kuis } from '../features/kuis/Kuis'
-import { MenyusunLatihan } from '../features/susun'
+import {
+  BabHero,
+  ToolbarTampilan,
+  BabToc,
+  KosakataSection,
+  type KosakataMode,
+  PolaSection,
+  ReibunSection,
+  KaiwaSection,
+  KonteksSection,
+  SusunSection,
+  RenshuuSection,
+  MondaiSection,
+  BunshoSection,
+  RangkumanSection,
+  CoretanSection,
+  BagianProgress,
+  KoreksiPanel,
+} from '../features/bab'
 
 export default function BabDetailPage() {
   const { no } = useParams()
@@ -20,9 +33,8 @@ export default function BabDetailPage() {
   const setCatatan = useNotes((s) => s.setCatatan)
   const [showRomaji, setShowRomaji] = useState(false)
   const [showFurigana, setShowFurigana] = useState(true)
-  const [modeKosakata, setModeKosakata] = useState<'tabel' | 'flash' | 'kuis'>('tabel')
+  const [modeKosakata, setModeKosakata] = useState<KosakataMode>('tabel')
   const [showTop, setShowTop] = useState(false)
-  const [cariKata, setCariKata] = useState('')
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 600)
@@ -62,8 +74,8 @@ export default function BabDetailPage() {
   // Deep-linking: sinkronisasi tab dengan URL hash (#flash, #kuis)
   useEffect(() => {
     const hash = window.location.hash.replace('#', '')
-    if (modeTab.includes(hash as (typeof modeTab)[number])) {
-      setModeKosakata(hash as (typeof modeTab)[number])
+    if (modeTab.includes(hash as KosakataMode)) {
+      setModeKosakata(hash as KosakataMode)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -86,22 +98,8 @@ export default function BabDetailPage() {
     <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
       <main className="book">
         <span className="page-curl" aria-hidden />
-        <header className="bab-hero">
-          <span className="bab-hero__no">{num}</span>
-          <div className="bab-hero__body">
-            <span className="bab-hero__label">Pelajaran</span>
-            <h1 className="bab-hero__title">{bab.topik}</h1>
-            <span className="bab-hero__sub" lang="ja">
-              {bab.kaiwa?.judul ?? ''}
-            </span>
-          </div>
-          <div className="bab-hero__stamp">
-            {p?.selesai && <span className="stamp stamp--ok">SELESAI</span>}
-            {typeof p?.skor === 'number' && (
-              <span className="stamp stamp--skor">SKOR {p.skor}</span>
-            )}
-          </div>
-        </header>
+
+        <BabHero num={num} bab={bab} selesai={p?.selesai} skor={p?.skor} />
 
         <div className="bab-context" aria-label="Ringkasan materi bab">
           <span><strong>{bab.kosakata.length}</strong> kosakata</span>
@@ -116,301 +114,58 @@ export default function BabDetailPage() {
           </button>
         </div>
 
-        <div className="toolbar" aria-label="Pengaturan tampilan">
-          <span className="toolbar__title">Tampilan teks</span>
-          <label className="toolbar__toggle">
-            <input
-              type="checkbox"
-              checked={showFurigana}
-              onChange={(e) => setShowFurigana(e.target.checked)}
-            />
-            Furigana
-          </label>
-          <label className="toolbar__toggle">
-            <input
-              type="checkbox"
-              checked={showRomaji}
-              onChange={(e) => setShowRomaji(e.target.checked)}
-            />
-            Romaji
-          </label>
-        </div>
+        <ToolbarTampilan
+          showFurigana={showFurigana}
+          onFurigana={setShowFurigana}
+          showRomaji={showRomaji}
+          onRomaji={setShowRomaji}
+        />
 
-        {/* TOC */}
-        <nav className="toc" aria-label="Daftar isi">
-          {sectionsOf(bab).map((s) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              onClick={() => {
-                const el = document.getElementById(s.id)
-                if (el && el instanceof HTMLDetailsElement && !el.open) {
-                  el.open = true
-                }
-              }}
-            >
-              {s.short}
-            </a>
-          ))}
-        </nav>
+        <BabToc bab={bab} />
 
         {bab.kosakata.length > 0 && (
-          <Section id="kosakata" title="Kosakata" defaultOpen>
-            <div className="seg" role="tablist" aria-label="Mode belajar kosakata" style={{ marginBottom: 10 }} onKeyDown={onTabKey}>
-              {([
-                ['tabel', 'Daftar'],
-                ['flash', 'Flashcard'],
-                ['kuis', 'Kuis'],
-              ] as const).map(([m, label]) => (
-                <button
-                  key={m}
-                  type="button"
-                  role="tab"
-                  aria-selected={modeKosakata === m}
-                  aria-controls={`panel-kosakata-${m}`}
-                  id={`tab-kosakata-${m}`}
-                  tabIndex={modeKosakata === m ? 0 : -1}
-                  className={`seg__item ${modeKosakata === m ? 'seg__item--aktif' : ''}`}
-                  onClick={() => {
-                    setModeKosakata(m)
-                    window.location.hash = m
-                    document.getElementById(`panel-kosakata-${m}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            {modeKosakata === 'tabel' && (
-              <div id="panel-kosakata-tabel" role="tabpanel" aria-labelledby="tab-kosakata-tabel">
-              <div className="kosakata-search" style={{ marginBottom: 8, maxWidth: 320 }}>
-                <input
-                  type="search"
-                  className="home-search"
-                  style={{ width: '100%' }}
-                  placeholder="Cari kata…"
-                  value={cariKata}
-                  onChange={(e) => setCariKata(e.target.value)}
-                  aria-label="Cari kosakata"
-                />
-              </div>
-              <table className="vokab">
-                <caption className="sr-caption">Kosakata Bab {num}</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Kana</th>
-                    <th scope="col">Kanji</th>
-                    {showRomaji && <th scope="col">Romaji</th>}
-                    <th scope="col">Arti</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bab.kosakata
-                    .filter((k) => {
-                      if (!cariKata.trim()) return true
-                      const q = cariKata.toLowerCase()
-                      return (
-                        k.kana.toLowerCase().includes(q) ||
-                        k.kanji?.toLowerCase().includes(q) ||
-                        k.arti.toLowerCase().includes(q)
-                      )
-                    })
-                    .map((k) => (
-                    <tr key={k.id}>
-                      <td data-label="Kana" lang="ja">{k.kana}</td>
-                      <td data-label="Kanji" lang="ja">
-                        {k.kanji ? (
-                          <span className="kanji">{k.kanji}</span>
-                        ) : (
-                          <span className="kosong">·</span>
-                        )}
-                      </td>
-                      {showRomaji && <td data-label="Romaji" className="romaji">{k.romaji ?? '—'}</td>}
-                      <td data-label="Arti">
-                        {k.arti}
-                        {k.catatan && <span className="block text-xs italic text-ink-soft">{k.catatan}</span>}
-                        {k.contoh && <span className="block text-xs text-ink-soft">contoh: {k.contoh}</span>}
-                      </td>
-                     </tr>
-                    ))}
-                </tbody>
-              </table>
-              </div>
-            )}
-            {modeKosakata === 'flash' && <div id="panel-kosakata-flash" role="tabpanel" aria-labelledby="tab-kosakata-flash"><Flashcard kosakata={bab.kosakata} babNo={num} /></div>}
-            {modeKosakata === 'kuis' && <div id="panel-kosakata-kuis" role="tabpanel" aria-labelledby="tab-kosakata-kuis"><Kuis kosakata={bab.kosakata} babNo={num} /></div>}
-          </Section>
+          <KosakataSection
+            bab={bab}
+            num={num}
+            mode={modeKosakata}
+            setMode={setModeKosakata}
+            showRomaji={showRomaji}
+            onTabKey={onTabKey}
+          />
         )}
 
         {bab.bunpou.length > 0 && (
-          <Section id="bunpou" title="Bunpou" defaultOpen>
-            {bab.bunpou.map((b) => (
-              <div key={b.no} className="mb-3">
-                <h3 className="font-semibold">
-                  {b.no}. <span lang="ja">{b.pola}</span>
-                </h3>
-                <p className="text-ink-soft" style={{ maxWidth: '68ch' }}>{b.penjelasan}</p>
-                {b.sub && b.sub.map((s, i) => (
-                  <p key={i} className="text-sm">
-                    <strong>{s.judul}:</strong> {s.isi}
-                  </p>
-                ))}
-                {b.contoh.length > 0 && (
-                  <div className="mt-1">
-                    <strong>Contoh:</strong>
-                    {b.contoh.map((c, i) => (
-                      <p key={i} className="ml-2">
-                        <span lang="ja">{c}</span>
-                        <span className="block text-sm italic text-ink-soft">{b.artiContoh[i]}</span>
-                      </p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </Section>
+          <PolaSection id="bunpou" title="Bunpou" items={bab.bunpou} variant="bunpou" defaultOpen />
         )}
 
         {bab.catatanTataBahasa && bab.catatanTataBahasa.length > 0 && (
-          <Section id="catatan" title="Catatan Tata Bahasa">
-            {bab.catatanTataBahasa.map((b) => (
-              <div key={b.no} className="mb-3">
-                <h3 className="font-semibold">{b.no}. <span lang="ja">{b.pola}</span></h3>
-                <p className="text-ink-soft" style={{ maxWidth: '68ch' }}>{b.penjelasan}</p>
-                {b.contoh.length > 0 && b.contoh.map((c, i) => (
-                  <p key={i} className="ml-2">
-                    <span lang="ja">{c}</span>
-                    <span className="block text-sm italic text-ink-soft">{b.artiContoh[i]}</span>
-                  </p>
-                ))}
-              </div>
-            ))}
-          </Section>
+          <PolaSection id="catatan" title="Catatan Tata Bahasa" items={bab.catatanTataBahasa} variant="catatan" />
         )}
 
-        {bab.reibun.length > 0 && (
-          <Section id="reibun" title="Contoh Kalimat (Reibun)">
-            <TerjemahanList
-              items={bab.reibun.map((r, i) => ({
-                key: `b${num}-terj-reibun-${i}`,
-                judul: '(Reibun)',
-                jp: r.kalimat,
-                kunci: r.arti,
-              }))}
-            />
-          </Section>
-        )}
+        {bab.reibun.length > 0 && <ReibunSection items={bab.reibun} num={num} />}
 
-        {bab.kaiwa && (
-          <Section id="kaiwa" title={`Kaiwa — ${bab.kaiwa.judul ?? ''}`}>
-            {bab.kaiwa.audio && <AudioBar src={bab.kaiwa.audio} label="Dengarkan dialog Kaiwa" />}
-            <div className="mt-2">
-              {bab.kaiwa.dialog.map((d) => (
-                <p key={d.no} className="mb-1">
-                  <strong>{d.pembicara}: </strong>
-                  <span lang="ja">
-                    <Ruby text={d.teks} furigana={d.furigana} show={showFurigana} />
-                  </span>
-                  {d.arti && <span className="block text-sm italic text-ink-soft">{d.arti}</span>}
-                </p>
-              ))}
-            </div>
-            <TerjemahanList
-              items={bab.kaiwa.dialog
-                .filter((d) => d.arti)
-                .map((d) => ({
-                  key: `b${num}-terj-kaiwa-${d.no}`,
-                  judul: d.pembicara,
-                  jp: d.teks,
-                  kunci: d.arti as string,
-                }))}
-            />
-          </Section>
-        )}
+        {bab.kaiwa && <KaiwaSection kaiwa={bab.kaiwa} num={num} showFurigana={showFurigana} />}
 
         {/* konteks untuk renshuuB */}
-        {bab.konteks && bab.konteks.length > 0 && (
-          <Section id="konteks" title="Konteks Latihan B">
-            {bab.konteks.map((k, i) => (
-              <div key={i}>
-                <h3 className="font-semibold">{k.judul}</h3>
-                <TextWithNewlines text={k.teks ?? ''} />
-              </div>
-            ))}
-          </Section>
-        )}
+        {bab.konteks && bab.konteks.length > 0 && <KonteksSection items={bab.konteks} />}
 
-        {bab.susun && bab.susun.length > 0 && (
-          <Section id="susun" title="Menyusun Kalimat">
-            <MenyusunLatihan babNo={num} items={bab.susun} />
-          </Section>
-        )}
+        {bab.susun && bab.susun.length > 0 && <SusunSection items={bab.susun} num={num} />}
 
-        {bab.renshuuA.length > 0 && (
-          <Section id="renshuuA" title="Renshuu A">
-            <LatihanList items={bab.renshuuA} section="A" babNo={num} />
-          </Section>
-        )}        {bab.renshuuB.length > 0 && (
-          <Section id="renshuuB" title="Renshuu B">
-            <LatihanList items={bab.renshuuB} section="B" babNo={num} />
-          </Section>
-        )}
-        {bab.renshuuC.length > 0 && (
-          <Section id="renshuuC" title="Renshuu C">
-            <LatihanList items={bab.renshuuC} section="C" babNo={num} />
-          </Section>
-        )}
+        {bab.renshuuA.length > 0 && <RenshuuSection id="renshuuA" title="Renshuu A" section="A" items={bab.renshuuA} num={num} />}
+        {bab.renshuuB.length > 0 && <RenshuuSection id="renshuuB" title="Renshuu B" section="B" items={bab.renshuuB} num={num} />}
+        {bab.renshuuC.length > 0 && <RenshuuSection id="renshuuC" title="Renshuu C" section="C" items={bab.renshuuC} num={num} />}
 
-        {bab.mondai.length > 0 && (
-          <Section id="mondai" title="Mondai">
-            {bab.mondai.map((m) => (
-                <SoalInteraktif 
-                  key={m.no}
-                  no={m.no}
-                  mkey={`b${num}-mondai-${m.no}`}
-                  soal={m.soal}
-                  audio={m.audio}
-                  instruksi={m.instruksi}
-                  pilihan={m.pilihan}
-                  jawaban={m.jawaban}
-                  kunciTersedia={m.kunciTersedia}
-                />
-              ))}
-          </Section>
-        )}
+        {bab.mondai.length > 0 && <MondaiSection items={bab.mondai} num={num} />}
 
-        {bab.bunsho.length > 0 && (
-          <Section id="bunsho" title="Bunsho">
-            {bab.bunsho.map((b, i) => (
-              <div key={i}>
-                {b.judul && <h3 className="font-semibold">{b.judul}</h3>}
-                <p lang="ja">{b.teks}</p>
-                {b.arti && <p className="text-sm italic text-ink-soft">{b.arti}</p>}
-              </div>
-            ))}
-          </Section>
-        )}
+        {bab.bunsho.length > 0 && <BunshoSection items={bab.bunsho} />}
 
-        {bab.rangkuman && (
-          <Section id="rangkuman" title="Rangkuman">
-            <p>{bab.rangkuman}</p>
-          </Section>
-        )}
+        {bab.rangkuman && <RangkumanSection teks={bab.rangkuman} />}
 
         <BagianProgress bab={bab} babNo={num} />
 
         <KoreksiPanel bab={bab} babNo={num} />
 
-        <Section id="coretan" title="Coretan & Catatanku">
-          <textarea
-            rows={6}
-            value={catatan[num] ?? ''}
-            onChange={(e) => setCatatan(num, e.target.value)}
-            placeholder="Tulis coretan, rangkuman, atau catatan penting bab ini di sini…"
-            aria-label={`Coretan bab ${num}`}
-            className="coretan"
-          />
-        </Section>
+        <CoretanSection num={num} value={catatan[num] ?? ''} onChange={(v) => setCatatan(num, v)} />
 
         <button
           type="button"
@@ -436,528 +191,5 @@ export default function BabDetailPage() {
         ↑
       </button>
     </div>
-  )
-}
-
-/* ---------- helpers ---------- */
-
-type BabSection = { id: string; short: string; label: string }
-
-function sectionsOf(bab: Bab): BabSection[] {
-  const arr: BabSection[] = []
-  if (bab.kosakata.length > 0) arr.push({ id: 'kosakata', short: 'Kosakata', label: 'Kosakata' })
-  if (bab.bunpou.length > 0) arr.push({ id: 'bunpou', short: 'Bunpou', label: 'Bunpou' })
-  if (bab.catatanTataBahasa?.length) arr.push({ id: 'catatan', short: 'Catatan', label: 'Catatan Tata Bahasa' })
-  if (bab.reibun.length > 0) arr.push({ id: 'reibun', short: 'Reibun', label: 'Reibun' })
-  if (bab.kaiwa) arr.push({ id: 'kaiwa', short: 'Kaiwa', label: 'Kaiwa' })
-  if (bab.konteks?.length) arr.push({ id: 'konteks', short: 'Konteks', label: 'Konteks' })
-  if (bab.susun?.length) arr.push({ id: 'susun', short: 'Menyusun', label: 'Menyusun Kalimat' })
-  if (bab.renshuuA.length > 0) arr.push({ id: 'renshuuA', short: 'Latih A', label: 'Latih A' })
-  if (bab.renshuuB.length > 0) arr.push({ id: 'renshuuB', short: 'Latih B', label: 'Latih B' })
-  if (bab.renshuuC.length > 0) arr.push({ id: 'renshuuC', short: 'Latih C', label: 'Latih C' })
-  if (bab.mondai.length > 0) arr.push({ id: 'mondai', short: 'Mondai', label: 'Mondai' })
-  if (bab.bunsho.length > 0) arr.push({ id: 'bunsho', short: 'Bunsho', label: 'Bunsho' })
-  if (bab.rangkuman) arr.push({ id: 'rangkuman', short: 'Rangkuman', label: 'Rangkuman' })
-  arr.push({ id: 'bagian', short: 'Progress', label: 'Progress Per-Bagian' })
-  arr.push({ id: 'coretan', short: 'Coretan', label: 'Coretan' })
-  return arr
-}
-
-function Section({
-  id,
-  title,
-  defaultOpen = false,
-  children,
-}: {
-  id: string
-  title: string
-  defaultOpen?: boolean
-  children: ReactNode
-}) {
-  return (
-    <details id={id} open={defaultOpen ? true : undefined} className={`section section--${id.replace(/[ABC]$/, '')} mb-2 scroll-mt-20`}>
-      <summary className="cursor-pointer select-none text-xl" style={{ fontFamily: 'var(--font-hand)' }}>
-        {title}
-      </summary>
-      <div className="mt-1">{children}</div>
-    </details>
-  )
-}
-
-function TextWithNewlines({ text, inline = false }: { text: string; inline?: boolean }) {
-  const lines = text.split('\n')
-  if (inline) {
-    return (
-      <>
-        {lines.map((l, i) => (
-          <span key={i}>
-            {l}
-            {i < lines.length - 1 && <br />}
-          </span>
-        ))}
-      </>
-    )
-  }
-  return (
-    <p>
-      {lines.map((l, i) => (
-        <span key={i}>
-          {l}
-          {i < lines.length - 1 && <br />}
-        </span>
-      ))}
-    </p>
-  )
-}
-
-function KoreksiPanel({ bab, babNo }: { bab: Bab; babNo: number }) {
-  const answers = useNotes((s) => s.answers)
-  const setSkor = useProgress((s) => s.setSkor)
-
-  const pairs: { user: string; expected: string }[] = []
-  const push = (section: string, items: { no: number; jawaban?: string; kunciTersedia?: boolean }[]) => {
-    items.forEach((r) => {
-      if (r.jawaban && r.kunciTersedia !== false) {
-        pairs.push({ user: answers[`b${babNo}-${section}-${r.no}`] ?? '', expected: r.jawaban })
-      }
-    })
-  }
-  push('A', bab.renshuuA)
-  push('B', bab.renshuuB)
-  push('C', bab.renshuuC)
-  push('mondai', bab.mondai)
-
-  // Kualitas terjemahan (reibun + kaiwa) — metrik terpisah dari skor exact-match.
-  const terjPairs = [
-    ...bab.reibun.map((r, i) => ({
-      user: answers[`b${babNo}-terj-reibun-${i}`] ?? '',
-      expected: r.arti,
-    })),
-    ...(bab.kaiwa?.dialog ?? [])
-      .filter((d) => d.arti)
-      .map((d) => ({
-        user: answers[`b${babNo}-terj-kaiwa-${d.no}`] ?? '',
-        expected: d.arti as string,
-      })),
-  ]
-  const terjTerisi = terjPairs.filter((p) => p.user.trim()).length
-  const terjRata = terjTerisi
-    ? Math.round(
-        terjPairs.reduce((a, p) => a + (p.user.trim() ? nilaiTerjemahan(p.user, p.expected)?.skor ?? 0 : 0), 0) /
-          terjTerisi,
-      )
-    : 0
-
-  const { benar, total } = countCorrect(pairs)
-  const skor = total > 0 ? Math.round((benar / total) * 100) : 0
-  const terisi = pairs.filter((p) => p.user.trim().length > 0).length
-
-  useEffect(() => {
-    if (terisi > 0) setSkor(babNo, skor)
-  }, [terisi, skor, babNo, setSkor])
-
-  if (total === 0 || terisi === 0) return null
-
-  return (
-    <div className="koreksi" id="koreksi">
-      <h2 className="mb-1 text-lg">Hasil Koreksi Bab {babNo}</h2>
-      <p className="text-sm text-ink-soft">
-        Terisi {terisi} dari {total} soal · <strong>{benar} benar</strong>
-      </p>
-      <div className="koreksi__bar">
-        <div className="koreksi__fill" style={{ width: `${skor}%` }} />
-      </div>
-      <p className="mt-1 text-sm">
-        Skor: <strong>{skor}</strong> / 100 <span className="score-note">{skor >= 60 ? 'Target tercapai' : 'Terus latihan'}</span>
-      </p>
-      <p className="koreksi__terj">
-        {terjTerisi > 0
-          ? `Kualitas terjemahan rata-rata: ${terjRata}% (${terjTerisi}/${terjPairs.length} terjemahan)`
-          : 'Isi terjemahan Reibun/Kaiwa untuk melihat kualitas terjemahan.'}
-      </p>
-    </div>
-  )
-}
-
-function BagianProgress({ bab, babNo }: { bab: Bab; babNo: number }) {
-  const bagianSelesai = useProgress(
-    (s) => s.items.find((x) => x.no === babNo)?.bagianSelesai,
-  )
-  const toggleBagian = useProgress((s) => s.toggleBagian)
-
-  const daftar = sectionsOf(bab).filter((s) => s.id !== 'coretan' && s.id !== 'bagian')
-  const done = bagianSelesai ?? []
-  const selesaiCount = daftar.filter((s) => done.includes(s.id)).length
-
-  return (
-    <Section id="bagian" title={`Progress Per-Bagian (${selesaiCount}/${daftar.length})`}>
-      <p className="text-sm text-ink-soft" style={{ marginTop: 0 }}>
-        Centang bagian yang sudah kamu kuasai. Ini terpisah dari skor latihan.
-      </p>
-      <ul className="bagian">
-        {daftar.map((s) => {
-          const sudah = done.includes(s.id)
-          return (
-            <li key={s.id}>
-              <label className={`bagian__item ${sudah ? 'bagian__item--selesai' : ''}`}>
-                <input
-                  type="checkbox"
-                  checked={sudah}
-                  onChange={() => toggleBagian(babNo, s.id)}
-                />
-                <span>{s.label}</span>
-              </label>
-            </li>
-          )
-        })}
-      </ul>
-    </Section>
-  )
-}
-
-
-function SoalInteraktif({ 
-  mkey, 
-  soal, 
-  audio, 
-  instruksi, 
-  pilihan, 
-  jawaban, 
-  kunciTersedia, 
-  no 
-}: { 
-  mkey: string
-  soal: string
-  audio?: string
-  instruksi?: string
-  pilihan?: string[]
-  jawaban?: string
-  kunciTersedia?: boolean
-  no: number
-}) {
-  const answers = useNotes((s) => s.answers)
-  const setAnswer = useNotes((s) => s.setAnswer)
-  const lines = soal.split('\n').filter(l => l.trim())
-
-  const lvl = adaJawaban(answers[mkey]) ? matchLevel(answers[mkey], jawaban ?? '') : null
-  const kunciMulti = (jawaban ?? '').includes('\n')
-
-  return (
-    <div className="mb-4">
-      <div className="flex gap-2">
-        <span className="font-medium text-accent">{no}.</span>
-        <div className="flex-1 min-w-0">
-          {lines.map((line, i) => (
-            <div key={i} className="soal-baris">
-              <span className="soal-baris__teks" lang="ja"><TextWithNewlines text={line} inline /></span>
-              <div className="soal-baris__input-wrapper">
-                <input
-                  type="text"
-                  className="book-input"
-                  placeholder={pilihan ? 'Jawaban baris ini…' : 'Tulis / terjemahkan baris ini…'}
-                  value={answers[`${mkey}-line-${i}`] || ''}
-                  onChange={(e) => setAnswer(`${mkey}-line-${i}`, e.target.value)}
-                />
-              </div>
-            </div>
-          ))}
-          {instruksi && <p className="text-sm italic text-ink-soft mb-2">{instruksi}</p>}
-          {audio && <div className="mb-2"><AudioBar src={audio} label={`Dengarkan soal ${no}`} /></div>}
-
-          {pilihan && pilihan.length > 0 && (
-            <ul className="mt-1 ml-4 mb-2 list-disc text-sm">
-              {pilihan.map((p, i) => (
-                <li key={i} lang="ja">{p}</li>
-              ))}
-            </ul>
-          )}
-
-          {kunciTersedia !== false && jawaban && (
-            <div className="mt-2 p-3 bg-paper-light border rounded-lg shadow-sm">
-              <label className="text-xs uppercase font-bold text-ink-faint tracking-wider mb-1 block">
-                Jawaban Soal
-              </label>
-              {kunciMulti ? (
-                <textarea
-                  rows={Math.min(6, (jawaban ?? '').split('\n').length + 1)}
-                  className="book-input book-input--area w-full font-bold"
-                  placeholder="Jawaban (mis. 1) ①… 2) ②…)"
-                  value={answers[mkey] || ''}
-                  onChange={(e) => setAnswer(mkey, e.target.value)}
-                />
-              ) : (
-                <input
-                  type="text"
-                  className="book-input font-bold"
-                  placeholder="Jawaban (mis. ①…)"
-                  value={answers[mkey] || ''}
-                  onChange={(e) => setAnswer(mkey, e.target.value)}
-                />
-              )}
-              {lvl && (
-                <div className={`mt-1 text-sm ${
-                  lvl === 'tepat' ? 'text-selesai' : lvl === 'dekat' ? 'text-accent' : 'text-salah'
-                }`}>
-                  {lvl === 'tepat' ? 'Benar!' : lvl === 'dekat' ? 'Hampir tepat (typo?)' : 'Kurang tepat'}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function TerjemahanList({
-  items,
-}: {
-  items: { key: string; judul: string; jp: string; kunci: string }[]
-}) {
-  const answers = useNotes((s) => s.answers)
-  const setAnswer = useNotes((s) => s.setAnswer)
-  const [tampilkanSemua, setTampilkanSemua] = useState(false)
-
-  const hasil = items.map((it) => {
-    const user = answers[it.key] ?? ''
-    return { ...it, user, nilai: user.trim() ? nilaiTerjemahan(user, it.kunci) : null }
-  })
-  const terisi = hasil.filter((h) => h.user.trim()).length
-  const rata = terisi
-    ? Math.round(hasil.reduce((a, h) => a + (h.nilai?.skor ?? 0), 0) / terisi)
-    : 0
-  const belum = hasil.filter((h) => !h.user.trim())
-  const tampil = tampilkanSemua ? hasil : belum
-
-  return (
-    <div className="terj">
-      <div className="toolbar" style={{ marginBottom: 4 }}>
-        <span className="toolbar__title">Koreksi terjemahan</span>
-        {belum.length < hasil.length && (
-          <button
-            type="button"
-            className="text-sm underline underline-offset-2 text-ink-soft"
-            onClick={() => setTampilkanSemua((v) => !v)}
-            aria-expanded={tampilkanSemua}
-          >
-            {tampilkanSemua ? 'Sembunyikan terjemahan' : `Tampilkan semua (${hasil.length})`}
-          </button>
-        )}
-      </div>
-      {terisi > 0 && (
-        <>
-          <div className="terj__bar" role="progressbar" aria-valuenow={rata} aria-valuemin={0} aria-valuemax={100}>
-            <div className="terj__fill" style={{ width: `${rata}%` }} />
-          </div>
-          <p className="text-xs text-ink-soft" style={{ margin: '0 0 6px' }}>
-            Kedekatan rata-rata {rata}% · {terisi}/{items.length} diterjemahkan
-          </p>
-        </>
-      )}
-      {tampil.length === 0 && (
-        <p className="text-sm text-ink-soft">Semua terjemahan sudah diisi. Klik "Tampilkan semua" untuk meninjau.</p>
-      )}
-      {tampil.map((h) => (
-        <div key={h.key} className="terj__row">
-          <span className="terj__jp" lang="ja">{h.jp}</span>
-          <span className="terj__kuci">Kunci: {h.kunci}</span>
-          <textarea
-            rows={2}
-            className="jawab terj__input"
-            value={h.user}
-            onChange={(e) => setAnswer(h.key, e.target.value)}
-            placeholder={`Terjemahanmu untuk ${h.judul}…`}
-            aria-label={`Terjemahan ${h.judul}`}
-          />
-          {h.nilai && (
-            <span className={`terj__res terj__res--${h.nilai.level}`}>
-              {h.nilai.level === 'tepat'
-                ? `Sangat dekat (${h.nilai.skor}%)`
-                : h.nilai.level === 'dekat'
-                  ? `Cukup dekat (${h.nilai.skor}%)`
-                  : `Belum dekat (${h.nilai.skor}%)`}
-            </span>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function LatihanList({
-  items,
-  section,
-  babNo,
-}: {
-  items: { no: number; soal: string; jawaban?: string; arti?: string }[]
-  section: string
-  babNo: number
-}) {
-  const answers = useNotes((s) => s.answers)
-  const setAnswer = useNotes((s) => s.setAnswer)
-  const [bukaKunci, setBukaKunci] = useState<Set<number>>(new Set())
-  const [semuaKunci, setSemuaKunci] = useState(false)
-  const pairs = items
-    .filter((r) => r.jawaban)
-    .map((r) => ({ user: answers[`b${babNo}-${section}-${r.no}`] ?? '', expected: r.jawaban as string }))
-  const score = countCorrect(pairs)
-  const nomorKunci = items.filter((r) => r.jawaban).map((r) => r.no)
-  const toggleSemua = () => {
-    setSemuaKunci((v) => {
-      const next = !v
-      setBukaKunci(next ? new Set(nomorKunci) : new Set())
-      return next
-    })
-  }
-  return (
-    <>
-      <div className="mb-2 flex items-center justify-between">
-        <p className="text-sm font-medium text-ink-soft">
-          Skor {section}: {score.benar} benar dari {score.total}
-        </p>
-        <button
-          type="button"
-          className="text-sm underline underline-offset-2 text-ink-soft"
-          onClick={toggleSemua}
-          aria-expanded={semuaKunci}
-        >
-          {semuaKunci ? 'Tutup semua kunci' : 'Lihat semua kunci'}
-        </button>
-      </div>
-      <ol className="list-decimal pl-5">
-        {items.map((r) => {
-          const key = `b${babNo}-${section}-${r.no}`
-          const lvl = adaJawaban(answers[key]) && r.jawaban
-            ? matchLevel(answers[key], r.jawaban)
-            : null
-          const terlihat = semuaKunci || bukaKunci.has(r.no)
-          return (
-            <li key={r.no} className="mb-3">
-              <span lang="ja" className="block text-[15px] leading-relaxed">
-                <TextWithNewlines text={r.soal} inline />
-              </span>
-              <textarea
-                rows={2}
-                value={answers[key] ?? ''}
-                onChange={(e) => setAnswer(key, e.target.value)}
-                placeholder="Jawabanmu…"
-                aria-label={`Jawaban ${section} nomor ${r.no}`}
-                className="jawab mt-1"
-              />
-              <p className="latih-hint">Koreksi otomatis saat kamu mengetik.</p>
-              {lvl && (
-                <p className={`verdict ${lvl === 'tepat' ? 'verdict--ok' : lvl === 'dekat' ? 'verdict--hangat' : 'verdict--no'}`}>
-                  {lvl === 'tepat' ? 'Benar' : lvl === 'dekat' ? 'Hampir — cek bagian yang kurang' : 'Belum cocok'}
-                </p>
-              )}
-              {r.jawaban && (
-                <div className="mt-1">
-                  <button
-                    type="button"
-                    className="text-sm underline underline-offset-2 text-ink-soft"
-                    onClick={() =>
-                      setBukaKunci((s) => {
-                        const n = new Set(s)
-                        if (n.has(r.no)) n.delete(r.no)
-                        else n.add(r.no)
-                        return n
-                      })
-                    }
-                    aria-expanded={terlihat}
-                  >
-                    {terlihat ? 'Tutup kunci' : 'Lihat kunci'}
-                  </button>
-                  {terlihat && (
-                    <div className="kunci-box">
-                      <div className="kunci-box__col">
-                        <span className="kunci-box__tag">Jawabanmu</span>
-                        <span className="kunci-box__isi">{answers[key] || '—'}</span>
-                      </div>
-                      <div className="kunci-box__col kunci-box__col--kunci">
-                        <span className="kunci-box__tag">Kunci</span>
-                        <span className="kunci-box__isi">{r.jawaban}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </li>
-          )
-        })}
-      </ol>
-    </>
-  )
-}
-
-function AudioBar({ src, label }: { src: string; label: string }) {
-  const ref = useRef<HTMLAudioElement>(null)
-  const [ulang, setUlang] = useState(false)
-  const [speed, setSpeed] = useState(1)
-  useEffect(() => {
-    if (ref.current) ref.current.playbackRate = speed
-  }, [speed])
-  return (
-    <div className="audio-bar">
-      <audio ref={ref} controls preload="none" src={src} aria-label={label} loop={ulang} />
-      <label className="audio-bar__ctl">
-        <input
-          type="checkbox"
-          checked={ulang}
-          onChange={(e) => setUlang(e.target.checked)}
-          aria-label="Ulangi audio terus-menerus"
-        />
-        Ulang
-      </label>
-      <label className="audio-bar__ctl">
-        Kecepatan
-        <select value={speed} onChange={(e) => setSpeed(Number(e.target.value))} aria-label="Kecepatan audio">
-          <option value={0.75}>0.75×</option>
-          <option value={1}>1×</option>
-          <option value={1.25}>1.25×</option>
-        </select>
-      </label>
-    </div>
-  )
-}
-
-function Ruby({
-  text,
-  furigana,
-  show,
-}: {
-  text: string
-  furigana?: Furigana[]
-  show: boolean
-}) {
-  if (!show || !furigana || furigana.length === 0) return <>{text}</>
-  let parts: (string | { base: string; ruby: string })[] = [text]
-  for (const f of furigana) {
-    const next: typeof parts = []
-    for (const part of parts) {
-      if (typeof part === 'string') {
-        const segs = part.split(f.base)
-        segs.forEach((s, i) => {
-          next.push(s)
-          if (i < segs.length - 1) next.push(f)
-        })
-      } else {
-        next.push(part)
-      }
-    }
-    parts = next
-  }
-  return (
-    <>
-      {parts.map((p, i) =>
-        typeof p === 'string' ? (
-          p
-        ) : (
-          <ruby key={i}>
-            {p.base}
-            <rt className="text-[0.7em]">{p.ruby}</rt>
-          </ruby>
-        ),
-      )}
-    </>
   )
 }
