@@ -640,3 +640,21 @@ Diukur lewat CDP: h1/hero = serif (`--font-display`), h2/section = Kalam (`--fon
 **Verifikasi:** `typecheck` bersih · `guard` 7/7 PASS · `check:full` build OK · `map` 32 modul · CDP **5 rute × {390px mobile terang, 1280px desktop gelap}: `overflowX=false`, 0 pelanggar, 0 error boundary**; `.seg__item` ≥32px; `/partikel` 38 kartu utuh.
 
 **Status Sprint 1 (modernisasi): SELESAI.** Sisa sepenuhnya opsional: menyeragamkan `.partikel-card`/`.koreksi`/`flash__card` ke `.card`, dan code-split bundle (peringatan 500kB dari vite, sudah ada sebelum sesi ini).
+
+
+## 26. Sesi "Nutup Sprint 1 + Vitest + pecah paper.css & BabDetailPage" — 2026-10-17
+
+**Catatan penting:** pekerjaan besar ini **sudah dikerjakan** di 4 commit sebelum sesi ini ditutup, tapi `AGENTS.md` + `PLAN.md` belum ikut ter-commit (working tree kotor). Sesi ini: **verifikasi + tutup**.
+
+**Yang sudah ada (dari commit):**
+- `7079b77` — `BabDetailPage.tsx` dipecah **963 → 168 baris**, isinya jadi `src/features/bab/` (25 file: `Section`, `AudioBar`, `Ruby`, `KosakataSection`, `KoreksiPanel`, … + `sectionsOf.ts`).
+- `0f286c8` — `paper.css` (1.400+ baris) dipecah jadi **16 modul** di `src/styles/paper/` (`00-fonts` … `90-partikel`); `paper.css` kini murni entry `@import` (**urutan = cascade**).
+- `cfcd09a` — **Vitest** (devDependency disetujui) + **66 tes**: `core/*` (normalize, terjemahan, susun, segmentPartikel, baca, manifest) + snapshot data (registry 50 bab) + invariant partikel.
+- `9be4b90` — pemilih bab partikel pakai `.seg`; CSS `.flash__seg` dihapus (dead code).
+
+**Verifikasi sesi ini (semua lolos):**
+- `npm run test` → **8 file, 66 tes, 0 gagal** (1.82s).
+- `typecheck` bersih · `guard` **7/7 PASS** (guard sudah mengenali `paper/*`) · `check:full` build OK.
+- CDP **6 rute × {390px mobile terang, 1280px desktop gelap}**: `overflowX=false`, **0 pelanggar**, 0 error boundary; `/partikel` 38 kartu utuh; `.seg__item` ≥32px; `/bab/*` hero + 20 soal susun utuh.
+
+**Kesimpulan: Sprint 1 (modernisasi) SELESAI.** Sisa sepenuhnya opsional: penyeragaman `.partikel-card`/`.koreksi`/`flash__card` → `.card`, dan code-split bundle (peringatan 500kB Vite — sudah ada sebelum sesi ini, bukan regresi).
