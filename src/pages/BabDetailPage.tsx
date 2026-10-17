@@ -99,7 +99,7 @@ export default function BabDetailPage() {
 
   if (bab === undefined) {
     return (
-      <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
+      <div className="app mx-auto p-4 md:p-8 lg:p-10 xl:px-12">
         <div className="book">
           <p className="text-ink-soft" role="status">
             Memuat bab {num}…
@@ -111,7 +111,7 @@ export default function BabDetailPage() {
 
   if (bab === null) {
     return (
-      <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
+      <div className="app mx-auto p-4 md:p-8 lg:p-10 xl:px-12">
         <div className="book">
           <p>
             <Link to="/">← Kembali ke daftar bab</Link>
@@ -124,7 +124,7 @@ export default function BabDetailPage() {
   }
 
   return (
-    <div className="app max-w-5xl mx-auto p-4 md:p-8 lg:p-10">
+    <div className="app mx-auto p-4 md:p-8 lg:p-10 xl:px-12">
       <main className="book">
         <span className="page-curl" aria-hidden />
 

@@ -846,3 +846,31 @@ CDP (port 5199): bab 18/22/25 tab Pola menampilkan pola + penjelasan benar, bab 
 ber-`arti`, tak ada error boundary.
 
 **Docs:** AGENTS header + §3 #34; PLAN sesi ini.
+
+---
+
+## 31. Sesi "Full-bleed — konten mengisi lebar layar" — 2026-10-17
+
+**Pemicu:** user melihat `/latihan/susun` di monitor lebar → „kanan kirinya masih kosong, belum tampilan full".
+
+**Diagnosis (bukti terukur, bukan tebakan):** di viewport 1920 → konten Susun & BabDetail **1024px** (`max-w-5xl`), Home & Partikel **1152px** (`max-w-6xl`), nav `72rem`. Sisa kosong **377–448px per sisi**. Itulah yang dilihat user.
+
+**Keputusan user:** full-bleed untuk **semua** halaman (dipilih dari 4 opsi).
+
+**Perubahan:**
+- `max-w-*` dihapus di 7 titik: `SusunCampuranPage`, `BabDetailPage` (3 varian: memuat / tidak tersedia / utama), `HomePage`, `PartikelPage`, `NotFoundPage`, dan fallback "Memuat…" di `App.tsx` (biar tidak "melompat" saat halaman selesai dimuat).
+- Padding konten: `p-4 md:p-8 lg:p-10` **+ `xl:px-12`** (jarak tepi tetap ada, tidak mepet).
+- `paper/10-theme.css`: `.topnav__inner` `max-width:72rem` **dihapus**; padding `8px 16px`, dan **`@media (min-width:1024px)` → `8px 24px`** sejajar padding konten.
+- Batas panjang **baris teks** TIDAK diubah (mis. `68ch` PolaSection, `42ch` flashcard) — kontainer lebar, teks tetap enak dibaca.
+
+**Verifikasi:**
+- Kontras terukur @1920: konten `1024→1920` (Susun/Bab), `1152→1905` (Home/Partikel), nav `1152→1905/1920`.
+- CDP device emulation **2560 / 1920 / 1440 / 1024 / 768 / 430(mobile,touch) / 390(mobile,touch)** × 4 rute (Home, Bab 1, Susun, Partikel) = **28 kombinasi**: `scrollWidth === clientWidth` di semua, **`overflowX = false`**, 0 pelanggar, 0 error boundary. Konten = lebar viewport (full-bleed) di semua.
+- **Temuan 8–9 „pelanggar" di `/bab/1` 390/430 = PRE-EXISTING, bukan regresi.** Dibuktikan dengan `git stash` (ukur versi lama: **9 pelanggar** — sama) dan penelusuran DOM: semuanya `<a>` di dalam `nav.toc` yang memang strip chip `overflow-x:auto; flex-wrap:nowrap` + mask fade di mobile (§3 #10). Pengukuran level halaman tetap bersih.
+  - Catatan: percobaan kontrol ke `minnanonihongo.vercel.app` gagal — URL-nya menjawab **404 `DEPLOYMENT_NOT_FOUND`** (deployment lama sudah tidak ada), jadi kontrolnya dilakukan lewat stash.
+- Screenshot 1920 (Home / Bab 1 / Partikel / Susun) + Susun 390 mobile diperiksa langsung — paper/notebook identity utuh, tidak ada tumpang tindih.
+- `typecheck` · `build` (572 modul) · `test` **80 hijau** · `guard` **9/9 PASS**.
+
+**Tahan-regresi:** aturan baru di `tools/guard.ts` — „kontainer halaman full-bleed (tanpa `max-w-*` di pembungkus `.app`)". Diuji negatif: menyisipkan `max-w-6xl` sementara → **FAIL**; file dipulihkan dari backup `tmp/backup-lebar/` (bukan `git checkout`) dan diverifikasi identik.
+
+**Docs:** AGENTS header + §9 (keputusan kontainer) + §3d (nav full-bleed) + §6b (daftar aturan guard); PLAN sesi ini.

@@ -106,6 +106,21 @@ lapor(
   pelanggarAll.slice(0, 6),
 )
 
+// 5c. Kontainer halaman WAJIB full-bleed: konten mengisi lebar layar (keputusan
+//     user). Batas `max-w-*` di pembungkus `.app` dilarang — batas panjang BARIS
+//     tetap ada di komponen (mis. 68ch), bukan di kontainer. Lihat AGENTS §3d.
+const pembatasLebar: string[] = []
+for (const rel of [...readdirSync(join(root, 'src', 'pages')).map((f) => `pages/${f}`), 'App.tsx']) {
+  if (!/\.tsx$/.test(rel) || rel.endsWith('.test.tsx')) continue
+  const isi = readFileSync(join(root, 'src', rel), 'utf8')
+  if (/className="[^"]*\bapp\b[^"]*max-w-/.test(isi)) pembatasLebar.push(`src/${rel}`)
+}
+lapor(
+  pembatasLebar.length === 0,
+  'kontainer halaman full-bleed (tanpa max-w-* di pembungkus .app)',
+  pembatasLebar,
+)
+
 // 6. Data: karakter rusak OCR (\ufffd) — '??' ditangani validator (AGENTS §3 #12-13)
 const rusak: string[] = []
 for (const d of readdirSync(join(root, 'src', 'data'), { withFileTypes: true })) {

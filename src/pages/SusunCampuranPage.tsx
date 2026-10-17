@@ -121,7 +121,7 @@ export default function SusunCampuranPage() {
   }
 
   return (
-    <div className="app mx-auto max-w-5xl p-4 md:p-8 lg:p-10">
+    <div className="app mx-auto p-4 md:p-8 lg:p-10 xl:px-12">
       <main className="book">
         <span className="page-curl" aria-hidden />
 

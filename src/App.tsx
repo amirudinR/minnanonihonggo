@@ -25,7 +25,7 @@ function ScrollTop() {
 
 function MemuatHalaman() {
   return (
-    <div className="app mx-auto max-w-6xl p-4 md:p-8 lg:p-10">
+    <div className="app mx-auto p-4 md:p-8 lg:p-10 xl:px-12">
       <div className="book">
         <p className="text-ink-soft" role="status">
           Memuat…

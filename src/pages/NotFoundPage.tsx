@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function NotFoundPage() {
   return (
-    <div className="app">
+    <div className="app mx-auto p-4 md:p-8 lg:p-10 xl:px-12">
       <div className="book">
         <h1>Halaman tidak ditemukan</h1>
         <p>

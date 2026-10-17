@@ -12,13 +12,17 @@ html, body { max-width: 100%; overflow-x: hidden; }
   border-bottom: 1px solid rgb(var(--k-rgb-ink) / 0.12);
 }
 .topnav__inner {
-  max-width: 72rem;
   margin: 0 auto;
   padding: 8px 16px;
   display: flex;
   align-items: center;
   gap: 10px 16px;
   flex-wrap: wrap;
+}
+
+/* Layar lebar: kontainer halaman & nav full-bleed — beri jarak tepi lebih lega. */
+@media (min-width: 1024px) {
+  .topnav__inner { padding: 8px 24px; }
 }
 .topnav__brand { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--color-ink); margin-right: auto; }
 .topnav__logo {
