@@ -156,7 +156,7 @@ export default function BabDetailPage() {
 
         {bab.kosakata.length > 0 && (
           <Section id="kosakata" title="Kosakata" defaultOpen>
-            <div className="flash__seg" role="tablist" aria-label="Mode belajar kosakata" style={{ marginBottom: 10 }} onKeyDown={onTabKey}>
+            <div className="seg" role="tablist" aria-label="Mode belajar kosakata" style={{ marginBottom: 10 }} onKeyDown={onTabKey}>
               {([
                 ['tabel', 'Daftar'],
                 ['flash', 'Flashcard'],
@@ -170,7 +170,7 @@ export default function BabDetailPage() {
                   aria-controls={`panel-kosakata-${m}`}
                   id={`tab-kosakata-${m}`}
                   tabIndex={modeKosakata === m ? 0 : -1}
-                  className={`chip ${modeKosakata === m ? 'chip--aktif' : ''}`}
+                  className={`seg__item ${modeKosakata === m ? 'seg__item--aktif' : ''}`}
                   onClick={() => {
                     setModeKosakata(m)
                     window.location.hash = m
@@ -731,7 +731,7 @@ function TerjemahanList({
 
   return (
     <div className="terj">
-      <div className="flash__seg" style={{ marginBottom: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="toolbar" style={{ marginBottom: 4 }}>
         <span className="toolbar__title">Koreksi terjemahan</span>
         {belum.length < hasil.length && (
           <button

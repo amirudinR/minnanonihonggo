@@ -75,7 +75,7 @@ export default function PartikelPage() {
           </div>
         </header>
 
-        <div className="flash__seg partikel-tab" role="tablist" aria-label="Mode halaman partikel">
+        <div className="seg partikel-tab" role="tablist" aria-label="Mode halaman partikel">
           {([
             ['daftar', 'Daftar & Penjelasan'],
             ['ujian', 'Ujian Partikel'],
@@ -85,7 +85,7 @@ export default function PartikelPage() {
               type="button"
               role="tab"
               aria-selected={mode === m}
-              className={`chip ${mode === m ? 'chip--aktif' : ''}`}
+              className={`seg__item ${mode === m ? 'seg__item--aktif' : ''}`}
               onClick={() => { setMode(m); window.location.hash = m }}
             >
               {label}

@@ -119,18 +119,20 @@ export function Flashcard({ kosakata, babNo = 0 }: { kosakata: KosaKata[]; babNo
   return (
     <div className="flash">
       <div className="flash__bar">
-        <div className="flash__seg">
+        <div className="seg" role="group" aria-label="Arah kartu">
           <button
             type="button"
-            className={`chip ${mode === 'jp-id' ? 'chip--aktif' : ''}`}
+            className={`seg__item ${mode === 'jp-id' ? 'seg__item--aktif' : ''}`}
             onClick={() => setMode('jp-id')}
+            aria-pressed={mode === 'jp-id'}
           >
             日本語 → Indonesia
           </button>
           <button
             type="button"
-            className={`chip ${mode === 'id-jp' ? 'chip--aktif' : ''}`}
+            className={`seg__item ${mode === 'id-jp' ? 'seg__item--aktif' : ''}`}
             onClick={() => setMode('id-jp')}
+            aria-pressed={mode === 'id-jp'}
           >
             Indonesia → 日本語
           </button>

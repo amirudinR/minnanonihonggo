@@ -603,3 +603,20 @@ Home                → vw 320/390: bersih ✅
 
 **Sengaja TIDAK diubah:** identitas kertas, blok `.partikel-*` (77 kartu utuh), fakta §4, key localStorage.
 **Sisa opsional:** menyamakan tipografi (serif judul / Inter body / Caveat aksen) & migrasi `.seg`/`.card` ke halaman Partikel/Kuis/Flashcard (belum perlu — tidak ada regresi).
+
+
+## 25. Sesi "Tipografi + migrasi komponen bersama ke seluruh app" — 2026-10-17
+
+**Sisa opsional Sprint 1, dikerjakan.**
+
+**1. Tipografi — diaudit, ternyata SUDAH benar (tidak diubah, hanya ditegaskan).**
+Diukur lewat CDP: h1/hero = serif (`--font-display`), h2/section = Kalam (`--font-title`), nomor bab + isian latihan = Caveat (`--font-hand`), semua teks isi/UI = Inter (`--font-sans`). Jadi **tidak** ada judul besar bertulis tangan — Caveat/Kalam memang hanya aksen (sesuai maksud awal). Peran ini ditulis sebagai komentar tegas di blok tipografi `paper.css` supaya tidak diacak-acak nanti. **Tidak ada perubahan visual** (dihindari ubah yang belum tentu lebih baik).
+
+**2. Migrasi `.flash__seg`+`.chip` → `.seg`/`.seg__item` (5 tempat, kini 0 sisa):**
+- `Flashcard` (arah kartu), `BabDetailPage` ×2 (tab kosakata; toolbar koreksi terjemahan → `.toolbar`), `HomePage` (filter fase), `PartikelPage` (tab Daftar/Ujian).
+- CSS mobile `@media` ditambah untuk `.seg`/`.seg__item` (sebelumnya hanya `.flash__seg`) agar melebar penuh & rapi di 390px.
+- Definisi `.flash__seg` **sengaja dibiarkan** di `paper.css` (matang, dan salah satu warnanya dipakai jalur bersama) — tapi **jangan** pakai lagi di komponen baru.
+
+**Verifikasi:** `typecheck` bersih · `guard` 7/7 PASS · `check:full` build OK · `map` 32 modul · CDP **5 rute × {390px mobile terang, 1280px desktop gelap}: `overflowX=false`, 0 pelanggar, 0 error boundary**; `.seg__item` ≥32px; `/partikel` 38 kartu utuh.
+
+**Status Sprint 1 (modernisasi): SELESAI.** Sisa sepenuhnya opsional: menyeragamkan `.partikel-card`/`.koreksi`/`flash__card` ke `.card`, dan code-split bundle (peringatan 500kB dari vite, sudah ada sebelum sesi ini).

@@ -16,7 +16,7 @@
 | `src/core/text/susun.ts` | 193 | Logika murni latihan menyusun kalimat (tanpa React) |
 | `src/core/text/terjemahan.ts` | 56 | Bandingkan terjemahan user vs terjemahan buku memakai Jaccard + cakupan kata kunci |
 | `src/core/validation/schema.ts` | 197 | Validasi konsistensi data satu bab. Dipakai lewat script `npm run validate` / dev |
-| `src/features/flashcard/Flashcard.tsx` | 197 | Baca set tersimpan dari localStorage (JSON) |
+| `src/features/flashcard/Flashcard.tsx` | 199 | Baca set tersimpan dari localStorage (JSON) |
 | `src/features/kuis/Kuis.tsx` | 159 | Bangun soal pilihan ganda: "Apa arti <kana>?" dengan 3 pengecoh |
 | `src/features/partikel/index.ts` | 5 | — |
 | `src/features/partikel/KartuPartikel.tsx` | 125 | Label kelompok (untuk badge kartu) |
@@ -29,10 +29,9 @@
 | `src/features/susun/PemilihBabSusun.tsx` | 50 | Pilihan bab untuk latihan susun: Semua · MNN I · MNN II · 1–50 |
 | `src/features/susun/SoalMenyusun.tsx` | 310 | Auto-check: begitu semua chip terpasang, langsung dikoreksi |
 | `src/features/theme/ThemeToggle.tsx` | 47 | Tombol tema: klik = balik terang <-> gelap (mode manual) |
-| `src/lib/scoring.ts` | 5 | exports: hitungSkor |
 | `src/main.tsx` | 11 | — |
 | `src/pages/BabDetailPage.tsx` | 964 | Navigasi bab dengan arrow key (←/→) — HANYA saat tab Daftar aktif. |
-| `src/pages/HomePage.tsx` | 202 | exports: HomePage |
+| `src/pages/HomePage.tsx` | 203 | exports: HomePage |
 | `src/pages/NotFoundPage.tsx` | 15 | exports: NotFoundPage |
 | `src/pages/PartikelPage.tsx` | 187 | Deep-linking: buka tab Ujian lewat #ujian / #ujian-mulai, daftar lewat #daftar. |
 | `src/pages/SusunCampuranPage.tsx` | 245 | exports: SusunCampuranPage |

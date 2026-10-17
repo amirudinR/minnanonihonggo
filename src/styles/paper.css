@@ -193,7 +193,14 @@ body {
   pointer-events: none;
 }
 
-/* tipografi */
+/* tipografi
+   Aturan bahasa visual (jangan diacak-acak):
+   - Judul halaman/hero  → var(--font-display) = serif (Iowan/Palatino/Georgia)
+   - Judul section & angka → var(--font-title) = Kalam (handwriting)
+   - Nomor bab + isian latihan → var(--font-hand) = Caveat (aksen tulis tangan)
+   - Semua teks isi/UI    → var(--font-sans) = Inter (+ fallback JP)
+   Caveat/Kalam HANYA aksen — jangan untuk teks isi (hurufnya kurang tajam di
+   ukuran kecil). Terukur lewat CDP: h1=serif, h2/nomor=Caveat/Kalam, body=Inter. */
 h1, h2, h3 {
   font-family: var(--font-title);
   letter-spacing: 0.005em;
@@ -679,10 +686,16 @@ table.vokab tbody tr:nth-child(10n+11) td { border-top: 2px solid rgb(var(--k-rg
   .flash__seg { width: 100%; }
   .flash__seg .chip { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
 
+  /* Komponen bersama juga melebar penuh di mobile */
+  .seg { width: 100%; }
+  .seg__item { flex: 1 1 0; justify-content: center; min-width: 0; padding-inline: 8px; }
+
   /* Home: search full-width, chips wrap below */
   .home-search { flex-basis: 100%; }
   .home-filter .flash__seg { flex-basis: 100%; flex-wrap: wrap; width: 100%; }
   .home-filter .flash__seg .chip { flex: 0 1 auto; }
+  .home-filter .seg { flex-basis: 100%; flex-wrap: wrap; width: 100%; }
+  .home-filter .seg__item { flex: 0 1 auto; }
 
   /* tabel kosakata jadi kartu bertumpuk */
   table.vokab { table-layout: auto; }

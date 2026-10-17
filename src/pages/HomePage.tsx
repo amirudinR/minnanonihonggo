@@ -61,7 +61,7 @@ export default function HomePage() {
             onChange={(e) => setCari(e.target.value)}
             aria-label="Cari bab"
           />
-          <div className="flash__seg" role="group" aria-label="Filter fase">
+          <div className="seg" role="group" aria-label="Filter fase">
             {([
               ['semua', 'Semua'],
               ['I', 'MNN I'],
@@ -70,8 +70,9 @@ export default function HomePage() {
               <button
                 key={f}
                 type="button"
-                className={`chip ${fase === f ? 'chip--aktif' : ''}`}
+                className={`seg__item ${fase === f ? 'seg__item--aktif' : ''}`}
                 onClick={() => setFase(f)}
+                aria-pressed={fase === f}
               >
                 {label}
               </button>
